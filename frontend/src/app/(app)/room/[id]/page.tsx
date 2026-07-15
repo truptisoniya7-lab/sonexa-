@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { useParams } from 'next/navigation';
-import { io, Socket } from 'socket.io-client';
+import { supabase } from '@/lib/supabase';
 import EmojiPicker from 'emoji-picker-react';
 import { usePlayer } from '@/context/PlayerContext';
 import { Button } from '@/components/ui/button';
@@ -10,8 +10,12 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Mic, MicOff, Play, Pause, SkipForward, SkipBack, Smile, Send, Search, X, Heart, Flame, Music, Laugh, PartyPopper, ChevronUp, ChevronDown, User, Activity } from 'lucide-react';
+import { Mic, MicOff, Play, Pause, SkipForward, SkipBack, Smile, Send, Search, X, Heart, Flame, Music, Laugh, PartyPopper, ChevronUp, ChevronDown, User, Activity, Clock, Eye, Library, MoreHorizontal } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { RealtimeChannel } from '@supabase/supabase-js';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Slider } from '@/components/ui/slider';
 
 const MOCK_MEMBERS = [
   { id: 1, name: 'You (Host)', avatar: 'https://i.pravatar.cc/150?u=1', role: 'Host', isSpeaking: false },
@@ -21,7 +25,7 @@ const MOCK_MEMBERS = [
 
 export default function RoomPage() {
   const { id } = useParams();
-  const [socket, setSocket] = useState<Socket | null>(null);
+  const channelRef = useRef<RealtimeChannel | null>(null);
   const [roomName, setRoomName] = useState('Loading Room...');
   
   // Tabs
@@ -31,9 +35,14 @@ export default function RoomPage() {
   const [queue, setQueue] = useState<any[]>([]);
   const [newSong, setNewSong] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [trendingSongs, setTrendingSongs] = useState<any[]>([]);
+  
+  // Search State
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
   
   // Playback State
-  const { playSong, togglePlay: globalTogglePlay, isPlaying: globalIsPlaying, currentSong: globalCurrentSong, setOnEndedCallback } = usePlayer();
+  const { playSong, togglePlay: globalTogglePlay, isPlaying: globalIsPlaying, currentSong: globalCurrentSong, setOnEndedCallback, progress, duration, seekTo } = usePlayer();
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   
   const currentSong = queue[currentSongIndex] || null;
@@ -75,37 +84,44 @@ export default function RoomPage() {
       .then(data => setMessages(data))
       .catch(console.error);
 
-    const newSocket = io('http://localhost:5000');
-    setSocket(newSocket);
+    fetch(`http://localhost:5000/spotify/trending`)
+      .then(res => res.json())
+      .then(data => { if (Array.isArray(data)) setTrendingSongs(data); })
+      .catch(console.error);
 
-    newSocket.on('connect', () => {
-      newSocket.emit('join_room', id);
-    });
+    const channel = supabase.channel(`room:${id}`);
+    channelRef.current = channel;
 
-    newSocket.on('queue_updated', () => {
-      fetch(`http://localhost:5000/rooms/${id}/queue`)
-        .then(res => res.json())
-        .then(data => {
-          const queueWithVotes = data.map((item: any) => ({ ...item, votes: Math.floor(Math.random() * 5) }));
-          setQueue(queueWithVotes);
-        });
-    });
-
-    newSocket.on('new_message', (data) => {
-      setMessages(prev => [...prev, data]);
-    });
-
-    newSocket.on('new_reaction', (data) => {
-      const reaction = { id: Math.random().toString(), emoji: data.reaction, right: Math.floor(Math.random() * 20) + 10 };
-      setActiveReactions(prev => [...prev, reaction]);
-      setTimeout(() => {
-        setActiveReactions(prev => prev.filter(r => r.id !== reaction.id));
-      }, 3000);
-    });
+    channel
+      .on('broadcast', { event: 'queue_updated' }, () => {
+        fetch(`http://localhost:5000/rooms/${id}/queue`)
+          .then(res => res.json())
+          .then(data => {
+            const queueWithVotes = data.map((item: any) => ({ ...item, votes: Math.floor(Math.random() * 5) }));
+            setQueue(queueWithVotes);
+          });
+      })
+      .on('broadcast', { event: 'new_message' }, ({ payload }) => {
+        setMessages(prev => [...prev, payload]);
+      })
+      .on('broadcast', { event: 'new_reaction' }, ({ payload }) => {
+        const reaction = { id: Math.random().toString(), emoji: payload.reaction, right: Math.floor(Math.random() * 20) + 10 };
+        setActiveReactions(prev => [...prev, reaction]);
+        setTimeout(() => {
+          setActiveReactions(prev => prev.filter(r => r.id !== reaction.id));
+        }, 3000);
+      })
+      .on('broadcast', { event: 'playback_synced' }, ({ payload }) => {
+        if (payload.state === 'play' && !globalIsPlaying) {
+          globalTogglePlay();
+        } else if (payload.state === 'pause' && globalIsPlaying) {
+          globalTogglePlay();
+        }
+      })
+      .subscribe();
 
     return () => {
-      newSocket.emit('leave_room', id);
-      newSocket.disconnect();
+      supabase.removeChannel(channel);
       if (localStream.current) localStream.current.getTracks().forEach(t => t.stop());
       if (peerConnection.current) peerConnection.current.close();
     };
@@ -115,23 +131,42 @@ export default function RoomPage() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, activeTab]);
 
-  const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    setNewSong(val);
-    
-    if (!val.trim()) {
-      setSearchResults([]);
-      return;
-    }
-
-    try {
-      const res = await fetch(`http://localhost:5000/spotify/search?q=${encodeURIComponent(val)}`);
-      const data = await res.json();
-      if (Array.isArray(data)) setSearchResults(data);
-    } catch (error) {
-      console.error(error);
-    }
+  const formatTime = (secs: number) => {
+    if (!secs || isNaN(secs)) return '0:00';
+    const m = Math.floor(secs / 60);
+    const s = Math.floor(secs % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
   };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewSong(e.target.value);
+  };
+
+  useEffect(() => {
+    const fetchResults = async () => {
+      setIsSearching(true);
+      try {
+        const res = await fetch(`http://localhost:5000/spotify/search?q=${encodeURIComponent(newSong)}`);
+        const data = await res.json();
+        if (Array.isArray(data)) setSearchResults(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsSearching(false);
+      }
+    };
+
+    const debounceTimer = setTimeout(() => {
+      if (newSong.trim()) {
+        fetchResults();
+      } else {
+        setSearchResults([]);
+        setIsSearching(false);
+      }
+    }, 500);
+
+    return () => clearTimeout(debounceTimer);
+  }, [newSong]);
 
   const addToQueue = async (track: any) => {
     const songData = { 
@@ -149,7 +184,7 @@ export default function RoomPage() {
       });
       setNewSong('');
       setSearchResults([]);
-      socket?.emit('add_to_queue', { roomId: id });
+      channelRef.current?.send({ type: 'broadcast', event: 'queue_updated', payload: { roomId: id } });
     } catch (error) { console.error(error); }
   };
 
@@ -158,7 +193,7 @@ export default function RoomPage() {
       await fetch(`http://localhost:5000/rooms/${id}/queue/${songId}`, {
         method: 'DELETE'
       });
-      socket?.emit('remove_from_queue', { roomId: id });
+      channelRef.current?.send({ type: 'broadcast', event: 'queue_updated', payload: { roomId: id } });
     } catch (error) { console.error(error); }
   };
 
@@ -170,7 +205,6 @@ export default function RoomPage() {
       }
       return song;
     }).sort((a, b) => (b.votes || 0) - (a.votes || 0)));
-    // In a real app, this would emit to socket to sync votes across clients
   };
 
   const sendMessage = async () => {
@@ -184,12 +218,12 @@ export default function RoomPage() {
       });
       const data = await res.json();
       setChatInput('');
-      socket?.emit('send_message', { ...data, roomId: id });
+      channelRef.current?.send({ type: 'broadcast', event: 'new_message', payload: { ...data, roomId: id } });
     } catch (error) { console.error(error); }
   };
 
   const sendReaction = (emoji: string) => {
-    socket?.emit('reaction', { roomId: id, reaction: emoji, user: 1 });
+    channelRef.current?.send({ type: 'broadcast', event: 'new_reaction', payload: { roomId: id, reaction: emoji, user: 1 } });
   };
 
   const startWebRTC = async () => {
@@ -217,12 +251,12 @@ export default function RoomPage() {
     if (!currentSong) return;
     if (!globalCurrentSong || globalCurrentSong.song_uri !== currentSong.song_uri) {
       playSong({ ...currentSong, room_id: id as string });
-      socket?.emit('sync_playback', { roomId: id, state: 'play' });
+      channelRef.current?.send({ type: 'broadcast', event: 'playback_synced', payload: { roomId: id, state: 'play' } });
       return;
     }
     
     globalTogglePlay();
-    socket?.emit('sync_playback', { roomId: id, state: !globalIsPlaying ? 'play' : 'pause' });
+    channelRef.current?.send({ type: 'broadcast', event: 'playback_synced', payload: { roomId: id, state: !globalIsPlaying ? 'play' : 'pause' } });
   };
 
   const playNext = () => {
@@ -249,19 +283,6 @@ export default function RoomPage() {
       playNext();
     });
   }, [currentSongIndex, queue]);
-
-  useEffect(() => {
-    if (!socket) return;
-    const handleSync = (data: any) => {
-      if (data.state === 'play' && !globalIsPlaying) {
-        globalTogglePlay();
-      } else if (data.state === 'pause' && globalIsPlaying) {
-        globalTogglePlay();
-      }
-    };
-    socket.on('playback_synced', handleSync);
-    return () => { socket.off('playback_synced', handleSync); };
-  }, [socket, globalIsPlaying]);
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto relative min-h-[85vh] pb-12">
@@ -310,10 +331,16 @@ export default function RoomPage() {
         </div>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[600px] lg:h-[700px]">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[650px] lg:h-[750px]">
         {/* Main Player Area */}
         <Card className="glass-panel lg:col-span-2 relative overflow-hidden flex flex-col items-center justify-center border-primary/10 shadow-2xl">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-purple-500/5 pointer-events-none" />
+          {currentSong?.song_image && (
+            <div 
+              className="absolute inset-0 bg-cover bg-center opacity-20 blur-[100px] pointer-events-none transition-all duration-1000"
+              style={{ backgroundImage: `url(${currentSong.song_image})` }}
+            />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/70 to-background pointer-events-none z-0" />
           
           {currentSong ? (
             <motion.div 
@@ -322,7 +349,7 @@ export default function RoomPage() {
               key={currentSong.song_uri}
               className="flex flex-col items-center z-10 w-full max-w-lg px-6"
             >
-              <div className="relative w-72 h-72 sm:w-96 sm:h-96 rounded-2xl mb-8 shadow-2xl overflow-hidden group border border-border/50">
+              <div className="relative w-56 h-56 sm:w-72 sm:h-72 rounded-2xl mb-6 shadow-2xl overflow-hidden group border border-border/30">
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity" />
                 {currentSong.song_image ? (
                   <img src={currentSong.song_image.replace('100x100', '500x500')} alt="Album Art" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
@@ -334,28 +361,69 @@ export default function RoomPage() {
                 
                 {/* Now Playing Indicator Overlay */}
                 <div className="absolute top-4 left-4 z-20 flex items-center gap-2 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 shadow-lg">
-                  <Activity className="w-4 h-4 text-primary animate-pulse" />
+                  {globalIsPlaying && globalCurrentSong?.song_uri === currentSong.song_uri ? (
+                    <div className="flex items-end justify-center gap-[2px] h-3 w-4 overflow-hidden">
+                      <motion.div animate={{ height: ["40%", "100%", "40%"] }} transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut" }} className="w-1 bg-primary rounded-t-sm" />
+                      <motion.div animate={{ height: ["100%", "30%", "100%"] }} transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut", delay: 0.2 }} className="w-1 bg-primary rounded-t-sm" />
+                      <motion.div animate={{ height: ["60%", "90%", "60%"] }} transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut", delay: 0.4 }} className="w-1 bg-primary rounded-t-sm" />
+                    </div>
+                  ) : (
+                    <Activity className="w-4 h-4 text-primary" />
+                  )}
                   <span className="text-xs font-semibold text-white tracking-wider uppercase">Now Playing</span>
                 </div>
               </div>
 
-              <h2 className="text-3xl sm:text-4xl font-extrabold mb-3 text-center line-clamp-1 tracking-tight text-foreground">{currentSong.song_title}</h2>
-              <p className="text-muted-foreground mb-10 text-center text-xl font-medium">{currentSong.song_artist}</p>
+              <h2 className="text-2xl sm:text-3xl font-extrabold mb-1 text-center line-clamp-1 tracking-tight text-foreground">{currentSong.song_title}</h2>
+              <p className="text-muted-foreground mb-6 text-center text-lg font-medium">{currentSong.song_artist}</p>
 
-              <div className="flex items-center gap-8 bg-background/40 backdrop-blur-xl px-8 py-4 rounded-full border border-border/50 shadow-xl">
-                <Button variant="ghost" size="icon" onClick={playPrev} disabled={currentSongIndex === 0} className="w-14 h-14 rounded-full hover:bg-primary/20 text-foreground">
-                  <SkipBack className="w-7 h-7 fill-current" />
+              {/* Progress Bar */}
+              <div className="w-full max-w-md mb-6 relative">
+                <Slider 
+                  value={[progress]} 
+                  max={duration || 100} 
+                  step={1}
+                  onValueChange={(val) => seekTo(val[0])}
+                  className="cursor-pointer mb-2"
+                />
+                <div className="flex justify-between items-center text-[11px] text-muted-foreground font-medium px-1 tracking-widest uppercase">
+                  <span>{formatTime(progress)}</span>
+                  <span>{formatTime(duration)}</span>
+                </div>
+              </div>
+
+              {/* Controls */}
+              <div className="flex items-center justify-center gap-6 bg-background/30 backdrop-blur-xl px-8 py-4 rounded-full border border-border/30 shadow-xl mb-6">
+                <Button variant="ghost" size="icon" onClick={playPrev} disabled={currentSongIndex === 0} className="w-12 h-12 rounded-full hover:bg-primary/20 text-foreground transition-transform hover:scale-105">
+                  <SkipBack className="w-6 h-6 fill-current" />
                 </Button>
-                <Button onClick={togglePlay} size="icon" className="w-24 h-24 rounded-full shadow-2xl hover:scale-105 transition-transform bg-primary hover:bg-primary/90 text-primary-foreground border-4 border-background">
+                <Button onClick={togglePlay} size="icon" className="w-16 h-16 sm:w-20 sm:h-20 rounded-full shadow-2xl hover:scale-105 transition-transform bg-primary hover:bg-primary/90 text-primary-foreground border-4 border-background">
                   {(globalCurrentSong?.song_uri === currentSong.song_uri && globalIsPlaying) ? (
-                    <Pause className="w-10 h-10 fill-current" />
+                    <Pause className="w-8 h-8 fill-current" />
                   ) : (
-                    <Play className="w-10 h-10 fill-current ml-1" />
+                    <Play className="w-8 h-8 fill-current ml-1" />
                   )}
                 </Button>
-                <Button variant="ghost" size="icon" onClick={playNext} disabled={currentSongIndex >= queue.length - 1} className="w-14 h-14 rounded-full hover:bg-primary/20 text-foreground">
-                  <SkipForward className="w-7 h-7 fill-current" />
+                <Button variant="ghost" size="icon" onClick={playNext} disabled={currentSongIndex >= queue.length - 1} className="w-12 h-12 rounded-full hover:bg-primary/20 text-foreground transition-transform hover:scale-105">
+                  <SkipForward className="w-6 h-6 fill-current" />
                 </Button>
+              </div>
+
+              {/* Lyrics Preview Placeholder */}
+              <div className="w-full max-w-md h-[72px] relative overflow-hidden rounded-xl flex flex-col items-center justify-center bg-background/20 backdrop-blur-sm border border-border/20 shadow-inner">
+                <motion.div 
+                  animate={{ y: ["0%", "-50%"] }} 
+                  transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                  className="flex flex-col items-center gap-2 text-center opacity-50 blur-[0.5px]"
+                >
+                  <p className="text-lg font-bold text-white tracking-wide">♪ You know I want you ♪</p>
+                  <p className="text-lg font-bold text-white tracking-wide">♪ It's not a secret I try to hide ♪</p>
+                  <p className="text-lg font-bold text-white tracking-wide">♪ I know you want me ♪</p>
+                  <p className="text-lg font-bold text-white tracking-wide">♪ So don't keep saying our hands are tied ♪</p>
+                  <p className="text-lg font-bold text-white tracking-wide">♪ You claim it's not in the cards ♪</p>
+                  <p className="text-lg font-bold text-white tracking-wide">♪ But fate is pulling you miles away ♪</p>
+                </motion.div>
+                <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-transparent to-background/90 pointer-events-none" />
               </div>
             </motion.div>
           ) : (
@@ -391,87 +459,131 @@ export default function RoomPage() {
             
             <TabsContent value="queue" className="flex-1 flex flex-col p-0 m-0 overflow-hidden">
               <div className="flex-1 overflow-y-auto p-4 space-y-3">
-                {queue.length === 0 ? (
-                  <div className="h-full flex flex-col items-center justify-center text-muted-foreground text-sm opacity-70">
+                {queue.length === 0 && (
+                  <div className="flex flex-col items-center justify-center text-muted-foreground text-sm opacity-70 my-8">
                     <Music className="w-10 h-10 mb-3 opacity-50" />
                     <p className="font-medium">The queue is empty.</p>
                   </div>
-                ) : (
-                  <AnimatePresence>
-                    {queue.map((song, index) => (
+                )}
+                
+                <AnimatePresence>
+                  {queue.map((song, index) => {
+                    const isPlaying = index === currentSongIndex;
+                    const isUpNextFirst = index === currentSongIndex + 1;
+                    return (
+                    <Fragment key={song.id}>
+                      {isPlaying && (
+                        <div className="sticky top-0 z-20 bg-background/95 backdrop-blur py-2 mb-2 border-b border-border/50 -mx-4 px-4">
+                          <h3 className="text-xs font-bold tracking-widest text-primary uppercase flex items-center gap-2">
+                            <Activity className="w-3 h-3" /> Now Playing
+                          </h3>
+                        </div>
+                      )}
+                      {isUpNextFirst && (
+                        <div className="sticky top-0 z-20 bg-background/95 backdrop-blur py-2 mb-2 mt-4 border-b border-border/50 -mx-4 px-4">
+                          <h3 className="text-xs font-bold tracking-widest text-muted-foreground uppercase flex items-center gap-2">
+                            <Clock className="w-3 h-3" /> Up Next
+                          </h3>
+                        </div>
+                      )}
                       <motion.div 
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -20 }}
-                        key={song.id} 
-                        className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all group shadow-sm ${index === currentSongIndex ? 'bg-primary/20 border border-primary/30' : 'bg-background/40 border border-border/30 hover:bg-accent/50'}`}
+                        className={`flex items-center gap-2 p-1.5 rounded-xl cursor-pointer transition-all duration-200 group shadow-sm border hover:-translate-y-0.5 hover:shadow-md hover:bg-accent/30 ${isPlaying ? 'bg-primary/10 border-primary/50 shadow-[0_0_15px_rgba(var(--primary),0.2)] relative overflow-hidden' : 'bg-background/40 border-border/30 hover:brightness-110'}`}
                       >
-                        <div onClick={() => setCurrentSongIndex(index)} className="w-6 text-center font-medium text-sm text-muted-foreground shrink-0">
-                          {index === currentSongIndex ? <Play className="w-3 h-3 text-primary mx-auto fill-current" /> : index + 1}
-                        </div>
-                        {song.song_image ? (
-                          <img src={song.song_image} alt="Art" className="w-12 h-12 rounded-lg object-cover shadow-sm" onClick={() => setCurrentSongIndex(index)} />
-                        ) : (
-                          <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center"><Music className="w-5 h-5 text-muted-foreground" /></div>
+                        {isPlaying && (
+                          <div className="absolute inset-0 bg-primary/5 animate-pulse pointer-events-none" />
                         )}
-                        <div className="flex-1 min-w-0" onClick={() => setCurrentSongIndex(index)}>
-                          <p className={`text-sm font-bold truncate ${index === currentSongIndex ? 'text-primary' : ''}`}>{song.song_title}</p>
-                          <p className="text-xs text-muted-foreground truncate">{song.song_artist}</p>
+                        <div onClick={() => setCurrentSongIndex(index)} className="w-6 flex justify-center shrink-0 z-10">
+                          {isPlaying ? (
+                            <div className="flex items-end justify-center gap-[2px] h-3 w-4 overflow-hidden">
+                              <motion.div animate={{ height: ["40%", "100%", "40%"] }} transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut" }} className="w-1 bg-primary rounded-t-sm" />
+                              <motion.div animate={{ height: ["100%", "30%", "100%"] }} transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut", delay: 0.2 }} className="w-1 bg-primary rounded-t-sm" />
+                              <motion.div animate={{ height: ["60%", "90%", "60%"] }} transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut", delay: 0.4 }} className="w-1 bg-primary rounded-t-sm" />
+                            </div>
+                          ) : (
+                            <span className="font-medium text-xs text-muted-foreground group-hover:hidden">{index + 1}</span>
+                          )}
+                          {!isPlaying && <Play className="w-3 h-3 text-primary hidden group-hover:block fill-current" />}
                         </div>
                         
-                        {/* Voting Section */}
-                        <div className="flex flex-col items-center gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity bg-background/60 p-1 rounded-md">
-                          <button onClick={(e) => { e.stopPropagation(); handleVote(song.id, 'up'); }}><ChevronUp className="w-4 h-4 text-green-500 hover:text-green-400" /></button>
-                          <span className="text-[10px] font-bold leading-none">{song.votes || 0}</span>
-                          <button onClick={(e) => { e.stopPropagation(); handleVote(song.id, 'down'); }}><ChevronDown className="w-4 h-4 text-red-500 hover:text-red-400" /></button>
+                        <div className="relative z-10 shrink-0">
+                          {song.song_image ? (
+                            <img src={song.song_image} alt="Art" className={`w-10 h-10 rounded-lg object-cover shadow-sm transition-transform ${isPlaying ? 'scale-105 ring-1 ring-primary/50' : ''}`} onClick={() => setCurrentSongIndex(index)} />
+                          ) : (
+                            <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center"><Music className="w-4 h-4 text-muted-foreground" /></div>
+                          )}
                         </div>
-
-                        <Button 
-                          variant="ghost" 
-                          size="icon"
-                          onClick={(e) => { e.stopPropagation(); removeFromQueue(song.id); }}
-                          className={`w-8 h-8 shrink-0 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity ${index === currentSongIndex ? 'text-primary hover:text-destructive hover:bg-destructive/10' : 'text-muted-foreground hover:text-destructive hover:bg-destructive/10'}`}
-                        >
-                          <X className="w-4 h-4" />
-                        </Button>
+                        
+                        <div className="flex-1 min-w-0 z-10 flex flex-col justify-center" onClick={() => setCurrentSongIndex(index)}>
+                          <p className={`text-[13px] font-bold truncate leading-tight ${isPlaying ? 'text-primary' : ''}`}>{song.song_title}</p>
+                          <p className="text-[11px] text-muted-foreground truncate">{song.song_artist}</p>
+                        </div>
+                        
+                        {/* Duration & Added By */}
+                        <div className="flex items-center gap-3 text-[11px] text-muted-foreground shrink-0 z-10 mr-2 opacity-100 transition-opacity">
+                          <span className="hidden sm:inline-block">{song.duration || '3:45'}</span>
+                          <Avatar className="w-5 h-5 border border-border">
+                            <AvatarImage src={`https://i.pravatar.cc/150?u=${song.added_by || song.id}`} />
+                            <AvatarFallback><User className="w-3 h-3" /></AvatarFallback>
+                          </Avatar>
+                        </div>
+                        
+                        {/* Hover Actions (Heart, More, X) */}
+                        <div className="absolute right-[44px] flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10 shrink-0 bg-background/80 backdrop-blur-md rounded-lg p-1 border border-border/50 shadow-md">
+                          <Button variant="ghost" size="icon" className="w-7 h-7 text-muted-foreground hover:text-pink-500 hover:bg-pink-500/10"><Heart className="w-4 h-4" /></Button>
+                          <Button variant="ghost" size="icon" className="w-7 h-7 text-muted-foreground hover:text-primary hover:bg-primary/10"><MoreHorizontal className="w-4 h-4" /></Button>
+                          <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); removeFromQueue(song.id); }} className="w-7 h-7 text-muted-foreground hover:text-destructive hover:bg-destructive/10"><X className="w-4 h-4" /></Button>
+                        </div>
+                        
+                        {/* Voting Section (Always Visible) */}
+                        <div className="flex flex-col items-center gap-0.5 bg-background border border-border/50 shadow-sm rounded-md px-1.5 py-0.5 min-w-[32px] z-10 ml-1">
+                          <button onClick={(e) => { e.stopPropagation(); handleVote(song.id, 'up'); }} className="hover:bg-accent rounded-sm transition-colors"><ChevronUp className="w-3.5 h-3.5 text-green-500 hover:text-green-400" /></button>
+                          <span className="text-[10px] font-bold leading-none">{song.votes || 0}</span>
+                          <button onClick={(e) => { e.stopPropagation(); handleVote(song.id, 'down'); }} className="hover:bg-accent rounded-sm transition-colors"><ChevronDown className="w-3.5 h-3.5 text-red-500 hover:text-red-400" /></button>
+                        </div>
                       </motion.div>
-                    ))}
-                  </AnimatePresence>
+                    </Fragment>
+                    );
+                  })}
+                </AnimatePresence>
+
+                {queue.length < 3 && trendingSongs.length > 0 && (
+                  <div className="mt-6 pt-4 border-t border-border/30">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3 px-2 flex items-center gap-2">
+                      <Flame className="w-4 h-4 text-orange-500" /> Recommended For You
+                    </h4>
+                    <div className="space-y-2">
+                      {trendingSongs.map(song => (
+                        <div key={song.id} className="flex items-center gap-3 p-2 rounded-xl bg-background/40 hover:bg-accent/50 border border-border/30 transition-colors group cursor-pointer" onClick={() => addToQueue(song)}>
+                          {song.image ? (
+                            <img src={song.image} alt="Art" className="w-10 h-10 rounded-lg object-cover shadow-sm" />
+                          ) : (
+                            <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center"><Music className="w-4 h-4 text-muted-foreground" /></div>
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-bold truncate group-hover:text-primary transition-colors">{song.title}</p>
+                            <p className="text-[10px] text-muted-foreground truncate">{song.artist}</p>
+                          </div>
+                          <Button variant="secondary" size="sm" className="shrink-0 text-[10px] font-bold rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground transition-colors opacity-0 group-hover:opacity-100">
+                            Add
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 )}
               </div>
               <div className="p-4 border-t border-border/50 bg-background/80 backdrop-blur-md relative">
-                <div className="relative">
-                  <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input 
-                    type="text" 
-                    placeholder="Search songs to add..." 
-                    value={newSong} 
-                    onChange={handleSearchChange} 
-                    className="pl-9 bg-background rounded-full h-10 border-primary/20 focus-visible:ring-primary shadow-inner"
-                  />
-                </div>
-                
-                <AnimatePresence>
-                  {searchResults.length > 0 && newSong.trim() && (
-                    <motion.div 
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 10 }}
-                      className="absolute bottom-[calc(100%+12px)] left-4 right-4 z-50 bg-background/95 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl p-2 max-h-72 overflow-y-auto"
-                    >
-                      {searchResults.map(track => (
-                        <div key={track.id} onClick={() => addToQueue(track)} className="flex gap-3 items-center p-2 rounded-xl cursor-pointer hover:bg-accent transition-colors group border border-transparent hover:border-border">
-                          {track.image && <img src={track.image} alt="Art" className="w-12 h-12 rounded-lg shadow-sm" />}
-                          <div className="overflow-hidden flex-1">
-                            <p className="text-sm font-bold truncate group-hover:text-primary transition-colors">{track.title}</p>
-                            <p className="text-xs text-muted-foreground truncate">{track.artist}</p>
-                          </div>
-                          <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 text-xs rounded-full">Add</Button>
-                        </div>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                <Button 
+                  onClick={() => setIsSearchOpen(true)} 
+                  variant="outline" 
+                  className="w-full justify-start text-muted-foreground bg-background rounded-full h-10 border-primary/20 shadow-inner hover:bg-accent/50 transition-colors"
+                >
+                  <Search className="mr-2 h-4 w-4" />
+                  Search songs to add...
+                </Button>
               </div>
             </TabsContent>
 
@@ -563,6 +675,81 @@ export default function RoomPage() {
           </Tabs>
         </Card>
       </div>
+
+      <Sheet open={isSearchOpen} onOpenChange={setIsSearchOpen}>
+        <SheetContent className="w-full sm:max-w-md p-0 flex flex-col bg-background/95 backdrop-blur-xl border-l border-border/50">
+          <SheetHeader className="p-4 border-b border-border/50 text-left">
+            <SheetTitle className="text-lg font-bold">Search Songs</SheetTitle>
+          </SheetHeader>
+          <div className="p-4 pb-2 border-b border-border/50 bg-background/50">
+            <div className="relative">
+              <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input 
+                type="text" 
+                placeholder="Type a song, artist, or album..." 
+                value={newSong} 
+                onChange={handleSearchChange} 
+                className="pl-9 bg-background rounded-full h-10 border-primary/20 focus-visible:ring-primary shadow-inner"
+                autoFocus
+              />
+            </div>
+          </div>
+          <div className="flex-1 overflow-y-auto p-4 space-y-3">
+            {isSearching ? (
+              Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className="flex gap-4 p-3 rounded-xl border border-border/30 bg-background/40">
+                  <Skeleton className="w-16 h-16 rounded-md shrink-0 bg-primary/10" />
+                  <div className="flex-1 space-y-2 py-1">
+                    <Skeleton className="h-4 w-3/4 bg-primary/10" />
+                    <Skeleton className="h-3 w-1/2 bg-primary/10" />
+                    <div className="flex gap-2 pt-1">
+                      <Skeleton className="h-3 w-12 bg-primary/10" />
+                      <Skeleton className="h-3 w-12 bg-primary/10" />
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : searchResults.length > 0 ? (
+              searchResults.map(track => (
+                <div key={track.id} onClick={() => addToQueue(track)} className="flex gap-4 items-center p-3 rounded-xl cursor-pointer bg-background/40 hover:bg-accent/50 transition-colors group border border-border/30 hover:border-primary/30 shadow-sm">
+                  {track.image ? (
+                    <img src={track.image} alt="Art" className="w-16 h-16 rounded-md shadow-sm object-cover shrink-0" />
+                  ) : (
+                    <div className="w-16 h-16 rounded-md bg-muted flex items-center justify-center shrink-0"><Music className="w-6 h-6 text-muted-foreground" /></div>
+                  )}
+                  <div className="overflow-hidden flex-1 flex flex-col justify-center h-16 py-0.5">
+                    <div>
+                      <p className="text-sm font-bold line-clamp-1 group-hover:text-primary transition-colors">{track.title}</p>
+                      <p className="text-xs text-muted-foreground line-clamp-1">{track.artist} {track.album ? `• ${track.album}` : ''}</p>
+                    </div>
+                    <div className="flex items-center gap-3 text-[10px] font-medium text-muted-foreground mt-1">
+                      {track.duration && (
+                        <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {track.duration}</span>
+                      )}
+                      {track.popularity && (
+                        <span className="flex items-center gap-1"><Eye className="w-3 h-3" /> {track.popularity.toLocaleString()}</span>
+                      )}
+                    </div>
+                  </div>
+                  <Button variant="secondary" size="sm" className="shrink-0 text-xs font-bold rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground transition-colors">
+                    Add
+                  </Button>
+                </div>
+              ))
+            ) : newSong.trim() ? (
+              <div className="h-40 flex flex-col items-center justify-center text-muted-foreground">
+                <Search className="w-10 h-10 mb-3 opacity-50" />
+                <p className="text-sm font-medium">No results found.</p>
+              </div>
+            ) : (
+              <div className="h-40 flex flex-col items-center justify-center text-muted-foreground">
+                <Library className="w-10 h-10 mb-3 opacity-50" />
+                <p className="text-sm font-medium">Type to search for songs.</p>
+              </div>
+            )}
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }

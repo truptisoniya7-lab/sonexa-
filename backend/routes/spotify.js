@@ -4,7 +4,7 @@ const axios = require('axios');
 const querystring = require('querystring');
 const ytSearch = require('yt-search');
 
-module.exports = (db) => {
+module.exports = (pool) => {
   router.get('/login', (req, res) => {
     const scope = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing streaming';
     const userId = req.query.userId || 1; 
@@ -40,8 +40,8 @@ module.exports = (db) => {
 
       const { access_token, refresh_token } = tokenResponse.data;
 
-      await db.run(
-        'INSERT INTO StreamingAccounts (user_id, provider, access_token, refresh_token) VALUES (?, ?, ?, ?) ON CONFLICT (user_id, provider) DO UPDATE SET access_token = ?, refresh_token = ?',
+      await pool.query(
+        'INSERT INTO StreamingAccounts (user_id, provider, access_token, refresh_token) VALUES ($1, $2, $3, $4) ON CONFLICT (user_id, provider) DO UPDATE SET access_token = $5, refresh_token = $6',
         [userId, 'spotify', access_token, refresh_token, access_token, refresh_token]
       );
 
@@ -74,13 +74,45 @@ module.exports = (db) => {
         uri: item.videoId, // The URI is the YouTube Video ID
         title: sanitizeTitle(item.title),
         artist: item.author.name,
-        image: item.thumbnail
+        image: item.thumbnail,
+        duration: item.timestamp,
+        popularity: item.views
       }));
 
       res.json(tracks);
     } catch (error) {
       console.error('Error searching YouTube:', error.message);
       res.status(500).json({ error: 'Failed to search for songs' });
+    }
+  });
+
+  router.get('/trending', async (req, res) => {
+    try {
+      const searchResponse = await ytSearch('top hits global playlist');
+      const videos = searchResponse.videos.slice(0, 5);
+
+      const sanitizeTitle = (title) => {
+        return title
+          .replace(/\s*[\[\(\{](official.*|lyric.*|audio|video|hd|4k|music video|visualizer)[\]\)\}]\s*/gi, '')
+          .replace(/\s*\|\s*.*$/g, '') 
+          .replace(/\s*\-?\s*official.*$/gi, '') 
+          .trim();
+      };
+
+      const tracks = videos.map((item) => ({
+        id: item.videoId,
+        uri: item.videoId,
+        title: sanitizeTitle(item.title),
+        artist: item.author.name,
+        image: item.thumbnail,
+        duration: item.timestamp,
+        popularity: item.views
+      }));
+
+      res.json(tracks);
+    } catch (error) {
+      console.error('Error fetching trending:', error.message);
+      res.status(500).json({ error: 'Failed to fetch trending songs' });
     }
   });
 
