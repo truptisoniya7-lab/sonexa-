@@ -55,7 +55,7 @@ export default function DashboardPage() {
   const fetchRooms = async () => {
     setIsLoadingRooms(true);
     try {
-      const res = await fetch('http://localhost:5000/rooms');
+      const res = await fetch(`\${process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}'}/rooms`);
       const data = await res.json();
       if (Array.isArray(data)) {
         const userCreatedRooms = data.filter(r => r.name !== 'My Private Session');
@@ -77,7 +77,7 @@ export default function DashboardPage() {
     if (!newRoomName.trim()) return;
     
     try {
-      const res = await fetch('http://localhost:5000/rooms', {
+      const res = await fetch(`\${process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}'}/rooms`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: newRoomName, host_id: 1, isPublic: isPublic ? 1 : 0 })
@@ -95,7 +95,7 @@ export default function DashboardPage() {
   const deleteRoom = async (id: number) => {
     if (!confirm('Are you sure you want to delete this room?')) return;
     try {
-      await fetch(`http://localhost:5000/rooms/${id}`, { method: 'DELETE' });
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/rooms/${id}`, { method: 'DELETE' });
       fetchRooms();
     } catch (error) {
       console.error('Failed to delete room', error);
@@ -108,7 +108,7 @@ export default function DashboardPage() {
       return;
     }
     try {
-      await fetch(`http://localhost:5000/rooms/${id}`, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/rooms/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: editName })

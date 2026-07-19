@@ -12,7 +12,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [showNotifs, setShowNotifs] = useState(false);
 
   useEffect(() => {
-    fetch('http://localhost:5000/notifications/1') // Mock user 1
+    fetch(`\${process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}'}/notifications/1`) // Mock user 1
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) setNotifications(data);
@@ -22,7 +22,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   const markAsRead = async (id: number) => {
     try {
-      await fetch(`http://localhost:5000/notifications/${id}/read`, { method: 'PUT' });
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/notifications/${id}/read`, { method: 'PUT' });
       setNotifications(prev => prev.map(n => n.id === id ? { ...n, is_read: 1 } : n));
     } catch (err) {
       console.error(err);

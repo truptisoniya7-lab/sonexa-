@@ -28,7 +28,7 @@ export default function CommunitiesPage() {
   const fetchCommunities = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/communities');
+      const res = await fetch(`\${process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}'}/communities`);
       const data = await res.json();
       if (Array.isArray(data)) setCommunities(data);
     } catch (error) {
@@ -41,7 +41,7 @@ export default function CommunitiesPage() {
   const createCommunity = async () => {
     if (!newCommName.trim()) return;
     try {
-      await fetch('http://localhost:5000/communities', {
+      await fetch(`\${process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}'}/communities`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: newCommName, description: newCommDesc, owner_id: 1 })
@@ -57,7 +57,7 @@ export default function CommunitiesPage() {
 
   const joinCommunity = async (id: number) => {
     try {
-      await fetch(`http://localhost:5000/communities/${id}/join`, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/communities/${id}/join`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user_id: 1 })

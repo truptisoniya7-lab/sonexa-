@@ -65,12 +65,12 @@ export default function RoomPage() {
   const localStream = useRef<MediaStream | null>(null);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/rooms/${id}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/rooms/${id}`)
       .then(res => res.json())
       .then(data => setRoomName(data.name))
       .catch(console.error);
 
-    fetch(`http://localhost:5000/rooms/${id}/queue`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/rooms/${id}/queue`)
       .then(res => res.json())
       .then(data => {
         // Add mock votes if missing
@@ -79,12 +79,12 @@ export default function RoomPage() {
       })
       .catch(console.error);
       
-    fetch(`http://localhost:5000/messages/${id}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/messages/${id}`)
       .then(res => res.json())
       .then(data => setMessages(data))
       .catch(console.error);
 
-    fetch(`http://localhost:5000/spotify/trending`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/spotify/trending`)
       .then(res => res.json())
       .then(data => { if (Array.isArray(data)) setTrendingSongs(data); })
       .catch(console.error);
@@ -94,7 +94,7 @@ export default function RoomPage() {
 
     channel
       .on('broadcast', { event: 'queue_updated' }, () => {
-        fetch(`http://localhost:5000/rooms/${id}/queue`)
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/rooms/${id}/queue`)
           .then(res => res.json())
           .then(data => {
             const queueWithVotes = data.map((item: any) => ({ ...item, votes: Math.floor(Math.random() * 5) }));
@@ -146,7 +146,7 @@ export default function RoomPage() {
     const fetchResults = async () => {
       setIsSearching(true);
       try {
-        const res = await fetch(`http://localhost:5000/spotify/search?q=${encodeURIComponent(newSong)}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/spotify/search?q=${encodeURIComponent(newSong)}`);
         const data = await res.json();
         if (Array.isArray(data)) setSearchResults(data);
       } catch (error) {
@@ -177,7 +177,7 @@ export default function RoomPage() {
       added_by: 1 
     };
     try {
-      await fetch(`http://localhost:5000/rooms/${id}/queue`, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/rooms/${id}/queue`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(songData)
@@ -190,7 +190,7 @@ export default function RoomPage() {
 
   const removeFromQueue = async (songId: number) => {
     try {
-      await fetch(`http://localhost:5000/rooms/${id}/queue/${songId}`, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/rooms/${id}/queue/${songId}`, {
         method: 'DELETE'
       });
       channelRef.current?.send({ type: 'broadcast', event: 'queue_updated', payload: { roomId: id } });
@@ -211,7 +211,7 @@ export default function RoomPage() {
     if (!chatInput.trim()) return;
     const msgData = { room_id: id, user_id: 1, content: chatInput, type: 'text' };
     try {
-      const res = await fetch(`http://localhost:5000/messages`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(msgData)

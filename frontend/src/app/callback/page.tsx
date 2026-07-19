@@ -13,7 +13,7 @@ function CallbackContent() {
     const state = searchParams.get('state');
 
     if (code && state) {
-      fetch('http://localhost:5000/spotify/callback', {
+      fetch(`\${process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}'}/spotify/callback`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

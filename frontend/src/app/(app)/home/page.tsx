@@ -38,7 +38,7 @@ export default function HomePage() {
 
     CATEGORIES.forEach(async (cat) => {
       try {
-        const res = await fetch(`http://localhost:5000/spotify/search?q=${encodeURIComponent(cat.query)}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/spotify/search?q=${encodeURIComponent(cat.query)}`);
         const tracks = await res.json();
         setCategoryData(prev => ({ ...prev, [cat.id]: Array.isArray(tracks) ? tracks : [] }));
       } catch (e) {
@@ -57,7 +57,7 @@ export default function HomePage() {
     
     setIsSearching(true);
     try {
-      const res = await fetch(`http://localhost:5000/spotify/search?q=${encodeURIComponent(searchQuery)}`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/spotify/search?q=${encodeURIComponent(searchQuery)}`);
       const tracks = await res.json();
       setSearchResults(Array.isArray(tracks) ? tracks : []);
     } catch (e) {
@@ -69,7 +69,7 @@ export default function HomePage() {
 
   const playSong = async (track: any) => {
     try {
-      const resRoom = await fetch('http://localhost:5000/rooms', {
+      const resRoom = await fetch(`\${process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}'}/rooms`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: 'My Private Session', host_id: 1, isPublic: 0 })
@@ -77,7 +77,7 @@ export default function HomePage() {
       const room = await resRoom.json();
 
       if (room.id) {
-        await fetch(`http://localhost:5000/rooms/${room.id}/queue`, {
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/rooms/${room.id}/queue`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ song_uri: track.uri, song_title: track.title, song_artist: track.artist, song_image: track.image, added_by: 1 })
