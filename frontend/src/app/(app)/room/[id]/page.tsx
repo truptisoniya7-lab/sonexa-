@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Mic, MicOff, Play, Pause, SkipForward, SkipBack, Smile, Send, Search, X, Heart, Flame, Music, Laugh, PartyPopper, ChevronUp, ChevronDown, User, Activity, Clock, Eye, Library, MoreHorizontal } from 'lucide-react';
+import { Mic, MicOff, Play, Pause, SkipForward, SkipBack, Smile, Send, Search, X, Heart, Flame, Music, Laugh, PartyPopper, ChevronUp, ChevronDown, User, Users, Activity, Clock, Eye, Library, MoreHorizontal, ArrowUp, History, Lock, MessageSquare } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
@@ -25,6 +25,7 @@ const MOCK_MEMBERS = [
 
 export default function RoomPage() {
   const { id } = useParams();
+
   const channelRef = useRef<RealtimeChannel | null>(null);
   const [roomName, setRoomName] = useState('Loading Room...');
   
@@ -42,8 +43,12 @@ export default function RoomPage() {
   const [isSearching, setIsSearching] = useState(false);
   
   // Playback State
-  const { playSong, togglePlay: globalTogglePlay, isPlaying: globalIsPlaying, currentSong: globalCurrentSong, setOnEndedCallback, progress, duration, seekTo } = usePlayer();
+  const { playSong, togglePlay: globalTogglePlay, isPlaying: globalIsPlaying, currentSong: globalCurrentSong, setOnEndedCallback, progress, duration, seekTo, setVideoState } = usePlayer();
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
+  
+  // Display Modes
+  const [playerMode, setPlayerMode] = useState<'video' | 'lyrics'>('video');
+  const videoPlaceholderRef = useRef<HTMLDivElement>(null);
   
   const currentSong = queue[currentSongIndex] || null;
 
@@ -143,12 +148,50 @@ export default function RoomPage() {
   };
 
   useEffect(() => {
+    const updateVideoPosition = () => {
+      if (playerMode === 'video' && videoPlaceholderRef.current) {
+        const rect = videoPlaceholderRef.current.getBoundingClientRect();
+        setVideoState({ 
+          isVisible: true, 
+          rect: {
+            top: rect.top + window.scrollY,
+            left: rect.left + window.scrollX,
+            width: rect.width,
+            height: rect.height
+          } 
+        });
+      } else {
+        setVideoState({ isVisible: false, rect: null });
+      }
+    };
+
+    updateVideoPosition();
+
+    window.addEventListener('resize', updateVideoPosition);
+    
+    let observer: ResizeObserver | null = null;
+    if (videoPlaceholderRef.current) {
+      observer = new ResizeObserver(() => {
+        updateVideoPosition();
+      });
+      observer.observe(videoPlaceholderRef.current);
+    }
+    
+    return () => {
+      window.removeEventListener('resize', updateVideoPosition);
+      if (observer) observer.disconnect();
+      setVideoState({ isVisible: false, rect: null });
+    };
+  }, [playerMode, currentSong, setVideoState, duration]);
+
+  useEffect(() => {
     const fetchResults = async () => {
       setIsSearching(true);
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/spotify/search?q=${encodeURIComponent(newSong)}`);
         const data = await res.json();
         if (Array.isArray(data)) setSearchResults(data);
+
       } catch (error) {
         console.error(error);
       } finally {
@@ -184,6 +227,7 @@ export default function RoomPage() {
       });
       setNewSong('');
       setSearchResults([]);
+      setIsSearchOpen(false);
       channelRef.current?.send({ type: 'broadcast', event: 'queue_updated', payload: { roomId: id } });
     } catch (error) { console.error(error); }
   };
@@ -284,12 +328,117 @@ export default function RoomPage() {
     });
   }, [currentSongIndex, queue]);
 
+  const renderSongCard = (song: any, index: number, isPlaying: boolean, isTrending: boolean = false) => {
+    const displayIndex = index >= 0 ? index + 1 : null;
+    
+    return (
+      <Fragment key={song.id || `${song.song_uri}-${index}`}>
+        <motion.div 
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: 10 }}
+          className={`group flex items-center gap-3 p-2 rounded-md cursor-pointer transition-colors relative ${isPlaying ? 'bg-primary/10 hover:bg-primary/20' : 'hover:bg-white/5'}`}
+          onClick={() => {
+            if (isTrending) {
+              playSong({ ...song, room_id: id as string });
+            } else if (index >= 0) {
+              setCurrentSongIndex(index);
+            }
+          }}
+        >
+          {/* Index / Play / EQ */}
+          <div className="w-6 flex justify-center shrink-0">
+            {isPlaying ? (
+              <div className="flex items-end justify-center gap-[2px] h-3.5 w-4 overflow-hidden">
+                <motion.div animate={{ height: ["40%", "100%", "40%"] }} transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut" }} className="w-1 bg-primary rounded-t-sm" />
+                <motion.div animate={{ height: ["100%", "30%", "100%"] }} transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut", delay: 0.2 }} className="w-1 bg-primary rounded-t-sm" />
+                <motion.div animate={{ height: ["60%", "90%", "60%"] }} transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut", delay: 0.4 }} className="w-1 bg-primary rounded-t-sm" />
+              </div>
+            ) : (
+              <div className="relative flex items-center justify-center w-full h-full">
+                <span className={`text-xs font-medium text-muted-foreground group-hover:opacity-0 transition-opacity ${isTrending ? 'opacity-0' : 'opacity-100'}`}>
+                  {displayIndex}
+                </span>
+                <Play className={`w-4 h-4 text-foreground fill-current absolute opacity-0 group-hover:opacity-100 transition-opacity ${isTrending ? 'group-hover:opacity-100 opacity-0' : ''}`} />
+              </div>
+            )}
+          </div>
+
+          {/* Thumbnail */}
+          <div className="relative w-10 h-10 rounded-md overflow-hidden shrink-0 bg-black/50 border border-white/5">
+            {song.song_image ? (
+              <img src={song.song_image} alt="Art" className="w-full h-full object-cover" />
+            ) : (
+              <Music className="w-full h-full p-2 text-muted-foreground/50" />
+            )}
+          </div>
+
+          {/* Title & Artist */}
+          <div className="flex-1 min-w-0 flex flex-col justify-center">
+            <h4 className={`text-sm font-medium truncate leading-tight ${isPlaying ? 'text-primary' : 'text-foreground group-hover:text-white transition-colors'}`}>
+              {song.song_title}
+            </h4>
+            <p className="text-xs text-muted-foreground truncate leading-tight mt-0.5">
+              {song.song_artist}
+            </p>
+          </div>
+
+          {/* Added By & Votes */}
+          {!isTrending && (
+            <div className="hidden sm:flex items-center gap-4 shrink-0 text-muted-foreground mr-2">
+               <div className="flex items-center gap-1.5" title={`Added by ${MOCK_MEMBERS.find(m => m.id === (song.added_by || 1))?.name || 'User'}`}>
+                 <Avatar className="w-5 h-5 border border-white/10 opacity-70 group-hover:opacity-100 transition-opacity">
+                   <AvatarImage src={`https://i.pravatar.cc/150?u=${song.added_by || song.id}`} />
+                   <AvatarFallback><User className="w-3 h-3" /></AvatarFallback>
+                 </Avatar>
+               </div>
+               
+               <button 
+                 className="flex items-center gap-1 text-[11px] font-semibold hover:text-green-400 transition-colors w-8 justify-end" 
+                 onClick={(e) => { e.stopPropagation(); handleVote(song.id, 'up'); }}
+               >
+                 {song.votes || 0} <ChevronUp className="w-3 h-3" />
+               </button>
+            </div>
+          )}
+
+          {/* Duration & Actions */}
+          <div className="flex items-center gap-3 shrink-0">
+             <span className="text-[11px] text-muted-foreground font-medium w-8 text-right">
+               {song.duration || '3:45'}
+             </span>
+             
+             {/* Hover Actions */}
+             <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity w-14 justify-end">
+                {!isPlaying && !isTrending && (
+                  <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); }} className="w-6 h-6 text-muted-foreground hover:text-primary rounded-full hover:bg-white/10">
+                    <ArrowUp className="w-3 h-3" />
+                  </Button>
+                )}
+                {!isTrending && (
+                  <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); removeFromQueue(song.id); }} className="w-6 h-6 text-muted-foreground hover:text-destructive rounded-full hover:bg-white/10">
+                    <X className="w-3 h-3" />
+                  </Button>
+                )}
+                {isTrending && (
+                  <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); addToQueue(song); }} className="w-6 h-6 text-muted-foreground hover:text-primary rounded-full hover:bg-white/10" title="Add to Queue">
+                    <Play className="w-3 h-3" />
+                  </Button>
+                )}
+             </div>
+          </div>
+        </motion.div>
+      </Fragment>
+    );
+  };
+
   return (
-    <div className="space-y-6 max-w-7xl mx-auto relative min-h-[85vh] pb-12">
+
+    <div className="flex flex-col h-[calc(100vh-13rem)] md:h-[calc(100vh-14rem)] overflow-hidden relative w-full bg-background rounded-2xl shadow-2xl border border-white/5">
       
       {/* Floating Reactions */}
       {activeReactions.map(reaction => (
-        <div key={reaction.id} className="absolute bottom-24 text-4xl z-50 pointer-events-none" style={{ right: `${reaction.right || 50}%`, animation: 'floatReaction 3s ease-out forwards' }}>
+        <div key={reaction.id} className="absolute bottom-32 text-4xl z-[100] pointer-events-none" style={{ right: `\${reaction.right || 50}%`, animation: 'floatReaction 3s ease-out forwards' }}>
           {reaction.emoji}
         </div>
       ))}
@@ -301,387 +450,430 @@ export default function RoomPage() {
         }
       `}} />
 
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight mb-2 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400">{roomName}</h1>
-          <p className="text-muted-foreground">Listen and chat together in real-time.</p>
+      {/* Dynamic Cinematic Background */}
+      {currentSong?.song_image && (
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+          {/* Blurred Artwork */}
+          <div 
+            className="absolute inset-0 opacity-50 blur-[100px] scale-150 transition-all duration-1000"
+            style={{
+              backgroundImage: `url(\${currentSong.song_image.replace('100x100', '1000x1000')})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          />
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/60 to-background/90" />
+          {/* Noise Texture */}
+          <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }} />
+          {/* Vignette */}
+          <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 100%)' }} />
         </div>
-        <div className="flex items-center gap-3">
-          {!inVoice ? (
-            <Button onClick={() => startWebRTC()} variant="outline" className="text-primary border-primary/50 hover:bg-primary/10 rounded-full px-6 shadow-md">
-              <Mic className="w-4 h-4 mr-2" /> Join Voice
-            </Button>
-          ) : (
-            <div className="flex items-center gap-3">
-              <Button onClick={toggleMute} variant={isMuted ? "destructive" : "secondary"} className="min-w-[100px] rounded-full">
-                {isMuted ? <MicOff className="w-4 h-4 mr-2" /> : <Mic className="w-4 h-4 mr-2" />}
-                {isMuted ? 'Unmute' : 'Mute'}
-              </Button>
-              <div className="flex items-center gap-2 text-green-500 font-medium text-sm bg-green-500/10 px-4 py-2 rounded-full shadow-inner border border-green-500/20">
-                <span className="relative flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
-                </span>
-                Voice Active
-              </div>
-            </div>
-          )}
-          <audio ref={localAudioRef} autoPlay muted className="hidden" />
-          <audio ref={remoteAudioRef} autoPlay className="hidden" />
-        </div>
-      </header>
+      )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[650px] lg:h-[750px]">
-        {/* Main Player Area */}
-        <Card className="glass-panel lg:col-span-2 relative overflow-hidden flex flex-col items-center justify-center border-primary/10 shadow-2xl">
-          {currentSong?.song_image && (
-            <div 
-              className="absolute inset-0 bg-cover bg-center opacity-20 blur-[100px] pointer-events-none transition-all duration-1000"
-              style={{ backgroundImage: `url(${currentSong.song_image})` }}
-            />
-          )}
-          <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/70 to-background pointer-events-none z-0" />
+      {/* Main Content Area Container */}
+      <div className="flex-1 flex flex-col z-10 w-full max-w-[1800px] mx-auto min-h-0 pt-6 px-4 sm:px-6 lg:px-8">
+        
+
+
+        {/* Grid Row */}
+        <div className="flex-1 flex flex-col lg:flex-row gap-6 min-h-0 pb-6">
           
-          {currentSong ? (
-            <motion.div 
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              key={currentSong.song_uri}
-              className="flex flex-col items-center z-10 w-full max-w-lg px-6"
-            >
-              <div className="relative w-56 h-56 sm:w-72 sm:h-72 rounded-2xl mb-6 shadow-2xl overflow-hidden group border border-border/30">
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                {currentSong.song_image ? (
-                  <img src={currentSong.song_image.replace('100x100', '500x500')} alt="Album Art" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
-                ) : (
-                  <div className="w-full h-full bg-muted flex items-center justify-center">
-                    <Music className="w-24 h-24 text-muted-foreground/30" />
-                  </div>
-                )}
-                
-                {/* Now Playing Indicator Overlay */}
-                <div className="absolute top-4 left-4 z-20 flex items-center gap-2 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 shadow-lg">
-                  {globalIsPlaying && globalCurrentSong?.song_uri === currentSong.song_uri ? (
-                    <div className="flex items-end justify-center gap-[2px] h-3 w-4 overflow-hidden">
-                      <motion.div animate={{ height: ["40%", "100%", "40%"] }} transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut" }} className="w-1 bg-primary rounded-t-sm" />
-                      <motion.div animate={{ height: ["100%", "30%", "100%"] }} transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut", delay: 0.2 }} className="w-1 bg-primary rounded-t-sm" />
-                      <motion.div animate={{ height: ["60%", "90%", "60%"] }} transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut", delay: 0.4 }} className="w-1 bg-primary rounded-t-sm" />
-                    </div>
-                  ) : (
-                    <Activity className="w-4 h-4 text-primary" />
-                  )}
-                  <span className="text-xs font-semibold text-white tracking-wider uppercase">Now Playing</span>
+          {/* Left: Header, Video & Lyrics */}
+          <div className="flex-1 flex flex-col min-w-0">
+            {/* Header Row */}
+            <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 shrink-0">
+              <div>
+                <h1 className="text-3xl font-extrabold tracking-tight mb-1 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400">{roomName}</h1>
+                <div className="flex flex-wrap items-center gap-3 mt-2">
+                  <span className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1 rounded-md border border-white/5 text-xs font-medium text-muted-foreground"><Lock className="w-3.5 h-3.5" /> Private</span>
+                  <span className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1 rounded-md border border-white/5 text-xs font-medium text-muted-foreground"><Users className="w-3.5 h-3.5" /> 12 Members</span>
+                  <span className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1 rounded-md border border-white/5 text-xs font-medium text-muted-foreground"><Music className="w-3.5 h-3.5" /> 54 Songs</span>
+                  <span className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1 rounded-md border border-white/5 text-xs font-medium text-muted-foreground"><Heart className="w-3.5 h-3.5 text-pink-500" /> 126 Likes</span>
                 </div>
               </div>
+            </header>
 
-              <h2 className="text-2xl sm:text-3xl font-extrabold mb-1 text-center line-clamp-1 tracking-tight text-foreground">{currentSong.song_title}</h2>
-              <p className="text-muted-foreground mb-6 text-center text-lg font-medium">{currentSong.song_artist}</p>
-
-              {/* Progress Bar */}
-              <div className="w-full max-w-md mb-6 relative">
-                <Slider 
-                  value={[progress]} 
-                  max={duration || 100} 
-                  step={1}
-                  onValueChange={(val) => seekTo(val[0])}
-                  className="cursor-pointer mb-2"
-                />
-                <div className="flex justify-between items-center text-[11px] text-muted-foreground font-medium px-1 tracking-widest uppercase">
-                  <span>{formatTime(progress)}</span>
-                  <span>{formatTime(duration)}</span>
-                </div>
-              </div>
-
-              {/* Controls */}
-              <div className="flex items-center justify-center gap-6 bg-background/30 backdrop-blur-xl px-8 py-4 rounded-full border border-border/30 shadow-xl mb-6">
-                <Button variant="ghost" size="icon" onClick={playPrev} disabled={currentSongIndex === 0} className="w-12 h-12 rounded-full hover:bg-primary/20 text-foreground transition-transform hover:scale-105">
-                  <SkipBack className="w-6 h-6 fill-current" />
-                </Button>
-                <Button onClick={togglePlay} size="icon" className="w-16 h-16 sm:w-20 sm:h-20 rounded-full shadow-2xl hover:scale-105 transition-transform bg-primary hover:bg-primary/90 text-primary-foreground border-4 border-background">
-                  {(globalCurrentSong?.song_uri === currentSong.song_uri && globalIsPlaying) ? (
-                    <Pause className="w-8 h-8 fill-current" />
-                  ) : (
-                    <Play className="w-8 h-8 fill-current ml-1" />
-                  )}
-                </Button>
-                <Button variant="ghost" size="icon" onClick={playNext} disabled={currentSongIndex >= queue.length - 1} className="w-12 h-12 rounded-full hover:bg-primary/20 text-foreground transition-transform hover:scale-105">
-                  <SkipForward className="w-6 h-6 fill-current" />
-                </Button>
-              </div>
-
-              {/* Lyrics Preview Placeholder */}
-              <div className="w-full max-w-md h-[72px] relative overflow-hidden rounded-xl flex flex-col items-center justify-center bg-background/20 backdrop-blur-sm border border-border/20 shadow-inner">
-                <motion.div 
-                  animate={{ y: ["0%", "-50%"] }} 
-                  transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                  className="flex flex-col items-center gap-2 text-center opacity-50 blur-[0.5px]"
-                >
-                  <p className="text-lg font-bold text-white tracking-wide">♪ You know I want you ♪</p>
-                  <p className="text-lg font-bold text-white tracking-wide">♪ It's not a secret I try to hide ♪</p>
-                  <p className="text-lg font-bold text-white tracking-wide">♪ I know you want me ♪</p>
-                  <p className="text-lg font-bold text-white tracking-wide">♪ So don't keep saying our hands are tied ♪</p>
-                  <p className="text-lg font-bold text-white tracking-wide">♪ You claim it's not in the cards ♪</p>
-                  <p className="text-lg font-bold text-white tracking-wide">♪ But fate is pulling you miles away ♪</p>
-                </motion.div>
-                <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-transparent to-background/90 pointer-events-none" />
-              </div>
-            </motion.div>
-          ) : (
-            <div className="flex flex-col items-center text-center z-10 opacity-70">
-              <div className="w-72 h-72 rounded-2xl mb-8 bg-muted/50 border-2 border-dashed border-border flex items-center justify-center">
-                <Music className="w-20 h-20 text-muted-foreground/50" />
-              </div>
-              <h2 className="text-3xl font-bold mb-3 tracking-tight">No song playing</h2>
-              <p className="text-muted-foreground max-w-sm text-lg">Add a song to the queue to start listening together.</p>
+            {/* View Mode Toggle Header */}
+            <div className="flex items-center gap-6 border-b border-white/10 pb-3 mb-4 px-2">
+              <button 
+                onClick={() => setPlayerMode('video')} 
+                className={`text-sm font-bold uppercase tracking-widest transition-colors ${playerMode === 'video' ? 'text-primary' : 'text-muted-foreground hover:text-white'}`}
+                suppressHydrationWarning
+              >
+                VIDEO
+              </button>
+              <button 
+                onClick={() => setPlayerMode('lyrics')} 
+                className={`text-sm font-bold uppercase tracking-widest transition-colors ${playerMode === 'lyrics' ? 'text-primary' : 'text-muted-foreground hover:text-white'}`}
+                suppressHydrationWarning
+              >
+                LYRICS
+              </button>
             </div>
-          )}
-
-          {/* Reaction Bar */}
-          <div className="absolute top-6 right-6 bg-background/60 backdrop-blur-xl p-2 rounded-full border border-border/50 shadow-2xl flex flex-col gap-3 z-20">
-            {[{icon: Heart, emoji: '❤️'}, {icon: Flame, emoji: '🔥'}, {icon: Laugh, emoji: '😂'}, {icon: PartyPopper, emoji: '🎉'}].map(({icon: Icon, emoji}) => (
-              <Button key={emoji} variant="ghost" size="icon" onClick={() => sendReaction(emoji)} className="w-12 h-12 rounded-full hover:bg-accent/80 hover:scale-110 transition-all text-2xl">
-                {emoji}
-              </Button>
-            ))}
-          </div>
-        </Card>
-
-        {/* Sidebar: Queue, Chat, Members */}
-        <Card className="glass-panel flex flex-col overflow-hidden h-full shadow-2xl border-primary/10">
-          <Tabs defaultValue="queue" value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="flex flex-col h-full w-full">
-            <CardHeader className="p-0 border-b border-border/50 bg-background/40">
-              <TabsList className="w-full bg-transparent p-0 h-14 rounded-none border-b-0 flex">
-                <TabsTrigger value="queue" className="flex-1 h-full rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none text-sm font-semibold">Queue</TabsTrigger>
-                <TabsTrigger value="chat" className="flex-1 h-full rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none text-sm font-semibold">Live Chat</TabsTrigger>
-                <TabsTrigger value="members" className="flex-1 h-full rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none text-sm font-semibold">Members</TabsTrigger>
-              </TabsList>
-            </CardHeader>
             
-            <TabsContent value="queue" className="flex-1 flex flex-col p-0 m-0 overflow-hidden">
-              <div className="flex-1 overflow-y-auto p-4 space-y-3">
-                {queue.length === 0 && (
-                  <div className="flex flex-col items-center justify-center text-muted-foreground text-sm opacity-70 my-8">
-                    <Music className="w-10 h-10 mb-3 opacity-50" />
-                    <p className="font-medium">The queue is empty.</p>
-                  </div>
-                )}
-                
-                <AnimatePresence>
-                  {queue.map((song, index) => {
-                    const isPlaying = index === currentSongIndex;
-                    const isUpNextFirst = index === currentSongIndex + 1;
+            <div className="w-full lg:w-[85%] mx-auto aspect-video relative rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-black shrink-0 mb-6">
+              
+              {/* No Song State */}
+              <div 
+                className="absolute inset-0 z-0 flex flex-col items-center justify-center text-center opacity-70 bg-muted/20 transition-opacity duration-500"
+                style={{ opacity: !currentSong ? 1 : 0, pointerEvents: !currentSong ? 'auto' : 'none' }}
+              >
+                <div className="w-32 h-32 rounded-2xl mb-4 bg-muted/50 border-2 border-dashed border-border flex items-center justify-center">
+                  <Music className="w-10 h-10 text-muted-foreground/50" />
+                </div>
+                <h2 className="text-xl font-bold mb-2 tracking-tight">No song playing</h2>
+                <p className="text-muted-foreground text-sm max-w-xs">Add a song to the queue to start listening.</p>
+              </div>
+
+              {/* Video Placeholder */}
+              <div 
+                ref={videoPlaceholderRef} 
+                className="absolute inset-0 z-10 transition-opacity duration-500"
+                style={{ 
+                  opacity: currentSong && playerMode === 'video' ? 1 : 0,
+                  pointerEvents: currentSong && playerMode === 'video' ? 'auto' : 'none'
+                }}
+              ></div>
+
+              {/* Lyrics Container */}
+              <div 
+                className="absolute inset-0 z-20 flex items-center justify-center p-6 text-center overflow-hidden bg-black/80 backdrop-blur-3xl transition-opacity duration-500"
+                style={{ 
+                  opacity: currentSong && playerMode === 'lyrics' ? 1 : 0,
+                  pointerEvents: currentSong && playerMode === 'lyrics' ? 'auto' : 'none'
+                }}
+              >
+                <motion.div 
+                  animate={{ y: `calc(50% - ${Math.max(0, [0, 5, 10, 15, 20, 25, 30, 35, 40].findIndex(t => progress >= t && progress < t+5)) * 64}px)` }} 
+                  transition={{ type: "spring", stiffness: 100, damping: 20 }}
+                  className="flex flex-col gap-8 absolute top-0 w-full pt-[275px]"
+                >
+                  {[
+                    { time: 0, text: "♪" },
+                    { time: 5, text: "Yesterday" },
+                    { time: 10, text: "All my troubles seemed so far away" },
+                    { time: 15, text: "Now it looks as though they're here to stay" },
+                    { time: 20, text: "Oh, I believe in yesterday" },
+                    { time: 25, text: "Suddenly" },
+                    { time: 30, text: "I'm not half the man I used to be" },
+                    { time: 35, text: "There's a shadow hanging over me" },
+                    { time: 40, text: "♪" }
+                  ].map((line, i) => {
+                    const activeLyricIndex = Math.max(0, [0, 5, 10, 15, 20, 25, 30, 35, 40].findIndex(t => progress >= t && progress < t+5));
+                    const isPast = i < activeLyricIndex;
+                    const isActive = i === activeLyricIndex;
                     return (
-                    <Fragment key={song.id}>
-                      {isPlaying && (
-                        <div className="sticky top-0 z-20 bg-background/95 backdrop-blur py-2 mb-2 border-b border-border/50 -mx-4 px-4">
-                          <h3 className="text-xs font-bold tracking-widest text-primary uppercase flex items-center gap-2">
-                            <Activity className="w-3 h-3" /> Now Playing
-                          </h3>
-                        </div>
-                      )}
-                      {isUpNextFirst && (
-                        <div className="sticky top-0 z-20 bg-background/95 backdrop-blur py-2 mb-2 mt-4 border-b border-border/50 -mx-4 px-4">
-                          <h3 className="text-xs font-bold tracking-widest text-muted-foreground uppercase flex items-center gap-2">
-                            <Clock className="w-3 h-3" /> Up Next
-                          </h3>
-                        </div>
-                      )}
-                      <motion.div 
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
-                        className={`flex items-center gap-2 p-1.5 rounded-xl cursor-pointer transition-all duration-200 group shadow-sm border hover:-translate-y-0.5 hover:shadow-md hover:bg-accent/30 ${isPlaying ? 'bg-primary/10 border-primary/50 shadow-[0_0_15px_rgba(var(--primary),0.2)] relative overflow-hidden' : 'bg-background/40 border-border/30 hover:brightness-110'}`}
+                      <p 
+                        key={i} 
+                        className={`text-2xl sm:text-4xl font-extrabold tracking-tight transition-all duration-700 h-[32px] flex items-center justify-center ${
+                          isActive ? 'text-white scale-110 opacity-100 drop-shadow-[0_0_15px_rgba(255,255,255,0.4)]' : 
+                          isPast ? 'text-white/30 scale-90 blur-[1px]' : 'text-white/40 scale-95'
+                        }`}
                       >
-                        {isPlaying && (
-                          <div className="absolute inset-0 bg-primary/5 animate-pulse pointer-events-none" />
-                        )}
-                        <div onClick={() => setCurrentSongIndex(index)} className="w-6 flex justify-center shrink-0 z-10">
-                          {isPlaying ? (
-                            <div className="flex items-end justify-center gap-[2px] h-3 w-4 overflow-hidden">
-                              <motion.div animate={{ height: ["40%", "100%", "40%"] }} transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut" }} className="w-1 bg-primary rounded-t-sm" />
-                              <motion.div animate={{ height: ["100%", "30%", "100%"] }} transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut", delay: 0.2 }} className="w-1 bg-primary rounded-t-sm" />
-                              <motion.div animate={{ height: ["60%", "90%", "60%"] }} transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut", delay: 0.4 }} className="w-1 bg-primary rounded-t-sm" />
-                            </div>
-                          ) : (
-                            <span className="font-medium text-xs text-muted-foreground group-hover:hidden">{index + 1}</span>
-                          )}
-                          {!isPlaying && <Play className="w-3 h-3 text-primary hidden group-hover:block fill-current" />}
-                        </div>
-                        
-                        <div className="relative z-10 shrink-0">
-                          {song.song_image ? (
-                            <img src={song.song_image} alt="Art" className={`w-10 h-10 rounded-lg object-cover shadow-sm transition-transform ${isPlaying ? 'scale-105 ring-1 ring-primary/50' : ''}`} onClick={() => setCurrentSongIndex(index)} />
-                          ) : (
-                            <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center"><Music className="w-4 h-4 text-muted-foreground" /></div>
-                          )}
-                        </div>
-                        
-                        <div className="flex-1 min-w-0 z-10 flex flex-col justify-center" onClick={() => setCurrentSongIndex(index)}>
-                          <p className={`text-[13px] font-bold truncate leading-tight ${isPlaying ? 'text-primary' : ''}`}>{song.song_title}</p>
-                          <p className="text-[11px] text-muted-foreground truncate">{song.song_artist}</p>
-                        </div>
-                        
-                        {/* Duration & Added By */}
-                        <div className="flex items-center gap-3 text-[11px] text-muted-foreground shrink-0 z-10 mr-2 opacity-100 transition-opacity">
-                          <span className="hidden sm:inline-block">{song.duration || '3:45'}</span>
-                          <Avatar className="w-5 h-5 border border-border">
-                            <AvatarImage src={`https://i.pravatar.cc/150?u=${song.added_by || song.id}`} />
-                            <AvatarFallback><User className="w-3 h-3" /></AvatarFallback>
-                          </Avatar>
-                        </div>
-                        
-                        {/* Hover Actions (Heart, More, X) */}
-                        <div className="absolute right-[44px] flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10 shrink-0 bg-background/80 backdrop-blur-md rounded-lg p-1 border border-border/50 shadow-md">
-                          <Button variant="ghost" size="icon" className="w-7 h-7 text-muted-foreground hover:text-pink-500 hover:bg-pink-500/10"><Heart className="w-4 h-4" /></Button>
-                          <Button variant="ghost" size="icon" className="w-7 h-7 text-muted-foreground hover:text-primary hover:bg-primary/10"><MoreHorizontal className="w-4 h-4" /></Button>
-                          <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); removeFromQueue(song.id); }} className="w-7 h-7 text-muted-foreground hover:text-destructive hover:bg-destructive/10"><X className="w-4 h-4" /></Button>
-                        </div>
-                        
-                        {/* Voting Section (Always Visible) */}
-                        <div className="flex flex-col items-center gap-0.5 bg-background border border-border/50 shadow-sm rounded-md px-1.5 py-0.5 min-w-[32px] z-10 ml-1">
-                          <button onClick={(e) => { e.stopPropagation(); handleVote(song.id, 'up'); }} className="hover:bg-accent rounded-sm transition-colors"><ChevronUp className="w-3.5 h-3.5 text-green-500 hover:text-green-400" /></button>
-                          <span className="text-[10px] font-bold leading-none">{song.votes || 0}</span>
-                          <button onClick={(e) => { e.stopPropagation(); handleVote(song.id, 'down'); }} className="hover:bg-accent rounded-sm transition-colors"><ChevronDown className="w-3.5 h-3.5 text-red-500 hover:text-red-400" /></button>
-                        </div>
-                      </motion.div>
-                    </Fragment>
+                        {line.text}
+                      </p>
                     );
                   })}
-                </AnimatePresence>
+                </motion.div>
+              </div>
+            </div>
 
-                {queue.length < 3 && trendingSongs.length > 0 && (
-                  <div className="mt-6 pt-4 border-t border-border/30">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3 px-2 flex items-center gap-2">
-                      <Flame className="w-4 h-4 text-orange-500" /> Recommended For You
-                    </h4>
-                    <div className="space-y-2">
-                      {trendingSongs.map(song => (
-                        <div key={song.id} className="flex items-center gap-3 p-2 rounded-xl bg-background/40 hover:bg-accent/50 border border-border/30 transition-colors group cursor-pointer" onClick={() => addToQueue(song)}>
-                          {song.image ? (
-                            <img src={song.image} alt="Art" className="w-10 h-10 rounded-lg object-cover shadow-sm" />
-                          ) : (
-                            <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center"><Music className="w-4 h-4 text-muted-foreground" /></div>
-                          )}
-                          <div className="flex-1 min-w-0">
-                            <p className="text-xs font-bold truncate group-hover:text-primary transition-colors">{song.title}</p>
-                            <p className="text-[10px] text-muted-foreground truncate">{song.artist}</p>
+            {/* Room Activity & Details - Below Video */}
+            <div className="flex-1 min-h-0 overflow-y-auto w-full lg:w-[85%] mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-6 pr-2">
+                
+                {/* Up Next Preview */}
+                <div className="bg-black/20 rounded-xl p-4 border border-white/5 transition-all hover:bg-black/30 hover:border-white/10">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-2"><Clock className="w-4 h-4"/> Up Next</h3>
+                  <div className="space-y-2">
+                    {queue.length > currentSongIndex + 1 ? (
+                      queue.slice(currentSongIndex + 1, currentSongIndex + 3).map((song, idx) => (
+                        <div key={idx} className="flex gap-3 items-center">
+                          <div className="w-10 h-10 rounded-md overflow-hidden shrink-0 bg-white/5 border border-white/5">
+                             {song.song_image ? <img src={song.song_image} className="w-full h-full object-cover" /> : <Music className="w-full h-full p-2 opacity-50" />}
                           </div>
-                          <Button variant="secondary" size="sm" className="shrink-0 text-[10px] font-bold rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground transition-colors opacity-0 group-hover:opacity-100">
-                            Add
-                          </Button>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-bold truncate text-foreground">{song.song_title}</p>
+                            <p className="text-xs text-muted-foreground truncate">{song.song_artist}</p>
+                          </div>
                         </div>
-                      ))}
-                    </div>
+                      ))
+                    ) : (
+                      <p className="text-sm text-muted-foreground">No upcoming songs.</p>
+                    )}
                   </div>
-                )}
-              </div>
-              <div className="p-4 border-t border-border/50 bg-background/80 backdrop-blur-md relative">
-                <Button 
-                  onClick={() => setIsSearchOpen(true)} 
-                  variant="outline" 
-                  className="w-full justify-start text-muted-foreground bg-background rounded-full h-10 border-primary/20 shadow-inner hover:bg-accent/50 transition-colors"
-                >
-                  <Search className="mr-2 h-4 w-4" />
-                  Search songs to add...
-                </Button>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="chat" className="flex-1 flex flex-col p-0 m-0 overflow-hidden">
-              <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                {messages.length === 0 ? (
-                  <div className="h-full flex flex-col items-center justify-center text-muted-foreground text-sm opacity-70">
-                    <p className="font-medium">No messages yet. Start the conversation!</p>
-                  </div>
-                ) : (
-                  messages.map((msg, idx) => {
-                    const isMe = msg.user_id === 1;
-                    return (
-                      <div key={idx} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
-                        <span className="text-[10px] text-muted-foreground mb-1 px-1 font-medium tracking-wide">{msg.user_name || 'User'}</span>
-                        <div className={`px-4 py-2.5 rounded-2xl max-w-[85%] text-sm shadow-sm ${isMe ? 'bg-primary text-primary-foreground rounded-br-sm' : 'bg-accent/80 text-accent-foreground rounded-bl-sm border border-border/50'}`}>
-                          {msg.content}
-                        </div>
-                      </div>
-                    );
-                  })
-                )}
-                <div ref={messagesEndRef} />
-              </div>
-              <div className="p-4 border-t border-border/50 bg-background/80 backdrop-blur-md relative">
-                {showEmojiPicker && (
-                  <div className="absolute bottom-[calc(100%+12px)] left-4 z-50 shadow-2xl rounded-2xl overflow-hidden border border-border/50">
-                    <EmojiPicker onEmojiClick={(e) => setChatInput(prev => prev + e.emoji)} theme={'dark' as any} />
-                  </div>
-                )}
-                <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
-                    size="icon"
-                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                    className={`shrink-0 rounded-full h-10 w-10 ${showEmojiPicker ? 'bg-accent' : ''}`}
-                  >
-                    <Smile className="w-5 h-5 text-muted-foreground" />
-                  </Button>
-                  <Input 
-                    type="text" 
-                    placeholder="Type a message..." 
-                    value={chatInput} 
-                    onChange={(e) => setChatInput(e.target.value)} 
-                    onKeyDown={(e) => e.key === 'Enter' && sendMessage()} 
-                    className="flex-1 bg-background rounded-full h-10"
-                  />
-                  <Button onClick={sendMessage} size="icon" className="shrink-0 rounded-full h-10 w-10" disabled={!chatInput.trim()}>
-                    <Send className="w-4 h-4" />
-                  </Button>
                 </div>
-              </div>
-            </TabsContent>
 
-            <TabsContent value="members" className="flex-1 flex flex-col p-0 m-0 overflow-hidden">
-              <div className="flex-1 overflow-y-auto p-4 space-y-3">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-4 pl-2">Active Members - {MOCK_MEMBERS.length}</h3>
-                {MOCK_MEMBERS.map(member => (
-                  <div key={member.id} className="flex items-center gap-3 p-3 rounded-xl bg-background/40 hover:bg-accent/50 border border-border/30 transition-colors shadow-sm">
-                    <div className="relative">
-                      <Avatar className="w-10 h-10 border border-border">
-                        <AvatarImage src={member.avatar} />
-                        <AvatarFallback>{member.name[0]}</AvatarFallback>
-                      </Avatar>
-                      {member.isSpeaking && (
-                         <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-background rounded-full"></span>
-                      )}
+                {/* Chat Preview */}
+                <div className="bg-black/20 rounded-xl p-4 border border-white/5 flex flex-col transition-all hover:bg-black/30 hover:border-white/10">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-2"><MessageSquare className="w-4 h-4"/> Chat Preview</h3>
+                  <div className="flex-1 flex flex-col justify-end space-y-2">
+                    {messages.slice(-2).map((msg, idx) => (
+                      <div key={idx} className="text-sm leading-relaxed">
+                        <span className="font-bold text-primary/90 mr-2">{msg.user_name || 'User'}:</span>
+                        <span className="text-foreground/80">{msg.content}</span>
+                      </div>
+                    ))}
+                    {messages.length === 0 && <p className="text-sm text-muted-foreground">No recent messages.</p>}
+                  </div>
+                </div>
+
+                {/* Room Activity */}
+                <div className="bg-black/20 rounded-xl p-4 border border-white/5 transition-all hover:bg-black/30 hover:border-white/10">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-2"><Activity className="w-4 h-4"/> Room Activity</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 text-sm text-foreground/80 bg-white/5 p-2 rounded-lg border border-white/5">
+                      <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div> <span className="font-medium text-white">Alex Johnson</span> joined the room
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-bold truncate">{member.name}</p>
-                      <p className="text-xs text-primary font-medium">{member.role}</p>
-                    </div>
-                    <div className="shrink-0">
-                      {member.isSpeaking ? (
-                        <div className="bg-green-500/10 p-2 rounded-full">
-                           <Mic className="w-4 h-4 text-green-500 animate-pulse" />
-                        </div>
-                      ) : (
-                        <div className="p-2 rounded-full opacity-50">
-                           <MicOff className="w-4 h-4 text-muted-foreground" />
-                        </div>
-                      )}
+                    <div className="flex items-center gap-3 text-sm text-foreground/80 bg-white/5 p-2 rounded-lg border border-white/5">
+                      <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse shadow-[0_0_8px_rgba(59,130,246,0.6)]"></div> <span className="font-medium text-white">Sarah Chen</span> added a song
                     </div>
                   </div>
+                </div>
+
+                {/* Recent Reactions */}
+                <div className="bg-black/20 rounded-xl p-4 border border-white/5 transition-all hover:bg-black/30 hover:border-white/10">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-2"><Heart className="w-4 h-4 text-pink-500"/> Recent Reactions</h3>
+                  <div className="flex gap-4 pt-1">
+                    <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-2xl animate-bounce shadow-xl border border-white/10 backdrop-blur-md">🔥</div>
+                    <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-2xl animate-bounce shadow-xl border border-white/10 backdrop-blur-md" style={{ animationDelay: '0.2s' }}>❤️</div>
+                    <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-2xl animate-bounce shadow-xl border border-white/10 backdrop-blur-md" style={{ animationDelay: '0.4s' }}>🎉</div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          {/* Right: Sidebar Container */}
+          <div className="w-full lg:w-[35%] h-full shrink-0 flex flex-col overflow-hidden rounded-2xl shadow-2xl" style={{ background: 'rgba(15,15,20,0.55)', backdropFilter: 'blur(30px)', border: '1px solid rgba(255,255,255,0.08)' }}>
+            
+            {/* Reactions and Voice Controls */}
+            <div className="flex items-center justify-between p-3 border-b border-white/10 bg-black/20">
+              {/* Reaction Buttons */}
+              <div className="flex items-center gap-1 bg-background/40 backdrop-blur-md rounded-full px-2 py-1 border border-border/30">
+                {[{icon: Heart, emoji: '❤️'}, {icon: Flame, emoji: '🔥'}, {icon: Laugh, emoji: '😂'}, {icon: PartyPopper, emoji: '🎉'}].map(({icon: Icon, emoji}) => (
+                  <Button key={emoji} variant="ghost" size="icon" onClick={() => sendReaction(emoji)} className="w-8 h-8 rounded-full hover:bg-accent/80 hover:scale-110 transition-all text-lg">
+                    {emoji}
+                  </Button>
                 ))}
               </div>
-            </TabsContent>
 
-          </Tabs>
-        </Card>
+              {!inVoice ? (
+                <Button onClick={() => startWebRTC()} variant="outline" className="text-primary border-primary/50 hover:bg-primary/10 rounded-full px-6 shadow-md h-9">
+                  <Mic className="w-4 h-4 mr-2" /> Join Voice
+                </Button>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Button onClick={toggleMute} variant={isMuted ? "destructive" : "secondary"} className="min-w-[90px] rounded-full h-9 text-xs">
+                    {isMuted ? <MicOff className="w-4 h-4 mr-1" /> : <Mic className="w-4 h-4 mr-1" />}
+                    {isMuted ? 'Unmute' : 'Mute'}
+                  </Button>
+                  <div className="flex items-center gap-2 text-green-500 font-medium text-xs bg-green-500/10 px-2 py-1.5 rounded-full shadow-inner border border-green-500/20">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                    </span>
+                  </div>
+                </div>
+              )}
+              <audio ref={localAudioRef} autoPlay muted className="hidden" />
+              <audio ref={remoteAudioRef} autoPlay className="hidden" />
+            </div>
+
+            <Tabs defaultValue="queue" value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="flex-1 flex flex-col w-full min-h-0">
+              <div className="p-0 border-b border-white/10 bg-black/20 relative">
+                <TabsList className="w-full bg-transparent p-0 h-14 rounded-none border-b-0 flex">
+                  <TabsTrigger value="queue" className="flex-1 h-full rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none text-sm font-semibold">Queue</TabsTrigger>
+                  <TabsTrigger value="chat" className="flex-1 h-full rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none text-sm font-semibold">Live Chat</TabsTrigger>
+                  <TabsTrigger value="members" className="flex-1 h-full rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none text-sm font-semibold">Members</TabsTrigger>
+                </TabsList>
+              </div>
+              
+              <TabsContent value="queue" className="flex-1 w-full p-0 m-0 outline-none min-h-0">
+                <div className="h-full flex flex-col overflow-hidden">
+                  <div className="p-4 pb-0 z-10 shrink-0">
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start text-muted-foreground border-white/10 bg-black/20 hover:bg-white/5 hover:text-white rounded-xl h-10 shadow-sm transition-all"
+                    onClick={() => setIsSearchOpen(true)}
+                  >
+                    <Search className="w-4 h-4 mr-2 opacity-70" />
+                    Search for songs to add to queue...
+                  </Button>
+                </div>
+                <div className="flex-1 overflow-y-auto p-4 space-y-6">
+                  {queue.length === 0 && (
+                    <div className="flex flex-col items-center justify-center text-muted-foreground text-sm opacity-70 my-8">
+                      <Music className="w-10 h-10 mb-3 opacity-50" />
+                      <p className="font-medium">The queue is empty.</p>
+                    </div>
+                  )}
+                  
+                  {/* NOW PLAYING */}
+                  {currentSong ? (
+                    <div className="space-y-2">
+                      <h3 className="text-[10px] font-bold tracking-[0.2em] text-primary uppercase flex items-center gap-2 px-1 mb-1">
+                        <Activity className="w-3.5 h-3.5" /> Now Playing
+                      </h3>
+                      {renderSongCard(currentSong, currentSongIndex, true)}
+                    </div>
+                  ) : null}
+
+                  {/* NEXT UP */}
+                  {queue.length > currentSongIndex + 1 && (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-4 px-1 mb-1">
+                        <h3 className="text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase flex items-center gap-2 shrink-0">
+                          <Clock className="w-3.5 h-3.5" /> Up Next
+                        </h3>
+                        <div className="h-px bg-white/10 flex-1"></div>
+                      </div>
+                      <div className="space-y-0.5">
+                        {queue.slice(currentSongIndex + 1).map((song, index) => (
+                          renderSongCard(song, currentSongIndex + 1 + index, false)
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* TRENDING */}
+                  {trendingSongs && trendingSongs.length > 0 && (
+                    <div className="space-y-2 pt-2">
+                      <div className="flex items-center gap-4 px-1 mb-1">
+                        <h3 className="text-[10px] font-bold tracking-[0.2em] text-orange-400 uppercase flex items-center gap-2 shrink-0">
+                          <Flame className="w-3.5 h-3.5" /> Trending
+                        </h3>
+                        <div className="h-px bg-white/10 flex-1"></div>
+                      </div>
+                      <div className="space-y-0.5">
+                        {trendingSongs.map((song, index) => (
+                          renderSongCard(song, -1, false, true)
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* HISTORY */}
+                  {currentSongIndex > 0 && (
+                    <div className="space-y-2 pt-2 opacity-70 hover:opacity-100 transition-opacity">
+                      <div className="flex items-center gap-4 px-1 mb-1">
+                        <h3 className="text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase flex items-center gap-2 shrink-0">
+                          <History className="w-3.5 h-3.5" /> History
+                        </h3>
+                        <div className="h-px bg-white/10 flex-1"></div>
+                      </div>
+                      <div className="space-y-0.5 grayscale hover:grayscale-0 transition-all">
+                        {queue.slice(0, currentSongIndex).reverse().map((song, index) => (
+                          renderSongCard(song, currentSongIndex - 1 - index, false)
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="chat" className="flex-1 w-full p-0 m-0 outline-none min-h-0">
+                <div className="h-full flex flex-col overflow-hidden">
+                <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                  {messages.length === 0 ? (
+                    <div className="h-full flex flex-col items-center justify-center text-muted-foreground text-sm opacity-70">
+                      <p className="font-medium">No messages yet. Start the conversation!</p>
+                    </div>
+                  ) : (
+                    messages.map((msg, idx) => {
+                      const isMe = msg.user_id === 1;
+                      return (
+                        <div key={idx} className={`flex flex-col \${isMe ? 'items-end' : 'items-start'}`}>
+                          <span className="text-[10px] text-muted-foreground mb-1 px-1 font-medium tracking-wide">{msg.user_name || 'User'}</span>
+                          <div className={`px-4 py-2.5 rounded-2xl max-w-[85%] text-sm shadow-sm \${isMe ? 'bg-primary text-primary-foreground rounded-br-sm' : 'bg-black/40 text-foreground rounded-bl-sm border border-white/5'}`}>
+                            {msg.content}
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
+                  <div ref={messagesEndRef} />
+                </div>
+                <div className="p-4 border-t border-white/5 bg-black/20 backdrop-blur-md relative">
+                  {showEmojiPicker && (
+                    <div className="absolute bottom-[calc(100%+12px)] left-4 z-50 shadow-2xl rounded-2xl overflow-hidden border border-border/50">
+                      <EmojiPicker onEmojiClick={(e) => setChatInput(prev => prev + e.emoji)} theme={'dark' as any} />
+                    </div>
+                  )}
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="icon"
+                      onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                      className={`shrink-0 rounded-full h-10 w-10 border-white/10 bg-black/40 \${showEmojiPicker ? 'bg-white/10' : ''}`}
+                    >
+                      <Smile className="w-5 h-5 text-muted-foreground" />
+                    </Button>
+                    <Input 
+                      type="text" 
+                      placeholder="Type a message..." 
+                      value={chatInput} 
+                      onChange={(e) => setChatInput(e.target.value)} 
+                      onKeyDown={(e) => e.key === 'Enter' && sendMessage()} 
+                      className="flex-1 bg-black/40 border-white/10 rounded-full h-10"
+                    />
+                    <Button onClick={sendMessage} size="icon" className="shrink-0 rounded-full h-10 w-10 bg-primary hover:bg-primary/90 text-primary-foreground border-none" disabled={!chatInput.trim()}>
+                      <Send className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="members" className="flex-1 w-full p-0 m-0 outline-none min-h-0">
+                <div className="h-full flex flex-col overflow-hidden">
+                <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-4 pl-2">Active Members - {MOCK_MEMBERS.length}</h3>
+                  {MOCK_MEMBERS.map(member => (
+                    <div key={member.id} className="flex items-center gap-3 p-3 rounded-xl bg-black/20 border border-white/5 hover:bg-white/5 transition-colors shadow-sm">
+                      <div className="relative">
+                        <Avatar className="w-10 h-10 border border-white/10">
+                          <AvatarImage src={member.avatar} />
+                          <AvatarFallback>{member.name[0]}</AvatarFallback>
+                        </Avatar>
+                        {member.isSpeaking && (
+                           <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-background rounded-full"></span>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-bold truncate">{member.name}</p>
+                        <p className="text-xs text-primary font-medium">{member.role}</p>
+                      </div>
+                      <div className="shrink-0">
+                        {member.isSpeaking ? (
+                          <div className="bg-green-500/10 p-2 rounded-full">
+                             <Mic className="w-4 h-4 text-green-500 animate-pulse" />
+                          </div>
+                        ) : (
+                          <div className="p-2 rounded-full opacity-50">
+                             <MicOff className="w-4 h-4 text-muted-foreground" />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                </div>
+              </TabsContent>
+            </Tabs>
+          </div>
+        </div>
       </div>
 
       <Sheet open={isSearchOpen} onOpenChange={setIsSearchOpen}>
-        <SheetContent className="w-full sm:max-w-md p-0 flex flex-col bg-background/95 backdrop-blur-xl border-l border-border/50">
-          <SheetHeader className="p-4 border-b border-border/50 text-left">
+        <SheetContent className="w-full sm:max-w-md p-0 flex flex-col bg-background/95 backdrop-blur-xl border-l border-white/10">
+          <SheetHeader className="p-4 border-b border-white/10 text-left bg-black/40">
             <SheetTitle className="text-lg font-bold">Search Songs</SheetTitle>
           </SheetHeader>
-          <div className="p-4 pb-2 border-b border-border/50 bg-background/50">
+          <div className="p-4 pb-2 border-b border-white/10 bg-black/20">
             <div className="relative">
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input 
@@ -689,7 +881,7 @@ export default function RoomPage() {
                 placeholder="Type a song, artist, or album..." 
                 value={newSong} 
                 onChange={handleSearchChange} 
-                className="pl-9 bg-background rounded-full h-10 border-primary/20 focus-visible:ring-primary shadow-inner"
+                className="pl-9 bg-black/40 rounded-full h-10 border-white/10 focus-visible:ring-primary shadow-inner"
                 autoFocus
               />
             </div>
@@ -697,7 +889,7 @@ export default function RoomPage() {
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
             {isSearching ? (
               Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="flex gap-4 p-3 rounded-xl border border-border/30 bg-background/40">
+                <div key={i} className="flex gap-4 p-3 rounded-xl border border-white/5 bg-black/20">
                   <Skeleton className="w-16 h-16 rounded-md shrink-0 bg-primary/10" />
                   <div className="flex-1 space-y-2 py-1">
                     <Skeleton className="h-4 w-3/4 bg-primary/10" />
@@ -711,7 +903,7 @@ export default function RoomPage() {
               ))
             ) : searchResults.length > 0 ? (
               searchResults.map(track => (
-                <div key={track.id} onClick={() => addToQueue(track)} className="flex gap-4 items-center p-3 rounded-xl cursor-pointer bg-background/40 hover:bg-accent/50 transition-colors group border border-border/30 hover:border-primary/30 shadow-sm">
+                <div key={track.id} onClick={() => addToQueue(track)} className="flex gap-4 items-center p-3 rounded-xl cursor-pointer bg-black/20 hover:bg-white/5 transition-colors group border border-white/5 hover:border-primary/30 shadow-sm">
                   {track.image ? (
                     <img src={track.image} alt="Art" className="w-16 h-16 rounded-md shadow-sm object-cover shrink-0" />
                   ) : (
@@ -720,7 +912,7 @@ export default function RoomPage() {
                   <div className="overflow-hidden flex-1 flex flex-col justify-center h-16 py-0.5">
                     <div>
                       <p className="text-sm font-bold line-clamp-1 group-hover:text-primary transition-colors">{track.title}</p>
-                      <p className="text-xs text-muted-foreground line-clamp-1">{track.artist} {track.album ? `• ${track.album}` : ''}</p>
+                      <p className="text-xs text-muted-foreground line-clamp-1">{track.artist} {track.album ? `• \${track.album}` : ''}</p>
                     </div>
                     <div className="flex items-center gap-3 text-[10px] font-medium text-muted-foreground mt-1">
                       {track.duration && (
@@ -753,3 +945,4 @@ export default function RoomPage() {
     </div>
   );
 }
+

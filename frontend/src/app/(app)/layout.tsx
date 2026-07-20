@@ -4,6 +4,7 @@ import { PlayerProvider } from '@/context/PlayerContext';
 import GlobalPlayer from '@/components/GlobalPlayer';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { TopBar } from '@/components/layout/TopBar';
+import { GlobalBackground } from '@/components/layout/GlobalBackground';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 
@@ -12,7 +13,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [showNotifs, setShowNotifs] = useState(false);
 
   useEffect(() => {
-    fetch(`\${process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}'}/notifications/1`) // Mock user 1
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/notifications/1`) // Mock user 1
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) setNotifications(data);
@@ -33,7 +34,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <PlayerProvider>
-      <div className="flex min-h-screen w-full relative">
+      <div className="flex min-h-screen w-full relative bg-transparent">
+        <GlobalBackground />
         <Sidebar unreadCount={unreadCount} toggleNotifs={() => setShowNotifs(!showNotifs)} />
         
         <div className="flex flex-col flex-1 md:pl-64">

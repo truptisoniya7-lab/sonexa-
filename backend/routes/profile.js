@@ -5,7 +5,7 @@ module.exports = (pool) => {
   router.get('/:id', async (req, res) => {
     try {
       const { id } = req.params;
-      const userResult = await pool.query('SELECT id, email, name, created_at FROM Users WHERE id = $1', [id]);
+      const userResult = await pool.query('SELECT id, email, name, profile_picture, created_at FROM Users WHERE id = $1', [id]);
       const user = userResult.rows[0];
       if (!user) return res.status(404).json({ error: 'User not found' });
       
@@ -32,6 +32,23 @@ module.exports = (pool) => {
       );
       
       res.json({ success: true });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+
+  router.put('/:id', async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { name } = req.body;
+      
+      await pool.query(
+        'UPDATE Users SET name = $1 WHERE id = $2',
+        [name, id]
+      );
+      
+      res.json({ success: true, message: 'Profile updated' });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Internal server error' });

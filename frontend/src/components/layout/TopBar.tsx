@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Sidebar } from "./Sidebar"
+import { SmartSearch } from "./SmartSearch"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -44,15 +45,8 @@ export function TopBar({ unreadCount, toggleNotifs }: { unreadCount: number, tog
         </SheetContent>
       </Sheet>
 
-      <div className="w-full flex-1 flex items-center">
-        <div className="relative w-full max-w-sm hidden md:block">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Search everywhere..."
-            className="w-full bg-background/50 pl-8 rounded-full"
-          />
-        </div>
+      <div className="w-full flex-1 flex items-center justify-center pr-4">
+        <SmartSearch />
       </div>
 
       <div className="flex items-center gap-2 md:gap-4">

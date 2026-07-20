@@ -12,7 +12,7 @@ export default function CommunityDetailsPage() {
   const [searchResults, setSearchResults] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch(`\${process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}'}/communities`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/communities`)
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) {

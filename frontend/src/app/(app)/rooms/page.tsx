@@ -55,7 +55,7 @@ export default function DashboardPage() {
   const fetchRooms = async () => {
     setIsLoadingRooms(true);
     try {
-      const res = await fetch(`\${process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}'}/rooms`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/rooms`);
       const data = await res.json();
       if (Array.isArray(data)) {
         const userCreatedRooms = data.filter(r => r.name !== 'My Private Session');
@@ -77,7 +77,7 @@ export default function DashboardPage() {
     if (!newRoomName.trim()) return;
     
     try {
-      const res = await fetch(`\${process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}'}/rooms`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/rooms`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: newRoomName, host_id: 1, isPublic: isPublic ? 1 : 0 })

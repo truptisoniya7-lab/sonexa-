@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { PlayCircle, Search, X, Activity, Clock, MoreHorizontal, User, Music, Users } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const CATEGORIES = [
@@ -22,6 +22,12 @@ const MOCK_FRIENDS = [
   { id: 4, name: 'Emily Davis', avatar: 'https://i.pravatar.cc/150?u=4', status: 'listening', song: 'Levitating', artist: 'Dua Lipa' },
 ];
 
+const HERO_PLAYLISTS = [
+  { id: 1, title: 'Midnight Memories', desc: 'Dive into the latest curated mix of synthwave and night-drive essentials. Perfect for your late-night coding sessions.', image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=800&auto=format&fit=crop', uri: 'spotify:track:4u7EnebtmKWzUH433cf5Qv', artist: 'Synthwave Essentials' },
+  { id: 2, title: 'Top Hits 2024', desc: 'The biggest global hits playing right now. Updated daily for your enjoyment.', image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=800&auto=format&fit=crop', uri: 'spotify:track:123', artist: 'Global Records' },
+  { id: 3, title: 'Deep Focus', desc: 'Keep calm and focus with ambient and post-rock music. Stay in the zone.', image: 'https://images.unsplash.com/photo-1494232410401-ad00d5433cfa?q=80&w=800&auto=format&fit=crop', uri: 'spotify:track:456', artist: 'Focus Flow' }
+];
+
 export default function HomePage() {
   const router = useRouter();
   const [categoryData, setCategoryData] = useState<Record<string, any[]>>({});
@@ -29,6 +35,7 @@ export default function HomePage() {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [greeting, setGreeting] = useState('Good evening');
+  const [heroIndex, setHeroIndex] = useState(0);
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -46,6 +53,12 @@ export default function HomePage() {
         setCategoryData(prev => ({ ...prev, [cat.id]: [] }));
       }
     });
+
+    const interval = setInterval(() => {
+      setHeroIndex((prev) => (prev + 1) % HERO_PLAYLISTS.length);
+    }, 2000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const handleSearch = async (e: React.FormEvent) => {
@@ -69,7 +82,7 @@ export default function HomePage() {
 
   const playSong = async (track: any) => {
     try {
-      const resRoom = await fetch(`\${process.env.NEXT_PUBLIC_API_URL || '${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}'}/rooms`, {
+      const resRoom = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/rooms`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: 'My Private Session', host_id: 1, isPublic: 0 })
@@ -88,12 +101,7 @@ export default function HomePage() {
   };
 
   const playHeroMix = () => {
-    playSong({
-      uri: 'spotify:track:4u7EnebtmKWzUH433cf5Qv', // Example track
-      title: 'Midnight Memories',
-      artist: 'Synthwave Essentials',
-      image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2070&auto=format&fit=crop'
-    });
+    playSong(HERO_PLAYLISTS[heroIndex]);
   };
 
   return (
@@ -162,16 +170,81 @@ export default function HomePage() {
           {!searchResults.length && (
             <>
               {/* Hero Section */}
-              <section onClick={playHeroMix} className="relative overflow-hidden rounded-3xl h-72 sm:h-80 shadow-2xl group cursor-pointer">
-                <div className="absolute inset-0 bg-gradient-to-r from-primary/80 via-purple-600/80 to-blue-600/80 z-10" />
-                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center mix-blend-overlay group-hover:scale-105 transition-transform duration-1000" />
-                <div className="absolute inset-0 p-8 flex flex-col justify-end z-20">
-                  <span className="text-xs font-bold uppercase tracking-widest text-primary-foreground/80 mb-2">Featured Release</span>
-                  <h2 className="text-3xl sm:text-5xl font-extrabold text-primary-foreground mb-2">Midnight Memories</h2>
-                  <p className="text-primary-foreground/90 max-w-lg mb-6">Dive into the latest curated mix of synthwave and night-drive essentials. Perfect for your late-night coding sessions.</p>
-                  <Button className="w-fit rounded-full px-8 bg-primary-foreground text-primary hover:bg-primary-foreground/90 shadow-lg" onClick={(e) => { e.stopPropagation(); playHeroMix(); }}>
-                    <PlayCircle className="w-5 h-5 mr-2" /> Listen Now
-                  </Button>
+              <section className="relative overflow-hidden rounded-3xl h-72 sm:h-80 shadow-2xl group cursor-pointer border border-white/5" onClick={playHeroMix}>
+                {/* Animated Gradient Background */}
+                <motion.div 
+                  animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
+                  transition={{ duration: 15, ease: 'linear', repeat: Infinity }}
+                  className="absolute inset-0 bg-gradient-to-br from-primary/60 via-purple-600/40 to-blue-900/60 z-10"
+                  style={{ backgroundSize: '200% 200%' }}
+                />
+
+                <AnimatePresence mode="wait">
+                  <motion.div 
+                    key={heroIndex}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.4 }}
+                    className="absolute inset-0 z-10"
+                  >
+                    <div className="absolute inset-0 bg-cover bg-center mix-blend-overlay opacity-30 transition-transform duration-[10000ms] ease-linear scale-110 group-hover:scale-125" style={{ backgroundImage: `url(${HERO_PLAYLISTS[heroIndex].image})` }} />
+                  </motion.div>
+                </AnimatePresence>
+
+                {/* Glass Overlay */}
+                <div className="absolute inset-0 bg-black/20 backdrop-blur-[4px] z-20" />
+
+                <div className="absolute inset-0 p-8 md:p-10 flex justify-between items-center z-30">
+                  {/* Left Content */}
+                  <AnimatePresence mode="wait">
+                    <motion.div 
+                      key={heroIndex}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 10 }}
+                      transition={{ duration: 0.3 }}
+                      className="flex flex-col justify-center h-full w-full sm:w-2/3"
+                    >
+                      <span className="text-xs font-bold uppercase tracking-widest text-primary mb-3 flex items-center gap-2">
+                         <span className="w-2 h-2 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(var(--primary),1)]" /> Featured Playlist
+                      </span>
+                      <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white mb-3 tracking-tight drop-shadow-lg">{HERO_PLAYLISTS[heroIndex].title}</h2>
+                      <p className="text-white/90 max-w-lg mb-6 line-clamp-2 md:line-clamp-3 text-sm md:text-base font-medium drop-shadow-md">{HERO_PLAYLISTS[heroIndex].desc}</p>
+                      <Button className="w-fit rounded-full px-8 bg-primary hover:bg-primary/90 text-white shadow-[0_0_20px_rgba(var(--primary),0.4)] group/btn overflow-hidden relative border border-white/10" onClick={(e) => { e.stopPropagation(); playHeroMix(); }}>
+                        <span className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300 ease-out" />
+                        <span className="relative flex items-center font-bold">
+                          <PlayCircle className="w-5 h-5 mr-2 group-hover/btn:scale-125 transition-transform" /> Listen Now
+                        </span>
+                      </Button>
+                    </motion.div>
+                  </AnimatePresence>
+
+                  {/* Floating Album Artwork on the Right */}
+                  <div className="hidden sm:flex w-1/3 h-full relative perspective-[1000px] items-center justify-end">
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={heroIndex}
+                        initial={{ opacity: 0, rotateY: 15, x: 10, y: 10 }}
+                        animate={{ opacity: 1, rotateY: -10, x: 0, y: [0, -10, 0] }}
+                        exit={{ opacity: 0, rotateY: -25, x: -10 }}
+                        transition={{ 
+                           opacity: { duration: 0.3 },
+                           x: { duration: 0.3 },
+                           rotateY: { duration: 0.3 },
+                           y: { duration: 6, repeat: Infinity, ease: "easeInOut" }
+                        }}
+                        className="relative z-10"
+                      >
+                        <div className="w-40 h-40 md:w-52 md:h-52 rounded-2xl overflow-hidden shadow-2xl border-2 border-white/20 relative group-hover:border-primary/50 transition-colors duration-500 bg-black">
+                           <img src={HERO_PLAYLISTS[heroIndex].image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-90 group-hover:opacity-100" alt="Album Art" />
+                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+                              <PlayCircle className="w-16 h-16 text-primary drop-shadow-2xl scale-90 group-hover:scale-100 transition-transform shadow-black" />
+                           </div>
+                        </div>
+                      </motion.div>
+                    </AnimatePresence>
+                  </div>
                 </div>
               </section>
 
