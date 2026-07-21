@@ -12,7 +12,7 @@ export default function CommunityDetailsPage() {
   const [searchResults, setSearchResults] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/communities`)
+    fetch(`/api/communities`)
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) {
@@ -26,7 +26,7 @@ export default function CommunityDetailsPage() {
   }, [id]);
 
   const fetchSongs = () => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/communities/${id}/songs`)
+    fetch(`/api/communities/${id}/songs`)
       .then(res => res.json())
       .then(data => setSongs(data))
       .catch(console.error);
@@ -42,7 +42,7 @@ export default function CommunityDetailsPage() {
     }
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/spotify/search?q=${encodeURIComponent(val)}`);
+      const res = await fetch(`/api/spotify/search?q=${encodeURIComponent(val)}`);
       const data = await res.json();
       setSearchResults(Array.isArray(data) ? data : []);
     } catch (error) {
@@ -59,7 +59,7 @@ export default function CommunityDetailsPage() {
       added_by: 1 
     };
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/communities/${id}/songs`, {
+      await fetch(`/api/communities/${id}/songs`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(songData)
@@ -72,7 +72,7 @@ export default function CommunityDetailsPage() {
 
   const removeFromPlaylist = async (songId: number) => {
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/communities/${id}/songs/${songId}`, {
+      await fetch(`/api/communities/${id}/songs/${songId}`, {
         method: 'DELETE'
       });
       fetchSongs();

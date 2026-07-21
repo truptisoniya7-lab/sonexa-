@@ -43,7 +43,7 @@ export default function ProfilePage() {
     // Simulated fetch
     const fetchProfile = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/profile/1`);
+        const res = await fetch(`/api/profile/1`);
         if (res.ok) {
           const data = await res.json();
           if (data.name) {
@@ -70,7 +70,7 @@ export default function ProfilePage() {
   const connectSpotify = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/spotify/login?userId=1`);
+      const response = await fetch(`/api/spotify/login?userId=1`);
       const data = await response.json();
       if (data.url) {
         window.location.href = data.url;
@@ -84,7 +84,7 @@ export default function ProfilePage() {
   const handleSaveProfile = async () => {
     try {
       setIsSaving(true);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/profile/1`, {
+      const res = await fetch(`/api/profile/1`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: editForm.name })
