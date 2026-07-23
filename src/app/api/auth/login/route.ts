@@ -16,9 +16,6 @@ export async function POST(request: NextRequest) {
       );
       user = result.rows[0];
     } else {
-      if (user.provider !== 'local') {
-        return NextResponse.json({ error: `Please log in using your ${user.provider} account.` }, { status: 401 });
-      }
       if (user.password_hash !== password) {
         return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
       }
