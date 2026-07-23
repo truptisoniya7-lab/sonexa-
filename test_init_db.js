@@ -1,16 +1,17 @@
 const { Pool } = require('pg');
-require('dotenv').config();
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
-});
+const getPool = () => {
+  return new Pool({
+    connectionString: "postgresql://postgres:3hgAef9rc%25Zjt*G@db.dpyzsrudkwaedeahgekj.supabase.co:5432/postgres",
+    ssl: { rejectUnauthorized: false }
+  });
+};
 
 const initPostgresDB = async () => {
+  const pool = getPool();
+  const client = await pool.connect();
   try {
-    await pool.query(`
+    await client.query(`
       CREATE TABLE IF NOT EXISTS Users (
         id SERIAL PRIMARY KEY,
         email TEXT UNIQUE NOT NULL,
@@ -130,10 +131,13 @@ const initPostgresDB = async () => {
         FOREIGN KEY (community_id) REFERENCES Communities(id) ON DELETE CASCADE
       );
     `);
-    console.log('PostgreSQL database initialized.');
-  } catch (error) {
-    console.error('Error initializing PostgreSQL database:', error);
+    console.log("initPostgresDB completed successfully");
+  } catch (err) {
+    console.error("initPostgresDB failed:", err);
+  } finally {
+    client.release();
+    pool.end();
   }
 };
 
-module.exports = { pool, initPostgresDB };
+initPostgresDB();

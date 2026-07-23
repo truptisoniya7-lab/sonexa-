@@ -28,12 +28,13 @@ export default function LoginPage() {
       if (data.token) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
-        router.push('/home');
+        window.location.href = '/home';
       } else {
         alert(data.error || 'Login failed');
       }
     } catch (err) {
       console.error(err);
+      alert('An error occurred during login. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -50,12 +51,13 @@ export default function LoginPage() {
       if (data.token) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
-        router.push('/home');
+        window.location.href = '/home';
       } else {
         alert(data.error || 'Google login failed');
       }
     } catch (err) {
       console.error(err);
+      alert('An error occurred during Google login.');
     }
   };
 
