@@ -39,6 +39,10 @@ app.use('/notifications', notificationRoutes);
 app.use('/recommendations', recommendationsRoutes);
 app.use('/library', libraryRoutes);
 
-server.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+if (require.main === module) {
+  server.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
+}
+
+module.exports = app;
