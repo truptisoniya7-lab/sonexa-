@@ -39,6 +39,11 @@ app.use('/notifications', notificationRoutes);
 app.use('/recommendations', recommendationsRoutes);
 app.use('/library', libraryRoutes);
 
+// Global Error Handler to force JSON instead of Express default HTML
+app.use((err, req, res, next) => {
+  console.error('Express Global Error:', err);
+  res.status(500).json({ error: 'Express Internal Server Error', details: err.message });
+});
 if (require.main === module) {
   server.listen(port, () => {
     console.log(`Server running on port ${port}`);
