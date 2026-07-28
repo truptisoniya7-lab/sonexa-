@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 
+export const maxDuration = 30;
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const query = searchParams.get('q');
@@ -11,7 +13,8 @@ export async function GET(request: Request) {
   try {
     // Call our backend music search endpoint which uses yt-search internally
     // This avoids needing a YOUTUBE_API_KEY and avoids quota limits
-    const res = await fetch(`http://127.0.0.1:5000/music/search?q=${encodeURIComponent(query)}`);
+    const backendUrl = process.env.BACKEND_URL || 'http://127.0.0.1:5000';
+    const res = await fetch(`${backendUrl}/music/search?q=${encodeURIComponent(query)}`);
     
     if (!res.ok) {
       return NextResponse.json({ error: 'Failed to fetch from backend API' }, { status: res.status });
