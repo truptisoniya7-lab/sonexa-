@@ -1,27 +1,12 @@
 {
-  "services": {
-    "frontend": {
-      "root": "frontend",
-      "framework": "nextjs"
-    },
-    "backend": {
-      "root": "backend"
-    }
-  },
-  "rewrites": [
+  "buildCommand": "cd frontend && npm run build",
+  "outputDirectory": "frontend/.next",
+  "framework": "nextjs",
+  "installCommand": "npm install",
+  "routes": [
     {
-      "source": "/api/(.*)",
-      "destination": {
-        "service": "backend",
-        "path": "/$1"
-      }
-    },
-    {
-      "source": "/(.*)",
-      "destination": {
-        "service": "frontend",
-        "path": "/$1"
-      }
+      "src": "/api/(.*)",
+      "dest": "/api/[...path].js"
     }
   ]
 }
