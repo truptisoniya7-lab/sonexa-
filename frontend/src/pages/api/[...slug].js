@@ -1,4 +1,4 @@
-import app from '../../../../backend/index.js';
+import app from '../../../backend/index.js';
 
 export const config = {
   api: {
