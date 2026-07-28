@@ -11,7 +11,7 @@ const getSupabase = () => {
       console.warn("WARNING: SUPABASE_URL or SUPABASE_KEY is missing from environment variables.");
     }
     
-    supabase = createClient(supabaseUrl || '', supabaseKey || '');
+    supabase = createClient(supabaseUrl || 'https://dummy.supabase.co', supabaseKey || 'dummy');
   }
   return supabase;
 };
