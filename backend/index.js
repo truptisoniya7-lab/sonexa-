@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 const http = require('http');
 
 const app = express();
@@ -10,13 +11,6 @@ const port = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({ origin: true, credentials: true })); // Enable credentials for cookies
-app.use((req, res, next) => {
-  if (req.body && Object.keys(req.body).length > 0) {
-    req._body = true; // Tell express.json() it's already parsed
-    return next();
-  }
-  next();
-});
 app.use(express.json());
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
