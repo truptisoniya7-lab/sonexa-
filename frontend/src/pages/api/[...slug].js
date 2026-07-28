@@ -2,7 +2,6 @@ const app = require('../../../backend/index.js');
 
 export const config = {
   api: {
-    bodyParser: false, // Let Express handle body parsing
     externalResolver: true, // Tell Next.js that Express handles the response
   },
 };
