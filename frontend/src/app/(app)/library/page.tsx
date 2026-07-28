@@ -81,7 +81,7 @@ export default function LibraryPage() {
   }, []);
 
   const heroSong = useMemo(() => {
-    if (currentSong) return currentSong;
+    if (currentSong) return currentSong as any;
     if (data?.continueListening) {
       return {
         song_title: data.continueListening.title,
