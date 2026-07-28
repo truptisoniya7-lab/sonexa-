@@ -76,7 +76,7 @@ export default function RoomPage() {
           song_artist: firstSong.song_artist,
           song_image: firstSong.song_image,
           room_id: id as string
-        });
+        } as any);
       }
     }
   }, [queue, autoplay, globalIsPlaying, currentSongIndex, globalCurrentSong, playSong, id]);
@@ -87,7 +87,7 @@ export default function RoomPage() {
     const fetchResults = async () => {
       setIsSearching(true);
       try {
-        const res = await fetch(`/api/spotify/search?q=\${encodeURIComponent(newSong)}`);
+        const res = await fetch(`/api/spotify/search?q=${encodeURIComponent(newSong)}`);
         const data = await res.json();
         if (Array.isArray(data)) setSearchResults(data);
       } catch (error) { console.error(error); } finally { setIsSearching(false); }
@@ -108,7 +108,7 @@ export default function RoomPage() {
   };
 
   const playNow = async (track: any) => {
-    playSong({ song_uri: track.uri, song_title: track.title, song_artist: track.artist, song_image: track.image, room_id: id as string });
+    playSong({ song_uri: track.uri, song_title: track.title, song_artist: track.artist, song_image: track.image, room_id: id as string } as any);
     const songData = { song_uri: track.uri, song_title: track.title, song_artist: track.artist, song_image: track.image };
     await provider.addSong(songData);
     
@@ -144,7 +144,7 @@ export default function RoomPage() {
   useEffect(() => {
     if (!currentSong) return;
     if (!globalCurrentSong || globalCurrentSong.song_uri !== currentSong.song_uri) {
-      playSong({ ...currentSong, room_id: id as string });
+      playSong({ ...currentSong, room_id: id as string } as any);
     }
   }, [currentSongIndex, currentSong, globalCurrentSong, playSong, id]);
 
@@ -265,7 +265,7 @@ export default function RoomPage() {
                       queue={queue} 
                       currentSongIndex={currentSongIndex} 
                       trendingSongs={trendingSongs} 
-                      onPlaySong={(song) => { playSong({...song, room_id: id as string}); }}
+                      onPlaySong={(song) => { playSong({...song, room_id: id as string} as any); }}
                       onSetCurrentIndex={setCurrentSongIndex}
                       onVote={handleVote}
                       onRemove={removeFromQueue}

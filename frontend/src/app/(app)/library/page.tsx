@@ -68,7 +68,7 @@ export default function LibraryPage() {
   const artistScrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    fetch('http://localhost:5000/library')
+    fetch('/api/library')
       .then(res => res.json())
       .then(d => {
         setData(d);
@@ -107,7 +107,7 @@ export default function LibraryPage() {
     return colors[hash];
   }, [heroSong]);
 
-  const scrollContainer = (ref: React.RefObject<HTMLDivElement>, direction: 'left' | 'right') => {
+  const scrollContainer = (ref: any, direction: 'left' | 'right') => {
     if (ref.current) {
       const scrollAmount = direction === 'left' ? -300 : 300;
       ref.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });

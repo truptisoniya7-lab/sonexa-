@@ -39,11 +39,11 @@ export default function GlobalPlayer() {
         {/* Left: Song Info */}
         <div 
           onClick={() => {
-            if (currentSong.room_id) {
-              router.push(`/room/${currentSong.room_id}`);
+            if ((currentSong as any).room_id) {
+              router.push(`/room/${(currentSong as any).room_id}`);
             }
           }}
-          className={`flex items-center gap-4 w-1/3 ${currentSong.room_id ? 'cursor-pointer hover:bg-accent/50 rounded-lg p-1 transition-colors -ml-1' : ''}`}
+          className={`flex items-center gap-4 w-1/3 ${(currentSong as any).room_id ? 'cursor-pointer hover:bg-accent/50 rounded-lg p-1 transition-colors -ml-1' : ''}`}
         >
           <div className="relative group overflow-hidden rounded-md shadow-md h-14 w-14">
             <img 
@@ -51,7 +51,7 @@ export default function GlobalPlayer() {
               alt={currentSong.song_title} 
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
             />
-            {currentSong.room_id && (
+            {(currentSong as any).room_id && (
               <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                 <MonitorSpeaker className="w-5 h-5 text-white" />
               </div>
