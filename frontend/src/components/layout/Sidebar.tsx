@@ -31,7 +31,7 @@ export function Sidebar({ unreadCount, toggleNotifs }: { unreadCount: number, to
       <ScrollArea className="flex-1 px-4 pb-20">
         <nav className="flex flex-col gap-2">
           {navItems.map((item) => {
-            const isActive = pathname.startsWith(item.href)
+            const isActive = pathname?.startsWith(item.href)
             return (
               <Link key={item.href} href={item.href}>
                 <Button

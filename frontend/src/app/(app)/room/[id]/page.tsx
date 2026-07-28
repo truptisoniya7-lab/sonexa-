@@ -23,9 +23,10 @@ import { QueuePanel } from '@/components/room/QueuePanel';
 import { useRoom } from '@/hooks/useRoom';
 
 export default function RoomPage() {
-  const { id } = useParams();
+  const params = useParams();
+  const id = params?.id as string;
   const searchParams = useSearchParams();
-  const autoplay = searchParams.get('autoplay');
+  const autoplay = searchParams?.get('autoplay');
 
   // Room State from Provider
   const { members, messages, reactions, activities, typingUsers, queue, provider } = useRoom(id as string);
