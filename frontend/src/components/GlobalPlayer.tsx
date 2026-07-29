@@ -3,7 +3,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { usePlayer } from '../context/PlayerContext';
-import { Play, Pause, SkipBack, SkipForward, Volume2, MonitorSpeaker } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, Volume2, MonitorSpeaker, ListPlus, Mic2, Shuffle, Repeat } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -71,7 +71,11 @@ export default function GlobalPlayer() {
             </div>
           ) : (
             <>
-              <div className="flex items-center gap-4 md:gap-6">
+              <div className="flex items-center gap-2 md:gap-4">
+                <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
+                  <Shuffle className="w-4 h-4" />
+                </Button>
+
                 <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground" onClick={prevTrack}>
                   <SkipBack className="w-5 h-5 fill-current" />
                 </Button>
@@ -90,6 +94,10 @@ export default function GlobalPlayer() {
                 
                 <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground" onClick={nextTrack}>
                   <SkipForward className="w-5 h-5 fill-current" />
+                </Button>
+
+                <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
+                  <Repeat className="w-4 h-4" />
                 </Button>
               </div>
               
@@ -112,16 +120,28 @@ export default function GlobalPlayer() {
           )}
         </div>
 
-        {/* Right: Volume */}
+        {/* Right: Volume & Extras */}
         <div className="flex justify-end items-center w-1/3 gap-3 pr-2">
-          <Volume2 className="w-5 h-5 text-muted-foreground" />
-          <div className="w-24">
-            <Slider 
-              value={[volume * 100]} 
-              max={100} 
-              step={1} 
-              onValueChange={(val) => setVolume(val[0] / 100)}
-            />
+          <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground h-8 w-8 hidden md:flex">
+            <Mic2 className="w-4 h-4" />
+          </Button>
+          <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground h-8 w-8 hidden md:flex">
+            <ListPlus className="w-4 h-4" />
+          </Button>
+          <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground h-8 w-8 hidden md:flex">
+            <MonitorSpeaker className="w-4 h-4" />
+          </Button>
+          
+          <div className="flex items-center gap-2">
+            <Volume2 className="w-4 h-4 text-muted-foreground" />
+            <div className="w-20 md:w-24">
+              <Slider 
+                value={[volume * 100]} 
+                max={100} 
+                step={1} 
+                onValueChange={(val) => setVolume(val[0] / 100)}
+              />
+            </div>
           </div>
         </div>
       </motion.div>

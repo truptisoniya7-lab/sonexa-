@@ -41,9 +41,15 @@ export const usePlayer = () => {
   return context;
 };
 
+import { HistoryManager } from '../managers/HistoryManager';
+import { QueueManager } from '../managers/QueueManager';
+import { PlaybackManager } from '../managers/PlaybackManager';
+import { LyricsManager } from '../managers/LyricsManager';
+
 export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   const [currentSong, setCurrentSong] = useState<Song | null>(null);
-  const [queue, setQueue] = useState<Song[]>([]);
+  const [queueManager] = useState(() => new QueueManager());
+  const [queue, setQueueState] = useState<Song[]>([]);
   const [history, setHistory] = useState<Song[]>([]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgressState] = useState(0);
@@ -53,7 +59,6 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   const [deviceId] = useState<string | null>('youtube-player');
   const [token, setToken] = useState<string | null>(null);
   
-  // No longer needed, but keeping interface intact
   const hasSpotifyError = false; 
 
   const ytPlayerRef = useRef<YouTubePlayer | null>(null);
@@ -65,7 +70,6 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     currentVideoIdRef.current = currentVideoId;
   }, [currentVideoId]);
 
-  // Fetch token on mount (still useful for API calls to Spotify if needed elsewhere, or we can just ignore it here)
   useEffect(() => {
     fetch('/api/spotify/token', {credentials: 'include'})
       .then(res => {
@@ -78,15 +82,20 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
       .catch(() => console.log('User not logged into Spotify'));
   }, []);
 
-  // Sync progress smoothly when playing
   useEffect(() => {
     if (isPlaying) {
       progressIntervalRef.current = setInterval(async () => {
         if (ytPlayerRef.current) {
           const currentTime = await ytPlayerRef.current.getCurrentTime();
-          const duration = await ytPlayerRef.current.getDuration();
-          if (currentTime) setProgressState(currentTime);
-          if (duration && duration > 0) setDuration(duration);
+          const durationVal = await ytPlayerRef.current.getDuration();
+          if (currentTime) {
+            setProgressState(currentTime);
+            // Save playback progress periodically (every 10s logic handled in manager)
+            if (currentSong?.song_uri) {
+               PlaybackManager.saveProgress(currentSong.song_uri, currentTime * 1000, (durationVal || 1) * 1000);
+            }
+          }
+          if (durationVal && durationVal > 0) setDuration(durationVal);
         }
       }, 1000);
     } else {
@@ -95,15 +104,12 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     return () => {
       if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
     };
-  }, [isPlaying]);
+  }, [isPlaying, currentSong]);
 
   const fetchYoutubeVideo = async (song: Song) => {
     const query = `${song.song_title} ${song.song_artist} audio`;
     const res = await fetch(`/api/youtube?q=${encodeURIComponent(query)}`);
-    if (!res.ok) {
-      console.error('Failed to find YouTube video');
-      return null;
-    }
+    if (!res.ok) return null;
     const data = await res.json();
     return data.videoId;
   };
@@ -113,20 +119,10 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
       setHistory(prev => [...prev, currentSong]);
     }
     setCurrentSong(song);
-    setIsReady(false); // Indicates loading
+    setIsReady(false);
     
-    // Save to PostgreSQL listening history
-    fetch('/api/history', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        user_id: '1', 
-        song_id: song.song_uri,
-        song_title: song.song_title,
-        song_artist: song.song_artist,
-        song_image: song.song_image
-      })
-    }).catch(err => console.error('Failed to save listening history', err));
+    // Use HistoryManager
+    HistoryManager.logListen(song);
 
     let videoId = null;
     if (song.song_uri && !song.song_uri.startsWith('spotify:')) {
@@ -153,9 +149,8 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const addToQueue = (song: Song) => {
-    if (!queue.find(s => s.song_uri === song.song_uri)) {
-      setQueue(prev => [...prev, song]);
-    }
+    queueManager.addTrack(song);
+    setQueueState(queueManager.getQueue());
   };
 
   const togglePlay = () => {
@@ -191,9 +186,9 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const nextTrack = async () => {
-    if (queue.length > 0) {
-      const next = queue[0];
-      setQueue(prev => prev.slice(1));
+    const next = queueManager.next();
+    if (next) {
+      setQueueState(queueManager.getQueue());
       playSong(next, true);
     } else if (currentSong) {
       setIsReady(false);
@@ -202,7 +197,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
         const res = await fetch(`/api/music/search?q=${encodeURIComponent(query)}`);
         const data = await res.json();
         // Pick a random song that isn't the current song
-        const similarSongs = data.filter((s: any) => s.title !== currentSong.song_title);
+        const similarSongs = (data.songs || data).filter((s: any) => s.title !== currentSong.song_title);
         if (similarSongs.length > 0) {
           const similar = similarSongs[Math.floor(Math.random() * Math.min(similarSongs.length, 5))];
           playSong({
@@ -229,7 +224,10 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     const previous = history[history.length - 1];
     setHistory(prev => prev.slice(0, -1));
     if (currentSong) {
-      setQueue(prev => [currentSong, ...prev]);
+      // Re-insert at the start of queue isn't directly supported by next/prev seamlessly, 
+      // but we can manually rebuild it or just keep it simple:
+      queueManager.setQueue([currentSong, ...queueManager.getQueue()]);
+      setQueueState(queueManager.getQueue());
     }
     playSong(previous, false);
   };

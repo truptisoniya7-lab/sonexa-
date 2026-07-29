@@ -58,14 +58,51 @@ export function SmartSearch() {
   const { data: searchResults, isLoading } = useQuery({
     queryKey: ['search', debouncedQuery],
     queryFn: async () => {
-      if (!debouncedQuery.trim()) return []
-      const res = await fetch(`/api/music/search?q=${encodeURIComponent(debouncedQuery)}`)
+      if (!debouncedQuery.trim()) return null
+      const res = await fetch(`/api/search?q=${encodeURIComponent(debouncedQuery)}`)
       if (!res.ok) throw new Error('Search failed')
       return res.json()
     },
     enabled: debouncedQuery.trim().length > 0,
     staleTime: 1000 * 60 * 5,
   })
+
+  // Keyboard navigation state
+  const [selectedIndex, setSelectedIndex] = useState(-1)
+  const allItems = React.useMemo(() => {
+    if (!searchResults) return []
+    return [
+      ...(searchResults.songs || []),
+      ...(searchResults.artists || []),
+      ...(searchResults.playlists || []),
+      ...(searchResults.rooms || [])
+    ]
+  }, [searchResults])
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      setSelectedIndex(prev => (prev < allItems.length - 1 ? prev + 1 : prev))
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      setSelectedIndex(prev => (prev > 0 ? prev - 1 : -1))
+    } else if (e.key === 'Enter') {
+      e.preventDefault()
+      if (selectedIndex >= 0 && selectedIndex < allItems.length) {
+        const item = allItems[selectedIndex]
+        if ('uri' in item) handlePlaySong(item) // It's a song
+        // Add navigation for rooms/playlists if needed
+      } else {
+        handleSelectText(query)
+      }
+    } else if (e.key === 'Escape') {
+      setIsOpen(false)
+    }
+  }
+
+  useEffect(() => {
+    setSelectedIndex(-1)
+  }, [debouncedQuery])
 
   useEffect(() => {
     const stored = localStorage.getItem('recentSearches')
@@ -96,7 +133,6 @@ export function SmartSearch() {
   const handleSelectText = (text: string) => {
     saveRecentSearch(text)
     setQuery(text)
-    // If you add a search page later: router.push(`/search?q=${encodeURIComponent(text)}`)
   }
 
   const handlePlaySong = (song: any) => {
@@ -117,6 +153,16 @@ export function SmartSearch() {
     localStorage.setItem('recentSearches', JSON.stringify(updated))
   }
 
+  const highlightMatch = (text: string, q: string) => {
+    if (!q) return text;
+    const regex = new RegExp(`(${q})`, 'gi');
+    return text.split(regex).map((part, i) => 
+      part.toLowerCase() === q.toLowerCase() ? <strong key={i} className="text-primary">{part}</strong> : part
+    );
+  }
+
+  let globalIndex = -1;
+
   return (
     <div ref={wrapperRef} className="relative w-full max-w-xl hidden md:block z-50">
       <div className="relative group">
@@ -124,10 +170,11 @@ export function SmartSearch() {
         <Input
           ref={inputRef}
           type="text"
-          placeholder="Search for songs, artists, users..."
+          placeholder="Search for songs, artists, playlists..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setIsOpen(true)}
+          onKeyDown={handleKeyDown}
           className={`w-full bg-background/60 pl-10 pr-10 rounded-full border transition-all duration-300 ${isOpen ? 'border-primary shadow-[0_0_15px_rgba(var(--primary),0.2)] bg-background/90' : 'border-border/50 hover:border-primary/50 hover:bg-background/80'}`}
         />
         {query && (
@@ -178,31 +225,67 @@ export function SmartSearch() {
               ) : (
                 // Show actual results
                 <div className="space-y-6">
-                  <section>
-                    <h3 className="text-sm font-semibold text-muted-foreground px-2 mb-2 flex items-center justify-between">
-                      <span className="flex items-center gap-2"><Music className="w-4 h-4" /> Songs</span>
-                      {isLoading && <Loader2 className="w-4 h-4 animate-spin text-primary" />}
-                    </h3>
-                    
-                    {!isLoading && (!searchResults || searchResults.length === 0) ? (
-                      <p className="text-sm text-muted-foreground px-2 py-4 text-center">No results found for "{debouncedQuery}"</p>
-                    ) : (
-                      <div className="space-y-1">
-                        {searchResults?.map((song: any) => (
-                          <div key={song.uri} onClick={() => handlePlaySong(song)} className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 cursor-pointer group transition-all">
-                            <div className="relative w-10 h-10 rounded overflow-hidden shrink-0">
-                               <img src={song.image} alt={song.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
-                               <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"><PlayCircle className="w-5 h-5 text-white" /></div>
-                            </div>
-                            <div className="flex flex-col min-w-0">
-                              <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors truncate">{song.title}</span>
-                              <span className="text-xs text-muted-foreground truncate">{song.artist}</span>
-                            </div>
+                  {isLoading && (
+                    <div className="flex justify-center p-4">
+                      <Loader2 className="w-6 h-6 animate-spin text-primary" />
+                    </div>
+                  )}
+                  
+                  {!isLoading && searchResults && (
+                    <>
+                      {searchResults.songs?.length > 0 && (
+                        <section>
+                          <h3 className="text-sm font-semibold text-muted-foreground px-2 mb-2 flex items-center gap-2">
+                            <Music className="w-4 h-4" /> Songs
+                          </h3>
+                          <div className="space-y-1">
+                            {searchResults.songs.map((song: any, i: number) => {
+                              globalIndex++;
+                              const isActive = globalIndex === selectedIndex;
+                              return (
+                                <div key={song.uri} onClick={() => handlePlaySong(song)} className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer group transition-all ${isActive ? 'bg-primary/20 border-primary/50' : 'hover:bg-white/5'}`}>
+                                  <div className="relative w-10 h-10 rounded overflow-hidden shrink-0">
+                                    <img src={song.image} alt={song.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
+                                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"><PlayCircle className="w-5 h-5 text-white" /></div>
+                                  </div>
+                                  <div className="flex flex-col min-w-0">
+                                    <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors truncate">{highlightMatch(song.title, debouncedQuery)}</span>
+                                    <span className="text-xs text-muted-foreground truncate">{highlightMatch(song.artist, debouncedQuery)}</span>
+                                  </div>
+                                </div>
+                              );
+                            })}
                           </div>
-                        ))}
-                      </div>
-                    )}
-                  </section>
+                        </section>
+                      )}
+
+                      {searchResults.playlists?.length > 0 && (
+                        <section>
+                          <h3 className="text-sm font-semibold text-muted-foreground px-2 mb-2 flex items-center gap-2">
+                            <ListMusic className="w-4 h-4" /> Playlists
+                          </h3>
+                          <div className="space-y-1">
+                            {searchResults.playlists.map((pl: any) => {
+                              globalIndex++;
+                              const isActive = globalIndex === selectedIndex;
+                              return (
+                                <div key={pl.id} className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer group transition-all ${isActive ? 'bg-primary/20 border-primary/50' : 'hover:bg-white/5'}`}>
+                                  <div className="flex flex-col min-w-0">
+                                    <span className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors truncate">{highlightMatch(pl.title, debouncedQuery)}</span>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </section>
+                      )}
+                      
+                      {/* Similar sections for Artists, Rooms can be added here following the same globalIndex pattern */}
+                      {allItems.length === 0 && (
+                        <p className="text-sm text-muted-foreground px-2 py-4 text-center">No results found for "{debouncedQuery}"</p>
+                      )}
+                    </>
+                  )}
                 </div>
               )}
             </ScrollArea>

@@ -27,6 +27,8 @@ const communityRoutes = require('./routes/communities');
 const notificationRoutes = require('./routes/notifications');
 const recommendationsRoutes = require('./routes/recommendations');
 const libraryRoutes = require('./routes/library');
+const homeRoutes = require('./routes/home');
+const searchRoutes = require('./routes/search');
 
 app.use('/auth', authRoutes);
 app.use('/profile', typeof profileRoutes === 'function' ? profileRoutes() : profileRoutes);
@@ -39,6 +41,8 @@ app.use('/communities', communityRoutes);
 app.use('/notifications', notificationRoutes);
 app.use('/recommendations', recommendationsRoutes);
 app.use('/library', libraryRoutes);
+app.use('/home', homeRoutes);
+app.use('/search', searchRoutes);
 
 // Global Error Handler to force JSON instead of Express default HTML
 app.use((err, req, res, next) => {
