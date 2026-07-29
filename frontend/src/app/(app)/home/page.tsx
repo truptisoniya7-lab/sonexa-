@@ -117,11 +117,7 @@ export default function HomePage() {
                 <h1 className="text-4xl md:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70 mb-3">
                   {hero?.greeting || 'Good day'}, Soniya 👋
                 </h1>
-                <p className="text-muted-foreground flex items-center gap-5 text-sm font-medium">
-                   <span className="flex items-center gap-1.5"><Flame className="w-4 h-4 text-orange-500" /> {hero?.stats?.streak || 5} Day Streak</span>
-                   <span className="flex items-center gap-1.5"><Music className="w-4 h-4 text-blue-500" /> {hero?.stats?.songsToday || 12} Songs Today</span>
-                   <span className="flex items-center gap-1.5"><Sparkles className="w-4 h-4 text-purple-500" /> {hero?.stats?.likedSongs || 42} Liked Songs</span>
-                </p>
+
               </div>
             )}
             
