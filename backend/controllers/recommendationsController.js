@@ -152,47 +152,7 @@ const getQuickPicks = async (req, res) => {
   }
 };
 
-const curatedPlaylists = {
-  'made-for-you': [
-    { id: 'E07s5ZYygMg', uri: 'E07s5ZYygMg', title: 'Watermelon Sugar', artist: 'Harry Styles', image: 'https://i.ytimg.com/vi/E07s5ZYygMg/hqdefault.jpg', duration: 174, youtubeId: 'E07s5ZYygMg' },
-    { id: 'ic8j13piAhQ', uri: 'ic8j13piAhQ', title: 'Cruel Summer', artist: 'Taylor Swift', image: 'https://i.ytimg.com/vi/ic8j13piAhQ/hqdefault.jpg', duration: 178, youtubeId: 'ic8j13piAhQ' },
-    { id: 'kTJczUoc26U', uri: 'kTJczUoc26U', title: 'Stay', artist: 'The Kid LAROI, Justin Bieber', image: 'https://i.ytimg.com/vi/kTJczUoc26U/hqdefault.jpg', duration: 141, youtubeId: 'kTJczUoc26U' },
-    { id: 'gNi_6U5Pm_o', uri: 'gNi_6U5Pm_o', title: 'good 4 u', artist: 'Olivia Rodrigo', image: 'https://i.ytimg.com/vi/gNi_6U5Pm_o/hqdefault.jpg', duration: 178, youtubeId: 'gNi_6U5Pm_o' }
-  ],
-  'trending-now': [
-    { id: '34Na4j8HLjc', uri: '34Na4j8HLjc', title: 'Starboy', artist: 'The Weeknd', image: 'https://i.ytimg.com/vi/34Na4j8HLjc/hqdefault.jpg', duration: 230, youtubeId: '34Na4j8HLjc' },
-    { id: '4NRXx6U8ABQ', uri: '4NRXx6U8ABQ', title: 'Blinding Lights', artist: 'The Weeknd', image: 'https://i.ytimg.com/vi/4NRXx6U8ABQ/hqdefault.jpg', duration: 200, youtubeId: '4NRXx6U8ABQ' },
-    { id: 'TUVcZfQe-Kw', uri: 'TUVcZfQe-Kw', title: 'Levitating', artist: 'Dua Lipa', image: 'https://i.ytimg.com/vi/TUVcZfQe-Kw/hqdefault.jpg', duration: 203, youtubeId: 'TUVcZfQe-Kw' },
-    { id: 'H5v3kku4y6Q', uri: 'H5v3kku4y6Q', title: 'As It Was', artist: 'Harry Styles', image: 'https://i.ytimg.com/vi/H5v3kku4y6Q/hqdefault.jpg', duration: 167, youtubeId: 'H5v3kku4y6Q' }
-  ],
-  'new-releases': [
-    { id: 'eVli-tstM5E', uri: 'eVli-tstM5E', title: 'Espresso', artist: 'Sabrina Carpenter', image: 'https://i.ytimg.com/vi/eVli-tstM5E/hqdefault.jpg', duration: 175, youtubeId: 'eVli-tstM5E' },
-    { id: 'q3zqJs7JUCQ', uri: 'q3zqJs7JUCQ', title: 'Fortnight', artist: 'Taylor Swift', image: 'https://i.ytimg.com/vi/q3zqJs7JUCQ/hqdefault.jpg', duration: 228, youtubeId: 'q3zqJs7JUCQ' },
-    { id: 'MB3VkzPIFgw', uri: 'MB3VkzPIFgw', title: 'LUNCH', artist: 'Billie Eilish', image: 'https://i.ytimg.com/vi/MB3VkzPIFgw/hqdefault.jpg', duration: 179, youtubeId: 'MB3VkzPIFgw' },
-    { id: '238Z4PeALw0', uri: '238Z4PeALw0', title: 'Texas Hold \'Em', artist: 'Beyoncé', image: 'https://i.ytimg.com/vi/238Z4PeALw0/hqdefault.jpg', duration: 235, youtubeId: '238Z4PeALw0' }
-  ],
-  'because-ed-sheeran': [
-    { id: 'JGwWNGJdvx8', uri: 'JGwWNGJdvx8', title: 'Shape of You', artist: 'Ed Sheeran', image: 'https://i.ytimg.com/vi/JGwWNGJdvx8/hqdefault.jpg', duration: 233, youtubeId: 'JGwWNGJdvx8' },
-    { id: '2Vv-BfVoq4g', uri: '2Vv-BfVoq4g', title: 'Perfect', artist: 'Ed Sheeran', image: 'https://i.ytimg.com/vi/2Vv-BfVoq4g/hqdefault.jpg', duration: 263, youtubeId: '2Vv-BfVoq4g' },
-    { id: 'zABLecsR5UE', uri: 'zABLecsR5UE', title: 'Someone You Loved', artist: 'Lewis Capaldi', image: 'https://i.ytimg.com/vi/zABLecsR5UE/hqdefault.jpg', duration: 182, youtubeId: 'zABLecsR5UE' },
-    { id: 'RBumHrGUOUCG', uri: 'RBumHrGUOUCG', title: 'Let Her Go', artist: 'Passenger', image: 'https://i.ytimg.com/vi/RBumHrGUOUCG/hqdefault.jpg', duration: 252, youtubeId: 'RBumHrGUOUCG' }
-  ],
-  'favourite-artists': [
-    { id: 'Umqb9KENgpn', uri: 'Umqb9KENgpn', title: 'Tum Hi Ho', artist: 'Arijit Singh', image: 'https://i.ytimg.com/vi/Umqb9KENgpn/hqdefault.jpg', duration: 262, youtubeId: 'Umqb9KENgpn' },
-    { id: 'VAdGW7QDJiU', uri: 'VAdGW7QDJiU', title: 'Chaleya', artist: 'Arijit Singh', image: 'https://i.ytimg.com/vi/VAdGW7QDJiU/hqdefault.jpg', duration: 198, youtubeId: 'VAdGW7QDJiU' },
-    { id: 'BddP6PYo2gs', uri: 'BddP6PYo2gs', title: 'Kesariya', artist: 'Arijit Singh', image: 'https://i.ytimg.com/vi/BddP6PYo2gs/hqdefault.jpg', duration: 268, youtubeId: 'BddP6PYo2gs' },
-    { id: 'sK7riqg2mrA', uri: 'sK7riqg2mrA', title: 'Agar Tum Saath Ho', artist: 'Arijit Singh', image: 'https://i.ytimg.com/vi/sK7riqg2mrA/hqdefault.jpg', duration: 341, youtubeId: 'sK7riqg2mrA' }
-  ]
-};
-
-const getCarouselRecommendations = (req, res) => {
-  const type = req.params.type;
-  const tracks = curatedPlaylists[type] || curatedPlaylists['trending-now'];
-  res.json(tracks);
-};
-
 module.exports = {
   getHeroRecommendations,
-  getQuickPicks,
-  getCarouselRecommendations
+  getQuickPicks
 };

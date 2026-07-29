@@ -74,35 +74,35 @@ export default function HomePage() {
             title="Made for You" 
             icon={<Music className="w-6 h-6 text-fuchsia-500" />} 
             queryKey={['made-for-you']} 
-            endpoint="/api/recommendations/carousel/made-for-you" 
+            endpoint="/api/music/search?q=for+you+mix" 
           />
 
           <CarouselSection 
             title="Trending Now" 
             icon={<Music className="w-6 h-6 text-orange-500" />} 
             queryKey={['trending-now']} 
-            endpoint="/api/recommendations/carousel/trending-now" 
+            endpoint="/api/music/search?q=trending+songs" 
           />
           
           <CarouselSection 
             title="Because you listened to Ed Sheeran" 
             icon={<Music className="w-6 h-6 text-blue-500" />} 
             queryKey={['because-ed-sheeran']} 
-            endpoint="/api/recommendations/carousel/because-ed-sheeran" 
+            endpoint="/api/music/search?q=pop+songs" 
           />
 
           <CarouselSection 
             title="Favourite Artists" 
             icon={<Music className="w-6 h-6 text-red-500" />} 
             queryKey={['favourite-artists']} 
-            endpoint="/api/recommendations/carousel/favourite-artists" 
+            endpoint="/api/music/search?q=Arijit+Singh" 
           />
 
           <CarouselSection 
             title="New Releases" 
             icon={<Music className="w-6 h-6 text-green-500" />} 
             queryKey={['new-releases']} 
-            endpoint="/api/recommendations/carousel/new-releases" 
+            endpoint="/api/music/search?q=new+releases+music" 
           />
           
         </div>
