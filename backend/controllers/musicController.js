@@ -112,6 +112,42 @@ const search = async (req, res) => {
         "image": "https://i.ytimg.com/vi/YQ-qToZUybM/hq720.jpg",
         "duration": 249,
         "youtubeId": "YQ-qToZUybM"
+      },
+      {
+        "id": "Pkh8UtuejGw",
+        "uri": "Pkh8UtuejGw",
+        "title": "Shawn Mendes - Treat You Better",
+        "artist": "ShawnMendesVEVO",
+        "image": "https://i.ytimg.com/vi/Pkh8UtuejGw/hq720.jpg",
+        "duration": 256,
+        "youtubeId": "Pkh8UtuejGw"
+      },
+      {
+        "id": "nYh-n7EOtMA",
+        "uri": "nYh-n7EOtMA",
+        "title": "Sia - Cheap Thrills (Lyric Video) ft. Sean Paul",
+        "artist": "SiaVEVO",
+        "image": "https://i.ytimg.com/vi/nYh-n7EOtMA/hq720.jpg",
+        "duration": 221,
+        "youtubeId": "nYh-n7EOtMA"
+      },
+      {
+        "id": "OPf0YbXqDm0",
+        "uri": "OPf0YbXqDm0",
+        "title": "Mark Ronson - Uptown Funk (Official Video) ft. Bruno Mars",
+        "artist": "MarkRonsonVEVO",
+        "image": "https://i.ytimg.com/vi/OPf0YbXqDm0/hq720.jpg",
+        "duration": 270,
+        "youtubeId": "OPf0YbXqDm0"
+      },
+      {
+        "id": "09R8_2nJtjg",
+        "uri": "09R8_2nJtjg",
+        "title": "Maroon 5 - Sugar",
+        "artist": "Maroon5VEVO",
+        "image": "https://i.ytimg.com/vi/09R8_2nJtjg/hq720.jpg",
+        "duration": 301,
+        "youtubeId": "09R8_2nJtjg"
       }
     ]);
   } finally {

@@ -63,7 +63,7 @@ export function CarouselSection({ title, icon, queryKey, endpoint }: CarouselSec
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: idx * 0.05 }}
-            className="min-w-[180px] md:min-w-[220px] snap-start group cursor-pointer"
+            className="w-[180px] md:w-[220px] shrink-0 snap-start group cursor-pointer"
             onClick={() => playSong({
               song_uri: track.uri,
               song_title: track.title,
