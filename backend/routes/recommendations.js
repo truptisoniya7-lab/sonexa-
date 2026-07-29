@@ -6,5 +6,6 @@ const recommendationsController = require('../controllers/recommendationsControl
 
 router.get('/hero', recommendationsController.getHeroRecommendations);
 router.get('/quick-picks', recommendationsController.getQuickPicks);
+router.get('/carousel/:type', recommendationsController.getCarouselRecommendations);
 
 module.exports = router;

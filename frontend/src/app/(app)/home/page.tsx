@@ -8,7 +8,6 @@ import { Search, X, Clock, Music } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { QuickPicksGrid } from '@/components/home/QuickPicksGrid';
 import { CarouselSection } from '@/components/home/CarouselSection';
-import { FriendsActivitySidebar } from '@/components/home/FriendsActivitySidebar';
 
 export default function HomePage() {
   const router = useRouter();
@@ -41,10 +40,10 @@ export default function HomePage() {
 
   return (
     <div className="max-w-[1600px] mx-auto pb-12">
-      <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
+      <div className="flex flex-col gap-8">
         
         {/* Main Content Area */}
-        <div className="xl:col-span-3 space-y-12">
+        <div className="w-full space-y-12">
           
           {/* Header & Search */}
           <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
@@ -75,42 +74,37 @@ export default function HomePage() {
             title="Made for You" 
             icon={<Music className="w-6 h-6 text-fuchsia-500" />} 
             queryKey={['made-for-you']} 
-            endpoint="/api/music/search?q=for+you+mix" 
+            endpoint="/api/recommendations/carousel/made-for-you" 
           />
 
           <CarouselSection 
             title="Trending Now" 
             icon={<Music className="w-6 h-6 text-orange-500" />} 
             queryKey={['trending-now']} 
-            endpoint="/api/music/search?q=trending+songs" 
+            endpoint="/api/recommendations/carousel/trending-now" 
           />
           
           <CarouselSection 
             title="Because you listened to Ed Sheeran" 
             icon={<Music className="w-6 h-6 text-blue-500" />} 
             queryKey={['because-ed-sheeran']} 
-            endpoint="/api/music/search?q=pop+songs" 
+            endpoint="/api/recommendations/carousel/because-ed-sheeran" 
           />
 
           <CarouselSection 
             title="Favourite Artists" 
             icon={<Music className="w-6 h-6 text-red-500" />} 
             queryKey={['favourite-artists']} 
-            endpoint="/api/music/search?q=Arijit+Singh" 
+            endpoint="/api/recommendations/carousel/favourite-artists" 
           />
 
           <CarouselSection 
             title="New Releases" 
             icon={<Music className="w-6 h-6 text-green-500" />} 
             queryKey={['new-releases']} 
-            endpoint="/api/music/search?q=new+releases+music" 
+            endpoint="/api/recommendations/carousel/new-releases" 
           />
           
-        </div>
-
-        {/* Right Sidebar: Friends Activity */}
-        <div className="hidden xl:block xl:col-span-1">
-          <FriendsActivitySidebar />
         </div>
 
       </div>
