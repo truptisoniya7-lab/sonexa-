@@ -119,7 +119,13 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     fetch('/api/history', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId: '1', song }) // Hardcoded user ID 1 for now
+      body: JSON.stringify({ 
+        user_id: '1', 
+        song_id: song.song_uri,
+        song_title: song.song_title,
+        song_artist: song.song_artist,
+        song_image: song.song_image
+      })
     }).catch(err => console.error('Failed to save listening history', err));
 
     let videoId = null;

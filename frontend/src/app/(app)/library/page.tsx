@@ -12,6 +12,8 @@ import { Input } from '@/components/ui/input';
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { usePlayer } from '@/context/PlayerContext';
 
+import { supabase } from '@/lib/supabase';
+
 const Skeleton = ({ className }: { className?: string }) => (
   <div className={`animate-pulse bg-white/10 rounded-md ${className}`} />
 );
@@ -67,7 +69,7 @@ export default function LibraryPage() {
   const recentScrollRef = useRef<HTMLDivElement>(null);
   const artistScrollRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  const fetchLibraryData = () => {
     fetch('/api/library')
       .then(res => res.json())
       .then(d => {
@@ -78,6 +80,42 @@ export default function LibraryPage() {
         console.error(e);
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchLibraryData();
+
+    // Supabase Realtime Subscription
+    const channel = supabase.channel('library_changes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'listening_history' },
+        (payload) => {
+          console.log('Realtime listening_history change received!', payload);
+          fetchLibraryData();
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'playlists' },
+        (payload) => {
+          console.log('Realtime playlists change received!', payload);
+          fetchLibraryData();
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'likes' },
+        (payload) => {
+          console.log('Realtime likes change received!', payload);
+          fetchLibraryData();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const heroSong = useMemo(() => {
