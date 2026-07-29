@@ -75,79 +75,88 @@ const search = async (req, res) => {
     res.json(topResults);
   } catch (error) {
     console.error('Error in music search (likely Vercel IP block):', error);
-    // Fallback to mock data if YouTube blocks the Vercel datacenter IP
+    
+    // Dynamic mock data based on query to match localhost experience on Vercel
+    const query = q.toLowerCase();
+    
+    if (query.includes('new') || query.includes('release') || query.includes('trending')) {
+      return res.json([
+        {
+          "id": "culVwJujOi4",
+          "uri": "culVwJujOi4",
+          "title": "Yeh Awarapan",
+          "artist": "Sony Music India",
+          "image": "https://i.ytimg.com/vi/culVwJujOi4/hq720.jpg",
+          "duration": 268,
+          "youtubeId": "culVwJujOi4"
+        },
+        {
+          "id": "LX2zshAgECQ",
+          "uri": "LX2zshAgECQ",
+          "title": "Aankhon Se Tune 2.0",
+          "artist": "Tips Official",
+          "image": "https://i.ytimg.com/vi/LX2zshAgECQ/hq720.jpg",
+          "duration": 229,
+          "youtubeId": "LX2zshAgECQ"
+        },
+        {
+          "id": "hPZcZpNn3KY",
+          "uri": "hPZcZpNn3KY",
+          "title": "Rana Ji 2.0",
+          "artist": "Tips Official",
+          "image": "https://i.ytimg.com/vi/hPZcZpNn3KY/hq720.jpg",
+          "duration": 229,
+          "youtubeId": "hPZcZpNn3KY"
+        },
+        {
+          "id": "mdYZiR3w1xM",
+          "uri": "mdYZiR3w1xM",
+          "title": "Chitti Chitti Cheema",
+          "artist": "T-Series Telugu",
+          "image": "https://i.ytimg.com/vi/mdYZiR3w1xM/hq720.jpg",
+          "duration": 244,
+          "youtubeId": "mdYZiR3w1xM"
+        }
+      ]);
+    }
+
+    // Default mock data (matches the localhost first row for "top hits" / "for you")
     res.json([
       {
-        "id": "sMQ0Eh1JNyk",
-        "uri": "sMQ0Eh1JNyk",
-        "title": "Fell For You - Shubh",
-        "artist": "Sick Vibe",
-        "image": "https://i.ytimg.com/vi/sMQ0Eh1JNyk/hq720.jpg",
-        "duration": 200,
-        "youtubeId": "sMQ0Eh1JNyk"
+        "id": "MJyKN-8UncM",
+        "uri": "MJyKN-8UncM",
+        "title": "Shayad - Love Aaj Kal",
+        "artist": "Sony Music India",
+        "image": "https://i.ytimg.com/vi/MJyKN-8UncM/hq720.jpg",
+        "duration": 190,
+        "youtubeId": "MJyKN-8UncM"
       },
       {
-        "id": "vidD46DKOFI",
-        "uri": "vidD46DKOFI",
-        "title": "Fell For You Mashup | Harshal Music",
-        "artist": "Harshal Music",
-        "image": "https://i.ytimg.com/vi/vidD46DKOFI/hq720.jpg",
-        "duration": 455,
-        "youtubeId": "vidD46DKOFI"
+        "id": "RLzC55ai0eo",
+        "uri": "RLzC55ai0eo",
+        "title": "Heeriye",
+        "artist": "Jasleen Royal",
+        "image": "https://i.ytimg.com/vi/RLzC55ai0eo/hq720.jpg",
+        "duration": 199,
+        "youtubeId": "RLzC55ai0eo"
       },
       {
-        "id": "RQUuqbzQVsY",
-        "uri": "RQUuqbzQVsY",
-        "title": "KHAID - FOR YOU",
-        "artist": "Khaid",
-        "image": "https://i.ytimg.com/vi/RQUuqbzQVsY/hq720.jpg",
-        "duration": 180,
-        "youtubeId": "RQUuqbzQVsY"
+        "id": "vEe-UgJvUHE",
+        "uri": "vEe-UgJvUHE",
+        "title": "Arijit Singh - Raabta",
+        "artist": "PluginVibes",
+        "image": "https://i.ytimg.com/vi/vEe-UgJvUHE/hq720.jpg",
+        "duration": 234,
+        "youtubeId": "vEe-UgJvUHE"
       },
       {
-        "id": "YQ-qToZUybM",
-        "uri": "YQ-qToZUybM",
-        "title": "Liam Payne, Rita Ora - For You",
-        "artist": "FiftyShadesVEVO",
-        "image": "https://i.ytimg.com/vi/YQ-qToZUybM/hq720.jpg",
-        "duration": 249,
-        "youtubeId": "YQ-qToZUybM"
-      },
-      {
-        "id": "Pkh8UtuejGw",
-        "uri": "Pkh8UtuejGw",
-        "title": "Shawn Mendes - Treat You Better",
-        "artist": "ShawnMendesVEVO",
-        "image": "https://i.ytimg.com/vi/Pkh8UtuejGw/hq720.jpg",
-        "duration": 256,
-        "youtubeId": "Pkh8UtuejGw"
-      },
-      {
-        "id": "nYh-n7EOtMA",
-        "uri": "nYh-n7EOtMA",
-        "title": "Sia - Cheap Thrills (Lyric Video) ft. Sean Paul",
-        "artist": "SiaVEVO",
-        "image": "https://i.ytimg.com/vi/nYh-n7EOtMA/hq720.jpg",
-        "duration": 221,
-        "youtubeId": "nYh-n7EOtMA"
-      },
-      {
-        "id": "OPf0YbXqDm0",
-        "uri": "OPf0YbXqDm0",
-        "title": "Mark Ronson - Uptown Funk (Official Video) ft. Bruno Mars",
-        "artist": "MarkRonsonVEVO",
-        "image": "https://i.ytimg.com/vi/OPf0YbXqDm0/hq720.jpg",
-        "duration": 270,
-        "youtubeId": "OPf0YbXqDm0"
-      },
-      {
-        "id": "09R8_2nJtjg",
-        "uri": "09R8_2nJtjg",
-        "title": "Maroon 5 - Sugar",
-        "artist": "Maroon5VEVO",
-        "image": "https://i.ytimg.com/vi/09R8_2nJtjg/hq720.jpg",
-        "duration": 301,
-        "youtubeId": "09R8_2nJtjg"
+        "id": "5-OqPhet-NU",
+        "uri": "5-OqPhet-NU",
+        "title": "Dil Sambhal Ja Zara",
+        "artist": "Jibonpathik",
+        "image": "https://i.ytimg.com/vi/5-OqPhet-NU/hq720.jpg",
+        "duration": 334,
+        "youtubeId": "5-OqPhet-NU"
       }
     ]);
   } finally {
