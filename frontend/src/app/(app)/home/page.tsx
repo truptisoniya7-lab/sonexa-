@@ -165,7 +165,7 @@ export default function HomePage() {
             subtitle="Based on your recent listening"
             icon={<Sparkles className="w-6 h-6 text-fuchsia-500" />} 
             queryKey={['made-for-you']} 
-            endpoint="/api/home" // In a real app we'd map this better, but using Carousel component as is for now requires an endpoint that returns array. I'll use trending as fallback.
+            endpoint="/api/music/search?q=for+you+mix" 
           />
 
           <CarouselSection 
@@ -173,15 +173,31 @@ export default function HomePage() {
             subtitle="Catch up with the most popular tracks"
             icon={<Flame className="w-6 h-6 text-orange-500" />} 
             queryKey={['trending-now']} 
-            endpoint="/api/home/trending" 
+            endpoint="/api/music/search?q=trending+songs" 
           />
 
           <CarouselSection 
-            title="Live Rooms" 
-            subtitle="Listen together with others"
-            icon={<Radio className="w-6 h-6 text-blue-500" />} 
-            queryKey={['live-rooms']} 
-            endpoint="/api/home/live" 
+            title="Because you listened to Ed Sheeran" 
+            subtitle="Pop hits and more"
+            icon={<Music className="w-6 h-6 text-blue-500" />} 
+            queryKey={['because-ed-sheeran']} 
+            endpoint="/api/music/search?q=pop+songs" 
+          />
+
+          <CarouselSection 
+            title="Favourite Artists" 
+            subtitle="Your top artists this month"
+            icon={<Music className="w-6 h-6 text-red-500" />} 
+            queryKey={['favourite-artists']} 
+            endpoint="/api/music/search?q=Arijit+Singh" 
+          />
+
+          <CarouselSection 
+            title="New Releases" 
+            subtitle="Fresh tracks for you"
+            icon={<Music className="w-6 h-6 text-green-500" />} 
+            queryKey={['new-releases']} 
+            endpoint="/api/music/search?q=new+releases+music" 
           />
         </div>
 

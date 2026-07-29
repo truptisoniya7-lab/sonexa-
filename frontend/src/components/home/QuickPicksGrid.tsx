@@ -16,7 +16,7 @@ export function QuickPicksGrid() {
   const { data: items = [], isLoading } = useQuery({
     queryKey: ['quickPicks'],
     queryFn: async () => {
-      const res = await fetch('/api/recommendations/quick-picks');
+      const res = await fetch('/api/music/search?q=top+hits');
       if (!res.ok) throw new Error('Failed to fetch quick picks');
       return res.json();
     },
