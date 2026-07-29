@@ -76,89 +76,31 @@ const search = async (req, res) => {
   } catch (error) {
     console.error('Error in music search (likely Vercel IP block):', error);
     
-    // Dynamic mock data based on query to match localhost experience on Vercel
+    // Dynamic mock data based on query to match exactly what localhost generated
     const query = q.toLowerCase();
     
-    if (query.includes('new') || query.includes('release') || query.includes('trending')) {
-      return res.json([
-        {
-          "id": "culVwJujOi4",
-          "uri": "culVwJujOi4",
-          "title": "Yeh Awarapan",
-          "artist": "Sony Music India",
-          "image": "https://i.ytimg.com/vi/culVwJujOi4/hq720.jpg",
-          "duration": 268,
-          "youtubeId": "culVwJujOi4"
-        },
-        {
-          "id": "LX2zshAgECQ",
-          "uri": "LX2zshAgECQ",
-          "title": "Aankhon Se Tune 2.0",
-          "artist": "Tips Official",
-          "image": "https://i.ytimg.com/vi/LX2zshAgECQ/hq720.jpg",
-          "duration": 229,
-          "youtubeId": "LX2zshAgECQ"
-        },
-        {
-          "id": "hPZcZpNn3KY",
-          "uri": "hPZcZpNn3KY",
-          "title": "Rana Ji 2.0",
-          "artist": "Tips Official",
-          "image": "https://i.ytimg.com/vi/hPZcZpNn3KY/hq720.jpg",
-          "duration": 229,
-          "youtubeId": "hPZcZpNn3KY"
-        },
-        {
-          "id": "mdYZiR3w1xM",
-          "uri": "mdYZiR3w1xM",
-          "title": "Chitti Chitti Cheema",
-          "artist": "T-Series Telugu",
-          "image": "https://i.ytimg.com/vi/mdYZiR3w1xM/hq720.jpg",
-          "duration": 244,
-          "youtubeId": "mdYZiR3w1xM"
-        }
-      ]);
-    }
-
-    // Default mock data (matches the localhost first row for "top hits" / "for you")
-    res.json([
-      {
-        "id": "MJyKN-8UncM",
-        "uri": "MJyKN-8UncM",
-        "title": "Shayad - Love Aaj Kal",
-        "artist": "Sony Music India",
-        "image": "https://i.ytimg.com/vi/MJyKN-8UncM/hq720.jpg",
-        "duration": 190,
-        "youtubeId": "MJyKN-8UncM"
-      },
-      {
-        "id": "RLzC55ai0eo",
-        "uri": "RLzC55ai0eo",
-        "title": "Heeriye",
-        "artist": "Jasleen Royal",
-        "image": "https://i.ytimg.com/vi/RLzC55ai0eo/hq720.jpg",
-        "duration": 199,
-        "youtubeId": "RLzC55ai0eo"
-      },
-      {
-        "id": "vEe-UgJvUHE",
-        "uri": "vEe-UgJvUHE",
-        "title": "Arijit Singh - Raabta",
-        "artist": "PluginVibes",
-        "image": "https://i.ytimg.com/vi/vEe-UgJvUHE/hq720.jpg",
-        "duration": 234,
-        "youtubeId": "vEe-UgJvUHE"
-      },
-      {
-        "id": "5-OqPhet-NU",
-        "uri": "5-OqPhet-NU",
-        "title": "Dil Sambhal Ja Zara",
-        "artist": "Jibonpathik",
-        "image": "https://i.ytimg.com/vi/5-OqPhet-NU/hq720.jpg",
-        "duration": 334,
-        "youtubeId": "5-OqPhet-NU"
+    try {
+      const fallbackData = require('../fallback_data.json');
+      // Find the exact match for the query (e.g. "top hits", "trending songs")
+      const exactMatch = fallbackData.find(d => d.query === query);
+      
+      if (exactMatch && exactMatch.results && exactMatch.results.length > 0) {
+        return res.json(exactMatch.results);
       }
-    ]);
+      
+      // If the query doesn't match our exact pre-generated fallbacks,
+      // try to find one that includes the word or just default to top hits
+      const partialMatch = fallbackData.find(d => query.includes(d.query) || d.query.includes(query));
+      if (partialMatch && partialMatch.results && partialMatch.results.length > 0) {
+        return res.json(partialMatch.results);
+      }
+
+      // Default to "top hits" if completely unknown query
+      return res.json(fallbackData[0].results);
+    } catch (fallbackError) {
+      console.error('Failed to load fallback_data.json', fallbackError);
+      return res.json([]);
+    }
   } finally {
     activeSearches.delete(cacheKey);
   }
