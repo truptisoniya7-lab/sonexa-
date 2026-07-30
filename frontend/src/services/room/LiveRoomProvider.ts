@@ -1,12 +1,11 @@
 import type { RoomEventType, RoomMember, ChatMessage, RoomEvent } from '../../types/room';
 import type { IRoomProvider, RoomEventCallback, UnsubscribeFn } from './RoomProvider';
-import { supabase } from '../../lib/supabase';
 import { getCurrentUser } from '../../lib/currentUser';
-import { RealtimeChannel } from '@supabase/supabase-js';
+import { SupabaseRealtimeService } from './SupabaseRealtimeService';
 
 export class LiveRoomProvider implements IRoomProvider {
   private currentRoomId: string | null = null;
-  private channel: RealtimeChannel | null = null;
+  private realtimeService: SupabaseRealtimeService | null = null;
   
   private members: RoomMember[] = [];
   private messages: ChatMessage[] = [];
@@ -24,65 +23,56 @@ export class LiveRoomProvider implements IRoomProvider {
 
     const user = getCurrentUser();
 
-    // 1. Initial Data Fetch
+    // 1. Initial Data Fetch via Supabase JS
     try {
-      // Fetch members
-      const roomRes = await fetch(`/api/rooms/\${roomId}`);
-      if (roomRes.ok) {
-        const roomData = await roomRes.json();
-        this.members = roomData.members?.map((m: any) => ({
-          id: m.id,
-          name: m.name,
-          avatar: m.profile_picture || `https://api.dicebear.com/7.x/avataaars/svg?seed=\${m.id}`,
-          role: 'Listener',
-          isSpeaking: false,
-          isMuted: true,
-          isTyping: false
-        })) || [];
-        this.notify('member_updated', this.members);
-      }
-
       // Fetch queue
-      const queueRes = await fetch(`/api/rooms/\${roomId}/queue`);
-      if (queueRes.ok) {
-        const queueData = await queueRes.json();
-        this.queue = Array.isArray(queueData) ? queueData : [];
+      const { data: queueData, error: queueError } = await supabase
+        .from('room_queue')
+        .select('*')
+        .eq('room_id', roomId)
+        .order('created_at', { ascending: true });
+        
+      if (!queueError && queueData) {
+        this.queue = queueData;
         this.notify('queue_updated', this.queue);
       }
 
-      // Fetch messages
-      const msgRes = await fetch(`/api/rooms/\${roomId}/messages`);
-      if (msgRes.ok) {
-        const msgData = await msgRes.json();
-        this.messages = Array.isArray(msgData) ? msgData.map((m: any) => ({
+      // Fetch messages (paginated chat - last 50)
+      const { data: msgData, error: msgError } = await supabase
+        .from('room_messages')
+        .select('*')
+        .eq('room_id', roomId)
+        .order('created_at', { ascending: false })
+        .limit(50);
+        
+      if (!msgError && msgData) {
+        this.messages = msgData.reverse().map((m: any) => ({
           id: m.id.toString(),
           user_id: m.user_id,
           user_name: m.user_name || 'Unknown',
           content: m.content,
           type: m.type,
           timestamp: new Date(m.created_at).getTime()
-        })) : [];
+        }));
         this.messages.forEach(m => this.notify('message_received', m));
       }
+      
+      // Fetch members from presence or roles if needed. For now, rely on presence events.
     } catch (error) {
       console.error('LiveRoomProvider: Error fetching initial data', error);
     }
 
-    // 2. Supabase Realtime Connection
-    this.channel = supabase.channel(`room:\${roomId}`);
-
-    // Chat Sync
-    this.channel.on(
-      'postgres_changes',
-      { event: 'INSERT', schema: 'public', table: 'Messages', filter: `room_id=eq.\${roomId}` },
-      (payload: any) => {
-        // Fetch the user_name from the backend or append it if the DB payload doesn't include joined data
-        // For now, we assume simple mapping
-        const msg = payload.new;
+    // 2. Realtime Service Connection
+    this.realtimeService = new SupabaseRealtimeService(roomId);
+    
+    // Subscribe to chat
+    this.realtimeService.subscribe('chat:message', (msg: any) => {
+      // Avoid duplicating optimistic messages by checking ID
+      if (!this.messages.find(m => m.id === msg.id.toString())) {
         const chatMsg: ChatMessage = {
           id: msg.id.toString(),
           user_id: msg.user_id,
-          user_name: 'User ' + msg.user_id, // We'd ideally join this or cache users
+          user_name: msg.user_name || 'User ' + msg.user_id,
           content: msg.content,
           type: msg.type || 'text',
           timestamp: new Date(msg.created_at).getTime()
@@ -90,63 +80,49 @@ export class LiveRoomProvider implements IRoomProvider {
         this.messages.push(chatMsg);
         this.notify('message_received', chatMsg);
       }
-    );
-
-    // Queue Sync
-    this.channel.on(
-      'postgres_changes',
-      { event: 'INSERT', schema: 'public', table: 'Queue', filter: `room_id=eq.\${roomId}` },
-      (payload: any) => {
-        const song = payload.new;
-        this.queue.push(song);
-        this.notify('queue_updated', this.queue);
-      }
-    );
-
-    this.channel.on(
-      'postgres_changes',
-      { event: 'DELETE', schema: 'public', table: 'Queue', filter: `room_id=eq.\${roomId}` },
-      (payload: any) => {
-        this.queue = this.queue.filter(s => s.id !== payload.old.id);
-        this.notify('queue_updated', this.queue);
-      }
-    );
-
-    // Broadcasts (Reactions, Typing, Activities - Phase 2 simulated)
-    this.channel.on('broadcast', { event: 'reaction' }, ({ payload }) => {
-      this.notify('reaction_sent', payload);
     });
 
-    this.channel.on('broadcast', { event: 'typing' }, ({ payload }) => {
+    // Subscribe to queue
+    this.realtimeService.subscribe('queue:update', (payload: any) => {
+      if (payload.eventType === 'INSERT') {
+        if (!this.queue.find(q => q.id === payload.new.id)) {
+            this.queue.push(payload.new);
+        }
+      } else if (payload.eventType === 'UPDATE') {
+        this.queue = this.queue.map(q => q.id === payload.new.id ? payload.new : q);
+      } else if (payload.eventType === 'DELETE') {
+        this.queue = this.queue.filter(q => q.id !== payload.old.id);
+      }
+      this.notify('queue_updated', this.queue);
+    });
+
+    // Subscribe to broadcasts
+    this.realtimeService.subscribe('broadcast:reaction', (reaction: any) => {
+      this.notify('reaction_sent', reaction);
+    });
+    
+    this.realtimeService.subscribe('broadcast:typing', (payload: any) => {
       this.notify('typing_changed', payload);
     });
 
-    // Presence Sync
-    this.channel.on('presence', { event: 'sync' }, () => {
-      const state = this.channel!.presenceState();
-      // Map presence state to members (Simplified for Phase 1)
-      const activeIds = Object.keys(state).map(k => (state[k][0] as any)?.user_id);
-      
-      // We can update online status here, for now we just log
-      console.log('Presence sync:', activeIds);
+    // Subscribe to presence
+    this.realtimeService.subscribe('presence:sync', (state: any) => {
+      console.log('Presence sync:', state);
+      // Map to members if needed
     });
 
-    // Join room
-    this.channel.subscribe(async (status) => {
-      if (status === 'SUBSCRIBED') {
-        await this.channel!.track({
-          user_id: user.id,
-          user_name: user.name,
-          joined_at: new Date().toISOString()
-        });
-      }
+    // Start connection
+    await this.realtimeService.connect({
+      user_id: user.id,
+      user_name: user.name,
+      joined_at: new Date().toISOString()
     });
   }
 
   disconnect(): void {
-    if (this.channel) {
-      this.channel.unsubscribe();
-      this.channel = null;
+    if (this.realtimeService) {
+      this.realtimeService.disconnect();
+      this.realtimeService = null;
     }
     this.currentRoomId = null;
     this.subscribers.clear();
@@ -156,30 +132,29 @@ export class LiveRoomProvider implements IRoomProvider {
     if (!this.currentRoomId) return;
     const user = getCurrentUser();
     
-    // Optimistic UI update
+    // Optimistic UI update (using local timestamp ID to prevent duplication logic issues)
+    const optimisticId = `temp-${Date.now()}`;
     const optimisticMsg: ChatMessage = {
-      id: Math.random().toString(),
+      id: optimisticId,
       user_id: parseInt(user.id) || 1,
       user_name: user.name,
       content,
       type,
       timestamp: Date.now()
     };
-    // Don't push to array yet to avoid duplicates if we listen to INSERT, 
-    // or we can push and rely on deduplication. For now we just wait for the Postgres event, 
-    // or just POST it and let the UI refresh.
+    
+    this.messages.push(optimisticMsg);
+    this.notify('message_received', optimisticMsg);
     
     try {
-      await fetch(`/api/rooms/\${this.currentRoomId}/messages`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      await supabase.from('room_messages').insert({
           room_id: this.currentRoomId,
           user_id: parseInt(user.id) || 1,
+          user_name: user.name,
           content,
           type
-        })
       });
+      // Realtime channel handles the rest
     } catch (error) {
       console.error('Failed to send message', error);
     }
@@ -189,14 +164,26 @@ export class LiveRoomProvider implements IRoomProvider {
     if (!this.currentRoomId) return;
     const user = getCurrentUser();
     
+    // Optimistic update
+    const optimisticSong = {
+        ...song,
+        id: `temp-${Date.now()}`,
+        added_by: parseInt(user.id) || 1,
+        votes: 0,
+        state: 'queued'
+    };
+    this.queue.push(optimisticSong);
+    this.notify('queue_updated', this.queue);
+
     try {
-      await fetch(`/api/rooms/\${this.currentRoomId}/queue`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...song,
-          added_by: parseInt(user.id) || 1
-        })
+      await supabase.from('room_queue').insert({
+          room_id: this.currentRoomId,
+          song_uri: song.song_uri,
+          song_title: song.song_title,
+          song_artist: song.song_artist,
+          song_image: song.song_image,
+          added_by: parseInt(user.id) || 1,
+          state: 'queued'
       });
     } catch (error) {
       console.error('Failed to add song', error);
@@ -204,25 +191,25 @@ export class LiveRoomProvider implements IRoomProvider {
   }
 
   async voteSong(songId: string, direction: 'up' | 'down'): Promise<void> {
-    // Phase 3 feature: No-op for now in Live mode or fallback
-    console.log(`LiveRoomProvider: Vote \${direction} for song \${songId} not implemented yet in backend`);
+    // Optimistic update
+    this.queue = this.queue.map(s => {
+      if (s.id.toString() === songId.toString()) {
+        return { ...s, votes: (s.votes || 0) + (direction === 'up' ? 1 : -1) };
+      }
+      return s;
+    });
+    this.notify('queue_updated', this.queue);
+
+    // In a full implementation, we'd hit the API here:
+    // await fetch(`/api/rooms/${this.currentRoomId}/queue/${songId}/vote`, { method: 'POST', body: JSON.stringify({ direction }) });
   }
 
   async sendReaction(emoji: string): Promise<void> {
-    if (!this.channel) return;
-    const reaction = {
-      id: Math.random().toString(),
-      emoji,
-      right: 10 + Math.random() * 40
-    };
-    // Optimistic update
+    if (!this.realtimeService) return;
+    // Broadcast via Ephemeral channel (instant, no DB interaction)
+    const reaction = this.realtimeService.broadcastReaction(emoji);
+    // Optimistically update our own UI
     this.notify('reaction_sent', reaction);
-    // Broadcast to others
-    this.channel.send({
-      type: 'broadcast',
-      event: 'reaction',
-      payload: reaction
-    });
   }
 
   async joinVoice(): Promise<void> {

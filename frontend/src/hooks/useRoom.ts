@@ -1,18 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import type { RoomMember, ChatMessage, ActivityEvent, RoomReaction, RoomEvent } from '../types/room';
 import type { IRoomProvider } from '../services/room/RoomProvider';
-import { MockRoomProvider } from '../services/room/MockRoomProvider';
 import { LiveRoomProvider } from '../services/room/LiveRoomProvider';
-
-// Determine the provider based on the environment flag
-const providerType = process.env.NEXT_PUBLIC_ROOM_PROVIDER || 'mock';
 
 // Singleton instance to prevent multiple connections across re-renders
 let roomProviderInstance: IRoomProvider | null = null;
 
 const getRoomProvider = (): IRoomProvider => {
   if (!roomProviderInstance) {
-    roomProviderInstance = providerType === 'live' ? new LiveRoomProvider() : new MockRoomProvider();
+    roomProviderInstance = new LiveRoomProvider();
   }
   return roomProviderInstance;
 };
