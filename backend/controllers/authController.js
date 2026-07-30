@@ -50,19 +50,32 @@ const signup = async (req, res) => {
       return res.status(409).json({ error: 'User already exists with this email.' });
     }
 
+    const baseUsername = email.split('@')[0];
+    const uniqueUsername = `${baseUsername}_${Math.floor(Math.random() * 10000)}`;
+
     const { data: newUser, error: insertError } = await supabase
       .from('users')
-      .insert([{ email, display_name: name || email.split('@')[0], username: email.split('@')[0], password_hash: password, provider: 'local' }])
+      .insert([{ 
+        email, 
+        name: name || baseUsername, 
+        display_name: name || baseUsername, 
+        username: uniqueUsername, 
+        password_hash: password, 
+        provider: 'local' 
+      }])
       .select()
       .single();
     
-    if (insertError) throw insertError;
+    if (insertError) {
+      console.error('Insert error:', insertError);
+      throw insertError;
+    }
     
     const token = generateToken(newUser);
     res.json({ token, user: { id: newUser.id, email: newUser.email, name: newUser.display_name, provider: newUser.provider } });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('Signup error:', error);
+    res.status(500).json({ error: 'Internal server error', details: error.message || error });
   }
 };
 
