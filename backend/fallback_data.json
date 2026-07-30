@@ -1,46 +1,5 @@
 [
   {
-    "query": "top hits",
-    "results": [
-      {
-        "id": "MJyKN-8UncM",
-        "uri": "MJyKN-8UncM",
-        "title": "Shayad - Love Aaj Kal",
-        "artist": "Sony Music India",
-        "image": "https://i.ytimg.com/vi/MJyKN-8UncM/hq720.jpg",
-        "duration": 190,
-        "youtubeId": "MJyKN-8UncM"
-      },
-      {
-        "id": "RLzC55ai0eo",
-        "uri": "RLzC55ai0eo",
-        "title": "Heeriye",
-        "artist": "Jasleen Royal",
-        "image": "https://i.ytimg.com/vi/RLzC55ai0eo/hq720.jpg",
-        "duration": 199,
-        "youtubeId": "RLzC55ai0eo"
-      },
-      {
-        "id": "vEe-UgJvUHE",
-        "uri": "vEe-UgJvUHE",
-        "title": "Arijit Singh - Raabta",
-        "artist": "PluginVibes",
-        "image": "https://i.ytimg.com/vi/vEe-UgJvUHE/hqdefault.jpg",
-        "duration": 234,
-        "youtubeId": "vEe-UgJvUHE"
-      },
-      {
-        "id": "5-OqPhet-NU",
-        "uri": "5-OqPhet-NU",
-        "title": "Dil Sambhal Ja Zara",
-        "artist": "Jibonpathik",
-        "image": "https://i.ytimg.com/vi/5-OqPhet-NU/hq720.jpg",
-        "duration": 334,
-        "youtubeId": "5-OqPhet-NU"
-      }
-    ]
-  },
-  {
     "query": "for you mix",
     "results": [
       {
@@ -55,25 +14,16 @@
       {
         "id": "0KHJ1YLvCq0",
         "uri": "0KHJ1YLvCq0",
-        "title": "Fell For You - Shubh Ft. Sonam Bajwa | Karda Shadai Ni | Latest Romantic Songs 2025",
+        "title": "Fell For You - Shubh",
         "artist": "Sick Vibe",
         "image": "https://i.ytimg.com/vi/0KHJ1YLvCq0/hq720.jpg",
         "duration": 270,
         "youtubeId": "0KHJ1YLvCq0"
       },
       {
-        "id": "dxNVkv1YN2k",
-        "uri": "dxNVkv1YN2k",
-        "title": "Fell For You (Mashup) - Shubh ft.Sonam Bajwa | In Love | DJ Sumit Rajwanshi | Latest Romantic Mashup",
-        "artist": "SR Music Official ",
-        "image": "https://i.ytimg.com/vi/dxNVkv1YN2k/hq720.jpg",
-        "duration": 297,
-        "youtubeId": "dxNVkv1YN2k"
-      },
-      {
         "id": "RQUuqbzQVsY",
         "uri": "RQUuqbzQVsY",
-        "title": "Liam Payne, Rita Ora - For You (Fifty Shades Freed)",
+        "title": "Liam Payne, Rita Ora - For You",
         "artist": "FiftyShadesVEVO",
         "image": "https://i.ytimg.com/vi/RQUuqbzQVsY/hq720.jpg",
         "duration": 249,
@@ -82,20 +32,38 @@
       {
         "id": "xMnwzvgfKfM",
         "uri": "xMnwzvgfKfM",
-        "title": "KHAID - FOR YOU (DANCE VISUALIZER)",
+        "title": "KHAID - FOR YOU",
         "artist": "Khaid",
         "image": "https://i.ytimg.com/vi/xMnwzvgfKfM/hq720.jpg",
         "duration": 148,
         "youtubeId": "xMnwzvgfKfM"
       },
       {
+        "id": "dxNVkv1YN2k",
+        "uri": "dxNVkv1YN2k",
+        "title": "Fell For You  - Shubh",
+        "artist": "SR Music Official ",
+        "image": "https://i.ytimg.com/vi/dxNVkv1YN2k/hq720.jpg",
+        "duration": 297,
+        "youtubeId": "dxNVkv1YN2k"
+      },
+      {
         "id": "YqtT9rwjRzE",
         "uri": "YqtT9rwjRzE",
-        "title": "Fell For You - Mashup | Shubh Ft.Sonam Bajwa | Sidhu Moosewala | Ap Dhillon | PropheC",
+        "title": "Fell For You - Mashup | Shubh",
         "artist": "Himanshu Music ",
         "image": "https://i.ytimg.com/vi/YqtT9rwjRzE/hq720.jpg",
         "duration": 426,
         "youtubeId": "YqtT9rwjRzE"
+      },
+      {
+        "id": "5fZzrE97GXo",
+        "uri": "5fZzrE97GXo",
+        "title": "Kenny Lattimore - For You",
+        "artist": "Kenny Lattimore",
+        "image": "https://i.ytimg.com/vi/5fZzrE97GXo/hq720.jpg",
+        "duration": 238,
+        "youtubeId": "5fZzrE97GXo"
       },
       {
         "id": "pK025XYzSWM",
@@ -107,64 +75,28 @@
         "youtubeId": "pK025XYzSWM"
       },
       {
-        "id": "5fZzrE97GXo",
-        "uri": "5fZzrE97GXo",
-        "title": "Kenny Lattimore - For You (Official 4K Video)",
-        "artist": "Kenny Lattimore",
-        "image": "https://i.ytimg.com/vi/5fZzrE97GXo/hq720.jpg",
-        "duration": 238,
-        "youtubeId": "5fZzrE97GXo"
-      },
-      {
-        "id": "ty3BffKoSxA",
-        "uri": "ty3BffKoSxA",
-        "title": "Fell For You - Shubh ft. Sonam Bajwa | Latest Romantic Mashup 2025",
-        "artist": "Regular Vibes ",
-        "image": "https://i.ytimg.com/vi/ty3BffKoSxA/hq720.jpg",
-        "duration": 284,
-        "youtubeId": "ty3BffKoSxA"
-      },
-      {
         "id": "heVwDxdIN1w",
         "uri": "heVwDxdIN1w",
-        "title": "Fell For You x Karan Aujla - Shubh ft. Sonam Bajwa | DJ Sumit | Latest Punjabi Songs 2025",
+        "title": "Fell For You x Karan Aujla - Shubh",
         "artist": "SR Music Official ",
         "image": "https://i.ytimg.com/vi/heVwDxdIN1w/hq720.jpg",
         "duration": 337,
         "youtubeId": "heVwDxdIN1w"
+      },
+      {
+        "id": "ty3BffKoSxA",
+        "uri": "ty3BffKoSxA",
+        "title": "Fell For You - Shubh",
+        "artist": "Regular Vibes ",
+        "image": "https://i.ytimg.com/vi/ty3BffKoSxA/hq720.jpg",
+        "duration": 284,
+        "youtubeId": "ty3BffKoSxA"
       }
     ]
   },
   {
     "query": "trending songs",
     "results": [
-      {
-        "id": "xvT1jH8B9AM",
-        "uri": "xvT1jH8B9AM",
-        "title": "KALYANI (with Shreya Ghoshal) OFFICIAL  | ARJN | KDS | FIFTY4 | RONN | SHREYA GHOSHAL |",
-        "artist": "MONEY VERSE RECORDS and ARJN",
-        "image": "https://i.ytimg.com/vi/xvT1jH8B9AM/hq720.jpg",
-        "duration": 288,
-        "youtubeId": "xvT1jH8B9AM"
-      },
-      {
-        "id": "M5OCLifZK1w",
-        "uri": "M5OCLifZK1w",
-        "title": "Noor, Khan, Madhurxo - Aarzu (Official )",
-        "artist": "Noor and Khan",
-        "image": "https://i.ytimg.com/vi/M5OCLifZK1w/hq720.jpg",
-        "duration": 227,
-        "youtubeId": "M5OCLifZK1w"
-      },
-      {
-        "id": "-MPHg4wPiyg",
-        "uri": "-MPHg4wPiyg",
-        "title": "Bairan 💗 New Haryanvi Song| Heart Touching Love Story | Viral Song 2026 #bairan #bairansong",
-        "artist": "Awaaj De",
-        "image": "https://i.ytimg.com/vi/-MPHg4wPiyg/hq720.jpg",
-        "duration": 294,
-        "youtubeId": "-MPHg4wPiyg"
-      },
       {
         "id": "rC-kbRanJQ0",
         "uri": "rC-kbRanJQ0",
@@ -175,13 +107,22 @@
         "youtubeId": "rC-kbRanJQ0"
       },
       {
-        "id": "Bm9lLpmPM0A",
-        "uri": "Bm9lLpmPM0A",
-        "title": "Pattampoochi  | Vishwanath and Sons | Suriya, Mamitha Baiju | G.V. Prakash | Venky Atluri",
-        "artist": "Aditya Music Tamil and Sithara Entertainments",
-        "image": "https://i.ytimg.com/vi/Bm9lLpmPM0A/hq720.jpg",
-        "duration": 246,
-        "youtubeId": "Bm9lLpmPM0A"
+        "id": "M5OCLifZK1w",
+        "uri": "M5OCLifZK1w",
+        "title": "Noor, Khan, Madhurxo - Aarzu",
+        "artist": "Noor and Khan",
+        "image": "https://i.ytimg.com/vi/M5OCLifZK1w/hq720.jpg",
+        "duration": 227,
+        "youtubeId": "M5OCLifZK1w"
+      },
+      {
+        "id": "xvT1jH8B9AM",
+        "uri": "xvT1jH8B9AM",
+        "title": "KALYANI  OFFICIAL  | ARJN | KDS | FIFTY4 | RONN | SHREYA GHOSHAL |",
+        "artist": "MONEY VERSE RECORDS and ARJN",
+        "image": "https://i.ytimg.com/vi/xvT1jH8B9AM/hq720.jpg",
+        "duration": 288,
+        "youtubeId": "xvT1jH8B9AM"
       },
       {
         "id": "6d5SS0gS5bU",
@@ -193,40 +134,58 @@
         "youtubeId": "6d5SS0gS5bU"
       },
       {
-        "id": "LX2zshAgECQ",
-        "uri": "LX2zshAgECQ",
-        "title": "Aankhon Se Tune 2.0 | Bhai Tera Star Hai | Raghav, Niharika | Lijo, Dev, Palak, Kumar, Alka, Mohsin",
-        "artist": "Tips Official and 3 more",
-        "image": "https://i.ytimg.com/vi/LX2zshAgECQ/hq720.jpg",
-        "duration": 229,
-        "youtubeId": "LX2zshAgECQ"
-      },
-      {
-        "id": "undhkaMMenU",
-        "uri": "undhkaMMenU",
-        "title": "Sambavakaari Video Song | Gatta Kusthi 2 | Vishnu Vishal, Aishwarya Lekshmi | Sean Roldan",
-        "artist": "Sony Music South",
-        "image": "https://i.ytimg.com/vi/undhkaMMenU/hq720.jpg",
-        "duration": 245,
-        "youtubeId": "undhkaMMenU"
-      },
-      {
         "id": "aRNfSqsgrgE",
         "uri": "aRNfSqsgrgE",
-        "title": "Sheesha (Official ) | Mitta Ror ft. Swara Verma | Sorab Bedi | Niharika Tiwari",
+        "title": "Sheesha  | Mitta Ror",
         "artist": "Sony Music India and Mitta Ror",
         "image": "https://i.ytimg.com/vi/aRNfSqsgrgE/hq720.jpg",
         "duration": 195,
         "youtubeId": "aRNfSqsgrgE"
       },
       {
-        "id": "2ehAiLhxm5Q",
-        "uri": "2ehAiLhxm5Q",
-        "title": "AZUL Song | Guru Randhawa | Dance Cover | Instagram Trending Song dance | Geeta Bagdwal",
-        "artist": "Geeta Bagdwal",
-        "image": "https://i.ytimg.com/vi/2ehAiLhxm5Q/hq720.jpg",
-        "duration": 85,
-        "youtubeId": "2ehAiLhxm5Q"
+        "id": "7c3-Gei5j4w",
+        "uri": "7c3-Gei5j4w",
+        "title": "Chaand Baaliyan – Aditya A. | Trending Song |",
+        "artist": "Sony Music India",
+        "image": "https://i.ytimg.com/vi/7c3-Gei5j4w/hq720.jpg",
+        "duration": 122,
+        "youtubeId": "7c3-Gei5j4w"
+      },
+      {
+        "id": "bFqg_fxcHNM",
+        "uri": "bFqg_fxcHNM",
+        "title": "Udi Udi – Aneesh, Sarkar & Hruday | Lyrics Video  | Trending Song 2026",
+        "artist": "Indian Hitmusic",
+        "image": "https://i.ytimg.com/vi/bFqg_fxcHNM/hq720.jpg",
+        "duration": 162,
+        "youtubeId": "bFqg_fxcHNM"
+      },
+      {
+        "id": "YMrFdkExojk",
+        "uri": "YMrFdkExojk",
+        "title": "Kalyani X Shreya Ghoshal Mashup  | Instagram Trending Song 2026 | Rex Music",
+        "artist": "Rex Music",
+        "image": "https://i.ytimg.com/vi/YMrFdkExojk/hq720.jpg",
+        "duration": 361,
+        "youtubeId": "YMrFdkExojk"
+      },
+      {
+        "id": "Bm9lLpmPM0A",
+        "uri": "Bm9lLpmPM0A",
+        "title": "Pattampoochi  | Vishwanath and Sons | Suriya, Mamitha Baiju | G.V. Prakash | Venky Atluri",
+        "artist": "Aditya Music Tamil and Sithara Entertainments",
+        "image": "https://i.ytimg.com/vi/Bm9lLpmPM0A/hq720.jpg",
+        "duration": 246,
+        "youtubeId": "Bm9lLpmPM0A"
+      },
+      {
+        "id": "QohIp3-Ygxk",
+        "uri": "QohIp3-Ygxk",
+        "title": "SADI SUN - Elvish Yadav & Simrat Kaur Randhawa | Harsh Nussi | Anshul Garg",
+        "artist": "Play DMF and Harsh Nussi ",
+        "image": "https://i.ytimg.com/vi/QohIp3-Ygxk/hq720.jpg",
+        "duration": 183,
+        "youtubeId": "QohIp3-Ygxk"
       }
     ]
   },
@@ -245,97 +204,88 @@
       {
         "id": "kPa7bsKwL-c",
         "uri": "kPa7bsKwL-c",
-        "title": "Lady Gaga, Bruno Mars - Die With A Smile (Official )",
+        "title": "Lady Gaga, Bruno Mars - Die With A Smile",
         "artist": "Lady Gaga",
         "image": "https://i.ytimg.com/vi/kPa7bsKwL-c/hq720.jpg",
         "duration": 253,
         "youtubeId": "kPa7bsKwL-c"
       },
       {
-        "id": "ek_8u-e8JIQ",
-        "uri": "ek_8u-e8JIQ",
-        "title": "Sokuladi Sittammi Full Video Song  |Greeshma|Bhoomika | Sekhar Master| Ravi Peetla| DJ Shekar Ichoda",
-        "artist": "Sekhar Music",
-        "image": "https://i.ytimg.com/vi/ek_8u-e8JIQ/hq720.jpg",
-        "duration": 305,
-        "youtubeId": "ek_8u-e8JIQ"
-      },
-      {
         "id": "Jyst8oIHOAY",
         "uri": "Jyst8oIHOAY",
-        "title": "Mercy - Badshah Feat. Lauren Gottlieb | Official  | Latest Hit Song 2017",
+        "title": "Mercy - Badshah",
         "artist": "Sony Music India",
         "image": "https://i.ytimg.com/vi/Jyst8oIHOAY/hq720.jpg",
         "duration": 177,
         "youtubeId": "Jyst8oIHOAY"
       },
       {
-        "id": "kffacxfA7G4",
-        "uri": "kffacxfA7G4",
-        "title": "Justin Bieber - Baby ft. Ludacris",
-        "artist": "Justin Bieber",
-        "image": "https://i.ytimg.com/vi/kffacxfA7G4/hq720.jpg",
-        "duration": 220,
-        "youtubeId": "kffacxfA7G4"
-      },
-      {
-        "id": "AdzRPuL2CzQ",
-        "uri": "AdzRPuL2CzQ",
-        "title": "Super Hit Latest Telugu Folk Song 'Vasthava Rangammo' || Telangana Folk Songs|| ORTV Originals",
-        "artist": "RTV Telugu",
-        "image": "https://i.ytimg.com/vi/AdzRPuL2CzQ/hq720.jpg",
-        "duration": 305,
-        "youtubeId": "AdzRPuL2CzQ"
-      },
-      {
-        "id": "G0Hx6uN2AJE",
-        "uri": "G0Hx6uN2AJE",
-        "title": "Harrdy Sandhu - Kya Baat Ay | Jaani | B Praak | Arvindr Khaira | Official",
-        "artist": "Sony Music India",
-        "image": "https://i.ytimg.com/vi/G0Hx6uN2AJE/hq720.jpg",
-        "duration": 191,
-        "youtubeId": "G0Hx6uN2AJE"
-      },
-      {
         "id": "JGwWNGJdvx8",
         "uri": "JGwWNGJdvx8",
-        "title": "Ed Sheeran - Shape of You (Official )",
+        "title": "Ed Sheeran - Shape of You",
         "artist": "Ed Sheeran",
         "image": "https://i.ytimg.com/vi/JGwWNGJdvx8/hqdefault.jpg",
         "duration": 264,
         "youtubeId": "JGwWNGJdvx8"
       },
       {
-        "id": "C8WCeSEj_kE",
-        "uri": "C8WCeSEj_kE",
-        "title": "Aryans - Dekha Hai Teri Aankhon Ko",
-        "artist": "AryansVEVO",
-        "image": "https://i.ytimg.com/vi/C8WCeSEj_kE/hq720.jpg",
-        "duration": 246,
-        "youtubeId": "C8WCeSEj_kE"
+        "id": "kffacxfA7G4",
+        "uri": "kffacxfA7G4",
+        "title": "Justin Bieber - Baby",
+        "artist": "Justin Bieber",
+        "image": "https://i.ytimg.com/vi/kffacxfA7G4/hq720.jpg",
+        "duration": 220,
+        "youtubeId": "kffacxfA7G4"
       },
       {
-        "id": "vt0i6nuqNEo",
-        "uri": "vt0i6nuqNEo",
-        "title": "The Weeknd, Madonna, Playboi Carti - Popular (Official )",
-        "artist": "The Weeknd",
-        "image": "https://i.ytimg.com/vi/vt0i6nuqNEo/hq720.jpg",
-        "duration": 231,
-        "youtubeId": "vt0i6nuqNEo"
+        "id": "JgDNFQ2RaLQ",
+        "uri": "JgDNFQ2RaLQ",
+        "title": "Ed Sheeran - Sapphire",
+        "artist": "Ed Sheeran",
+        "image": "https://i.ytimg.com/vi/JgDNFQ2RaLQ/hq720.jpg",
+        "duration": 184,
+        "youtubeId": "JgDNFQ2RaLQ"
+      },
+      {
+        "id": "mvCWGL_r-Zg",
+        "uri": "mvCWGL_r-Zg",
+        "title": "Badshah - Gone Girl  | Official  | Payal Dev | Sakshi Vaidya",
+        "artist": "Badshah",
+        "image": "https://i.ytimg.com/vi/mvCWGL_r-Zg/hq720.jpg",
+        "duration": 195,
+        "youtubeId": "mvCWGL_r-Zg"
+      },
+      {
+        "id": "TRa9IMvccjg",
+        "uri": "TRa9IMvccjg",
+        "title": "DILBAR Full Song | Satyameva Jayate | John Abraham Nora Fatehi | Tanishk B Neha Kakkar Ikka Dhvani",
+        "artist": "T-Series",
+        "image": "https://i.ytimg.com/vi/TRa9IMvccjg/hq720.jpg",
+        "duration": 177,
+        "youtubeId": "TRa9IMvccjg"
       }
     ]
   },
   {
-    "query": "Arijit Singh",
+    "query": "arijit singh",
     "results": [
       {
-        "id": "r_3zVIyblLQ",
-        "uri": "r_3zVIyblLQ",
-        "title": "Dil Sambhal Ja Zara | LYRICS | Arijit Singh, Mohammad Irfan Ali, Saim Bhat",
-        "artist": " জীবনপথিক ~ Jibonpathik",
-        "image": "https://i.ytimg.com/vi/r_3zVIyblLQ/hq720.jpg",
-        "duration": 336,
-        "youtubeId": "r_3zVIyblLQ"
+        "id": "vKDsAB1ccn0",
+        "uri": "vKDsAB1ccn0",
+        "title": "गीतात्मक: आयत | बोल के साथ पूर्ण गाना | बाजीराव मस्तानी",
+        "artist": "Sony Music India",
+        "image": "https://i.ytimg.com/vi/vKDsAB1ccn0/hq720.jpg",
+        "duration": 248,
+        "youtubeId": "vKDsAB1ccn0"
+      },
+      {
+        "id": "RLzC55ai0eo",
+        "uri": "RLzC55ai0eo",
+        "title": "Heeriye  Jasleen Royal ft Arijit Singh| Dulquer Salmaan| Aditya Sharma |Taani Tanvir",
+        "artist": "Jasleen Royal",
+        "image": "https://i.ytimg.com/vi/RLzC55ai0eo/hq720.jpg",
+        "duration": 199,
+        "youtubeId": "RLzC55ai0eo"
       },
       {
         "id": "MJyKN-8UncM",
@@ -347,6 +297,33 @@
         "youtubeId": "MJyKN-8UncM"
       },
       {
+        "id": "cpDyLJkhg0I",
+        "uri": "cpDyLJkhg0I",
+        "title": "Arijit Singh, White Noise Collectives, Amitabh Bhattacharya - Sitaare",
+        "artist": "SonyMusicIndiaVEVO",
+        "image": "https://i.ytimg.com/vi/cpDyLJkhg0I/hq720.jpg",
+        "duration": 246,
+        "youtubeId": "cpDyLJkhg0I"
+      },
+      {
+        "id": "r_3zVIyblLQ",
+        "uri": "r_3zVIyblLQ",
+        "title": "Dil Sambhal Ja Zara | LYRICS | Arijit Singh, Mohammad Irfan Ali, Saim Bhat",
+        "artist": " জীবনপথিক ~ Jibonpathik",
+        "image": "https://i.ytimg.com/vi/r_3zVIyblLQ/hq720.jpg",
+        "duration": 336,
+        "youtubeId": "r_3zVIyblLQ"
+      },
+      {
+        "id": "RVOUAUMvx7A",
+        "uri": "RVOUAUMvx7A",
+        "title": "Agar Tum Saath Ho  | Arijit Singh & Alka Yagnik Song",
+        "artist": "Weathering With Lofi",
+        "image": "https://i.ytimg.com/vi/RVOUAUMvx7A/hqdefault.jpg",
+        "duration": 338,
+        "youtubeId": "RVOUAUMvx7A"
+      },
+      {
         "id": "Grr0FlC8SQA",
         "uri": "Grr0FlC8SQA",
         "title": "Kalank Title Track - Lyrical | Alia Bhatt , Varun Dhawan | Arijit Singh | Pritam| Amitabh",
@@ -356,31 +333,13 @@
         "youtubeId": "Grr0FlC8SQA"
       },
       {
-        "id": "vEe-UgJvUHE",
-        "uri": "vEe-UgJvUHE",
-        "title": "Arijit Singh - Raabta (Lyrics Video)| Agent Vinod | Saif Ali Khan , Kareena Kapoor Khan.",
-        "artist": "PluginVibes",
-        "image": "https://i.ytimg.com/vi/vEe-UgJvUHE/hqdefault.jpg",
-        "duration": 234,
-        "youtubeId": "vEe-UgJvUHE"
-      },
-      {
-        "id": "VAdGW7QDJiU",
-        "uri": "VAdGW7QDJiU",
-        "title": "JAWAN: Chaleya (Hindi) | Shah Rukh Khan | Nayanthara | Atlee | Anirudh | Arijit S, Shilpa R | Kumaar",
-        "artist": "T-Series",
-        "image": "https://i.ytimg.com/vi/VAdGW7QDJiU/hq720.jpg",
-        "duration": 188,
-        "youtubeId": "VAdGW7QDJiU"
-      },
-      {
-        "id": "FJ55SHCzt88",
-        "uri": "FJ55SHCzt88",
-        "title": "हमदर्द पूरा वीडियो गाना | एक विलेन | अरिजीत सिंह | मिथुन",
-        "artist": "T-Series",
-        "image": "https://i.ytimg.com/vi/FJ55SHCzt88/hq720.jpg",
-        "duration": 259,
-        "youtubeId": "FJ55SHCzt88"
+        "id": "TyMUY2CDrjc",
+        "uri": "TyMUY2CDrjc",
+        "title": "Haareya Song | Meri Pyaari Bindu | Ayushmann Khurrana | Parineeti Chopra | Arijit Singh",
+        "artist": "YRF",
+        "image": "https://i.ytimg.com/vi/TyMUY2CDrjc/hq720.jpg",
+        "duration": 184,
+        "youtubeId": "TyMUY2CDrjc"
       },
       {
         "id": "aNToVeBBKn4",
@@ -392,31 +351,13 @@
         "youtubeId": "aNToVeBBKn4"
       },
       {
-        "id": "RLzC55ai0eo",
-        "uri": "RLzC55ai0eo",
-        "title": "Heeriye () Jasleen Royal ft Arijit Singh| Dulquer Salmaan| Aditya Sharma |Taani Tanvir",
-        "artist": "Jasleen Royal",
-        "image": "https://i.ytimg.com/vi/RLzC55ai0eo/hq720.jpg",
-        "duration": 199,
-        "youtubeId": "RLzC55ai0eo"
-      },
-      {
-        "id": "XZoowSq0oYw",
-        "uri": "XZoowSq0oYw",
-        "title": "Kalank Title Track - Lyrical | Alia Bhatt , Varun Dhawan | Arijit Singh | Pritam| Amitabh",
-        "artist": "Bollywood Lyrical Songs",
-        "image": "https://i.ytimg.com/vi/XZoowSq0oYw/hq720.jpg",
-        "duration": 314,
-        "youtubeId": "XZoowSq0oYw"
-      },
-      {
-        "id": "dIVpJEKYNq4",
-        "uri": "dIVpJEKYNq4",
-        "title": "Arijit Singh - Darkhaast (Lyrics) Ft. Sunidhi Chauhan | Shivaay",
-        "artist": "Indian Harmony",
-        "image": "https://i.ytimg.com/vi/dIVpJEKYNq4/hq720.jpg",
-        "duration": 375,
-        "youtubeId": "dIVpJEKYNq4"
+        "id": "liSbkrbNj6Y",
+        "uri": "liSbkrbNj6Y",
+        "title": "Sanam Re - Arijit Singh  | Lyrical Bam Hindi",
+        "artist": "LYRICAL BAM HINDI",
+        "image": "https://i.ytimg.com/vi/liSbkrbNj6Y/hq720.jpg",
+        "duration": 270,
+        "youtubeId": "liSbkrbNj6Y"
       }
     ]
   },
@@ -433,6 +374,15 @@
         "youtubeId": "I9tX-lFUTrw"
       },
       {
+        "id": "LX2zshAgECQ",
+        "uri": "LX2zshAgECQ",
+        "title": "Aankhon Se Tune 2.0 | Bhai Tera Star Hai | Raghav, Niharika | Lijo, Dev, Palak, Kumar, Alka, Mohsin",
+        "artist": "Tips Official and 3 more",
+        "image": "https://i.ytimg.com/vi/LX2zshAgECQ/hq720.jpg",
+        "duration": 229,
+        "youtubeId": "LX2zshAgECQ"
+      },
+      {
         "id": "hPZcZpNn3KY",
         "uri": "hPZcZpNn3KY",
         "title": "Rana Ji 2.0 | Mahira Sharma | Tanishk Bagchi | Ila Arun | Alka Yagnik | Rajesh Roshan | Indeevar",
@@ -442,13 +392,40 @@
         "youtubeId": "hPZcZpNn3KY"
       },
       {
-        "id": "LX2zshAgECQ",
-        "uri": "LX2zshAgECQ",
-        "title": "Aankhon Se Tune 2.0 | Bhai Tera Star Hai | Raghav, Niharika | Lijo, Dev, Palak, Kumar, Alka, Mohsin",
-        "artist": "Tips Official and 3 more",
-        "image": "https://i.ytimg.com/vi/LX2zshAgECQ/hq720.jpg",
-        "duration": 229,
-        "youtubeId": "LX2zshAgECQ"
+        "id": "NW6Dgax2d6I",
+        "uri": "NW6Dgax2d6I",
+        "title": "Sahiba  Jasleen Royal |Vijay Deverakonda Radhikka Madan|Stebin| Priya|Aditya| Sudhanshu",
+        "artist": "Jasleen Royal",
+        "image": "https://i.ytimg.com/vi/NW6Dgax2d6I/hq720.jpg",
+        "duration": 260,
+        "youtubeId": "NW6Dgax2d6I"
+      },
+      {
+        "id": "lNaSdnz2I8g",
+        "uri": "lNaSdnz2I8g",
+        "title": "Namit Malhotra’s Ramayana - Hindi Trailer | Nitesh Tiwari | Ranbir, Yash, Hans Zimmer, A.R. Rahman",
+        "artist": "World Of Ramayana and T-Series",
+        "image": "https://i.ytimg.com/vi/lNaSdnz2I8g/hq720.jpg",
+        "duration": 250,
+        "youtubeId": "lNaSdnz2I8g"
+      },
+      {
+        "id": "0NAJX4DrXv0",
+        "uri": "0NAJX4DrXv0",
+        "title": "Manamohaka - Toxic  | Rocking Star Yash,Tara Sutaria | Tanishk,Arslan,Faheem |  Siddharth B",
+        "artist": "Zee Music South",
+        "image": "https://i.ytimg.com/vi/0NAJX4DrXv0/hq720.jpg",
+        "duration": 195,
+        "youtubeId": "0NAJX4DrXv0"
+      },
+      {
+        "id": "ce7NfzrRrz0",
+        "uri": "ce7NfzrRrz0",
+        "title": "New Song 2026 | New Hindi Song | Baarish Aur Tum | Sidharth Malhotra | Kriti Sanon | New Song",
+        "artist": "Music World",
+        "image": "https://i.ytimg.com/vi/ce7NfzrRrz0/hq720.jpg",
+        "duration": 263,
+        "youtubeId": "ce7NfzrRrz0"
       },
       {
         "id": "mdYZiR3w1xM",
@@ -462,56 +439,20 @@
       {
         "id": "h1kihH0l8iQ",
         "uri": "h1kihH0l8iQ",
-        "title": "Tabaahi 🔥| Toxic (Hindi) | Rocking Star Yash, Kiara Advani, Tara Sutaria| Vishal Mishra, Raj Shekhar",
+        "title": "Tabaahi 🔥| Toxic  | Rocking Star Yash, Kiara Advani, Tara Sutaria| Vishal Mishra, Raj Shekhar",
         "artist": "Zee Music Company",
         "image": "https://i.ytimg.com/vi/h1kihH0l8iQ/hq720.jpg",
         "duration": 269,
         "youtubeId": "h1kihH0l8iQ"
       },
       {
-        "id": "NW6Dgax2d6I",
-        "uri": "NW6Dgax2d6I",
-        "title": "Sahiba () Jasleen Royal |Vijay Deverakonda Radhikka Madan|Stebin| Priya|Aditya| Sudhanshu",
-        "artist": "Jasleen Royal",
-        "image": "https://i.ytimg.com/vi/NW6Dgax2d6I/hq720.jpg",
-        "duration": 260,
-        "youtubeId": "NW6Dgax2d6I"
-      },
-      {
-        "id": "0NAJX4DrXv0",
-        "uri": "0NAJX4DrXv0",
-        "title": "Manamohaka - Toxic (Kannada) | Rocking Star Yash,Tara Sutaria | Tanishk,Arslan,Faheem |  Siddharth B",
-        "artist": "Zee Music South",
-        "image": "https://i.ytimg.com/vi/0NAJX4DrXv0/hq720.jpg",
-        "duration": 195,
-        "youtubeId": "0NAJX4DrXv0"
-      },
-      {
-        "id": "RLSF6DJ3ix0",
-        "uri": "RLSF6DJ3ix0",
-        "title": "New Song 2026 | New Hindi Song | Woh Dard Sataaye | Emraan Hashmi | Kiara Advani | New Song",
-        "artist": "Gaurav Mali",
-        "image": "https://i.ytimg.com/vi/RLSF6DJ3ix0/hq720.jpg",
-        "duration": 235,
-        "youtubeId": "RLSF6DJ3ix0"
-      },
-      {
-        "id": "ce7NfzrRrz0",
-        "uri": "ce7NfzrRrz0",
-        "title": "New Song 2026 | New Hindi Song | Baarish Aur Tum | Sidharth Malhotra | Kriti Sanon | New Song",
-        "artist": "Music World",
-        "image": "https://i.ytimg.com/vi/ce7NfzrRrz0/hq720.jpg",
-        "duration": 263,
-        "youtubeId": "ce7NfzrRrz0"
-      },
-      {
-        "id": "3vPosyq1_Ic",
-        "uri": "3vPosyq1_Ic",
-        "title": "New Songs Of The Week (July 17, 2026) | New Music Friday",
-        "artist": "InMusic Official",
-        "image": "https://i.ytimg.com/vi/3vPosyq1_Ic/hq720.jpg",
-        "duration": 200,
-        "youtubeId": "3vPosyq1_Ic"
+        "id": "B9Sbi14Q_QE",
+        "uri": "B9Sbi14Q_QE",
+        "title": "Tu Chahida Ve  Ammy Virk",
+        "artist": "Navras Records",
+        "image": "https://i.ytimg.com/vi/B9Sbi14Q_QE/hq720.jpg",
+        "duration": 153,
+        "youtubeId": "B9Sbi14Q_QE"
       }
     ]
   }
