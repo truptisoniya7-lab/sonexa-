@@ -53,7 +53,7 @@ export function SharedMetadata({
           onClick={(e) => { e.stopPropagation(); togglePlay(); }} 
           className={`rounded-full font-bold bg-white text-black hover:scale-105 active:scale-95 transition-all shadow-xl flex items-center gap-2 ${isMobileLayout ? 'px-6 py-2 text-sm' : 'px-8 py-3'}`}
         >
-          {isPlaying ? 'Pause' : (isMobileLayout ? 'Play' : 'Resume')}
+          {isPlaying ? 'Pause' : 'Resume'}
         </button>
         
         {/* Fluid Waveform */}

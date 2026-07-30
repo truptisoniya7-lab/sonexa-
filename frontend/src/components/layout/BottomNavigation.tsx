@@ -65,17 +65,17 @@ export function BottomNavigation() {
                   <motion.div
                     {...hoverButton}
                     className={cn(
-                      "flex flex-col items-center justify-center w-14 h-14 rounded-full transition-colors relative",
-                      isActive ? "text-primary scale-110" : "text-muted-foreground hover:text-white"
+                      "flex items-center justify-center rounded-full transition-all relative z-10",
+                      isActive ? "w-14 h-10 text-primary" : "w-12 h-12 text-muted-foreground hover:text-white"
                     )}
                   >
-                    <item.icon className="w-6 h-6" strokeWidth={isActive ? 2.5 : 2} />
+                    <item.icon className="w-6 h-6 relative z-20" strokeWidth={isActive ? 2.5 : 2} />
                     
-                    {/* Glowing dot for active state instead of text */}
+                    {/* Glowing pill background for active state */}
                     {isActive && (
                       <motion.div
-                        layoutId="bottomNavIndicator"
-                        className="absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_10px_rgba(139,92,246,0.8)]"
+                        layoutId="bottomNavPill"
+                        className="absolute inset-0 rounded-2xl bg-primary/20 shadow-[0_0_20px_rgba(139,92,246,0.3)] z-10"
                         transition={springTransition}
                       />
                     )}

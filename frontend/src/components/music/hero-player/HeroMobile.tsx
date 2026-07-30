@@ -48,8 +48,8 @@ export function HeroMobile({
           isPlaying={isPlaying}
           togglePlay={togglePlay}
           dominantColor={dominantColor}
-          className="w-28 h-28 shrink-0 hidden sm:flex"
-          vinylClassName="right-[-20px] w-24 h-24"
+          className="w-20 h-20 shrink-0"
+          hideVinyl={true}
         />
 
         <SharedMetadata 
