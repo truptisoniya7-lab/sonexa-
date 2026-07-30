@@ -10,7 +10,7 @@ const generateToken = (user) => {
 };
 
 const login = async (req, res) => {
-  const { email, name, password } = req.body;
+  const { email, password } = req.body;
   try {
     const { data: existingUsers, error: fetchError } = await supabase
       .from('users')
@@ -22,14 +22,7 @@ const login = async (req, res) => {
     let user = existingUsers && existingUsers.length > 0 ? existingUsers[0] : null;
 
     if (!user) {
-      const { data: newUser, error: insertError } = await supabase
-        .from('users')
-        .insert([{ email, display_name: name || email.split('@')[0], username: email.split('@')[0], password_hash: password, provider: 'local' }])
-        .select()
-        .single();
-      
-      if (insertError) throw insertError;
-      user = newUser;
+      return res.status(401).json({ error: 'User does not exist. Please sign up.' });
     } else {
       if (user.password_hash !== password) {
         return res.status(401).json({ error: 'Invalid credentials' });
@@ -37,6 +30,36 @@ const login = async (req, res) => {
     }
     const token = generateToken(user);
     res.json({ token, user: { id: user.id, email: user.email, name: user.display_name, provider: user.provider } });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const signup = async (req, res) => {
+  const { email, name, password } = req.body;
+  try {
+    const { data: existingUsers, error: fetchError } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', email);
+
+    if (fetchError) throw fetchError;
+
+    if (existingUsers && existingUsers.length > 0) {
+      return res.status(409).json({ error: 'User already exists with this email.' });
+    }
+
+    const { data: newUser, error: insertError } = await supabase
+      .from('users')
+      .insert([{ email, display_name: name || email.split('@')[0], username: email.split('@')[0], password_hash: password, provider: 'local' }])
+      .select()
+      .single();
+    
+    if (insertError) throw insertError;
+    
+    const token = generateToken(newUser);
+    res.json({ token, user: { id: newUser.id, email: newUser.email, name: newUser.display_name, provider: newUser.provider } });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });
@@ -93,5 +116,6 @@ const googleLogin = async (req, res) => {
 
 module.exports = {
   login,
+  signup,
   googleLogin
 };

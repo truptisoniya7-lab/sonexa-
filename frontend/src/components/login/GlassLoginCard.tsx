@@ -12,8 +12,13 @@ export function GlassLoginCard({
   setEmail,
   password,
   setPassword,
+  name,
+  setName,
+  isSignUp,
+  setIsSignUp,
   isLoading,
   handleLogin,
+  handleSignup,
   handleGoogleSuccess
 }: any) {
   const x = useMotionValue(0);
@@ -57,14 +62,33 @@ export function GlassLoginCard({
           <div className="absolute top-0 left-[-100%] w-[200%] h-full bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-[-45deg] group-hover:animate-shimmer pointer-events-none" />
 
           <CardHeader className="space-y-1 pb-6 relative z-10">
-            <CardTitle className="text-2xl font-bold tracking-tight text-center text-white">Sign In</CardTitle>
+            <CardTitle className="text-2xl font-bold tracking-tight text-center text-white">
+              {isSignUp ? 'Create an Account' : 'Sign In'}
+            </CardTitle>
             <CardDescription className="text-center text-white/60">
-              Enter your credentials to continue
+              {isSignUp ? 'Enter your details to get started' : 'Enter your credentials to continue'}
             </CardDescription>
           </CardHeader>
 
           <CardContent className="relative z-10">
-            <form onSubmit={handleLogin} className="space-y-5">
+            <form onSubmit={isSignUp ? handleSignup : handleLogin} className="space-y-5">
+              {isSignUp && (
+                <div className="space-y-2 group/input relative">
+                  <Label htmlFor="name" className="text-white/80 group-focus-within/input:text-primary transition-colors">Name</Label>
+                  <div className="relative">
+                    <Input 
+                      id="name" 
+                      type="text" 
+                      placeholder="Display Name" 
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
+                      className="bg-white/5 border-white/10 text-white focus-visible:ring-primary focus-visible:bg-white/10 transition-all duration-300 backdrop-blur-sm"
+                    />
+                    <div className="absolute inset-0 rounded-md ring-1 ring-primary/0 group-focus-within/input:ring-primary/50 transition-all duration-500 pointer-events-none blur-sm" />
+                  </div>
+                </div>
+              )}
               <div className="space-y-2 group/input relative">
                 <Label htmlFor="email" className="text-white/80 group-focus-within/input:text-primary transition-colors">Email</Label>
                 <div className="relative">
@@ -83,7 +107,7 @@ export function GlassLoginCard({
               <div className="space-y-2 pb-2 group/input relative">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password" className="text-white/80 group-focus-within/input:text-primary transition-colors">Password</Label>
-                  <a href="#" className="text-xs text-primary hover:text-purple-300 transition-colors">Forgot password?</a>
+                  {!isSignUp && <a href="#" className="text-xs text-primary hover:text-purple-300 transition-colors">Forgot password?</a>}
                 </div>
                 <div className="relative">
                   <Input 
@@ -108,10 +132,23 @@ export function GlassLoginCard({
                         <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }} className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full" />
                         Entering Universe...
                       </>
-                    ) : "Log In / Sign Up"}
+                    ) : isSignUp ? "Sign Up" : "Log In"}
                   </span>
                 </Button>
               </motion.div>
+              
+              <div className="text-center mt-4">
+                <p className="text-sm text-white/60">
+                  {isSignUp ? "Already have an account? " : "Don't have an account? "}
+                  <button 
+                    type="button" 
+                    onClick={() => setIsSignUp(!isSignUp)}
+                    className="text-primary hover:text-purple-300 hover:underline transition-all"
+                  >
+                    {isSignUp ? "Log In" : "Sign Up"}
+                  </button>
+                </p>
+              </div>
             </form>
 
             <div className="relative my-8">

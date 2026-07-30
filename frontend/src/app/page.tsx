@@ -15,6 +15,8 @@ export default function LoginPage() {
   const [loadingComplete, setLoadingComplete] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [isSignUp, setIsSignUp] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -47,6 +49,32 @@ export default function LoginPage() {
         }, 1000);
       } else {
         alert(data.error || 'Login failed');
+        setIsLoading(false);
+      }
+    } catch (err) {
+      console.error(err);
+      setIsLoading(false);
+    }
+  };
+
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      const res = await fetch(`/api/auth/signup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, name })
+      });
+      const data = await res.json();
+      if (res.ok && data.token) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        setTimeout(() => {
+          router.push('/home');
+        }, 1000);
+      } else {
+        alert(data.error || 'Signup failed');
         setIsLoading(false);
       }
     } catch (err) {
@@ -141,8 +169,13 @@ export default function LoginPage() {
              setEmail={setEmail}
              password={password}
              setPassword={setPassword}
+             name={name}
+             setName={setName}
+             isSignUp={isSignUp}
+             setIsSignUp={setIsSignUp}
              isLoading={isLoading}
              handleLogin={handleLogin}
+             handleSignup={handleSignup}
              handleGoogleSuccess={handleGoogleSuccess}
            />
         </motion.div>
