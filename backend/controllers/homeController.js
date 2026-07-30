@@ -53,6 +53,8 @@ const getLayout = async (req, res) => {
       { id: 'vijay', title: 'Vijay Thalapathy', search: 'Vijay Thalapathy' }
     ];
 
+    let madeForYouEndpoint = '/api/music/discover?category=for you mix';
+
     // Personalization Logic: Override static artists with user's top artists if history exists
     if (supabase) {
       const { data: history } = await supabase
@@ -78,6 +80,10 @@ const getLayout = async (req, res) => {
         // Replace as many static sections as we have top artists (up to 5)
         for (let i = 0; i < Math.min(topArtists.length, 5); i++) {
           const artist = topArtists[i];
+          if (i === 0) {
+            // Use top artist for "Made For You"
+            madeForYouEndpoint = `/api/music/discover?section=${encodeURIComponent(artist + ' mix')}`;
+          }
           dynamicArtistSections[i] = {
             id: `personalized-artist-${i}`,
             title: `Because You Listened To ${artist}`,
@@ -99,7 +105,7 @@ const getLayout = async (req, res) => {
         id: 'made-for-you',
         type: 'CAROUSEL',
         title: 'Made For You',
-        endpoint: '/api/music/discover?category=for you mix',
+        endpoint: madeForYouEndpoint,
         motionPreset: 'level-3',
         caching: { strategy: 'stale-while-revalidate', ttl: 3600 }
       },
@@ -132,9 +138,9 @@ const getLayout = async (req, res) => {
         id: 'recently-played',
         type: 'INFINITE_CAROUSEL',
         title: 'Recently Played',
-        endpoint: '/api/music/discover?category=recent',
+        endpoint: `/api/history/recent/${userId}`,
         motionPreset: 'level-3',
-        caching: { strategy: 'cache-first', ttl: 1800 }
+        caching: { strategy: 'cache-first', ttl: 0 }
       }
     ];
 
