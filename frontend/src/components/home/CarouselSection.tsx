@@ -126,12 +126,20 @@ export function CarouselSection({ title, subtitle, icon, queryKey, endpoint }: C
             transition={{ type: "spring", stiffness: 300, damping: 20, delay: idx * 0.05 }}
             whileHover={{ y: -8, transition: { duration: 0.2 } }}
             className={isExpanded ? "w-full cursor-pointer group" : "w-[160px] md:w-[200px] shrink-0 snap-start group cursor-pointer"}
-            onClick={() => playSong({
-              song_uri: track.uri,
-              song_title: track.title,
-              song_artist: track.artist,
-              song_image: track.image
-            })}
+            onClick={() => {
+              if (track.type === 'Room' || track.type === 'ROOM') {
+                router.push(`/rooms`);
+              } else if (track.type === 'Artist' || track.type === 'ARTIST') {
+                router.push(`/search?q=${track.title}`);
+              } else {
+                playSong({
+                  song_uri: track.uri,
+                  song_title: track.title,
+                  song_artist: track.artist,
+                  song_image: track.image
+                });
+              }
+            }}
           >
             <div className="glass-panel p-3 h-full border-white/5 group-hover:border-primary/30 transition-all duration-300 bg-background/40 group-hover:bg-white/10 shadow-glass group-hover:shadow-glass-hover rounded-2xl relative overflow-hidden">
               {/* Subtle inner glow on hover */}

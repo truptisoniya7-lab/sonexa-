@@ -115,14 +115,24 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const playSong = async (song: Song, addToHistory = true) => {
-    if (addToHistory && currentSong) {
-      setHistory(prev => [...prev, currentSong]);
+    if (currentSong) {
+      if (addToHistory) {
+        setHistory(prev => [...prev, currentSong]);
+      }
+      // Log the previous song
+      const progressSec = Math.floor(progress);
+      const durationSec = Math.floor(duration);
+      HistoryManager.logEvent({
+        ...currentSong,
+        duration_listened: progressSec,
+        song_duration: durationSec,
+        completed: durationSec > 0 && progressSec >= durationSec - 10,
+        skipped: durationSec > 0 && progressSec < durationSec / 2 && progressSec > 5
+      });
     }
+
     setCurrentSong(song);
     setIsReady(false);
-    
-    // Use HistoryManager
-    HistoryManager.logListen(song);
 
     let videoId = null;
     if (song.song_uri && !song.song_uri.startsWith('spotify:')) {
