@@ -10,6 +10,7 @@ export function HeroPlayer() {
   const { currentSong, isPlaying, togglePlay } = usePlayer();
   
   const [dominantColor, setDominantColor] = useState('139, 92, 246'); // Default purple rgb
+  const [recentSong, setRecentSong] = useState<any>(null);
 
   const defaultSong = {
     song_uri: 'spotify:track:default',
@@ -18,7 +19,25 @@ export function HeroPlayer() {
     song_image: 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=500&q=80'
   };
 
-  const activeSong = currentSong || defaultSong;
+  useEffect(() => {
+    // Fetch last played song
+    const userId = '1'; // Mock user id
+    fetch(`/api/history/recent/${userId}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.length > 0) {
+          setRecentSong({
+            song_uri: data[0].uri,
+            song_title: data[0].title,
+            song_artist: data[0].artist,
+            song_image: data[0].image
+          });
+        }
+      })
+      .catch(err => console.error('Failed to load recent song', err));
+  }, []);
+
+  const activeSong = currentSong || recentSong || defaultSong;
 
   useEffect(() => {
     if (activeSong.song_image) {
@@ -152,16 +171,18 @@ export function HeroPlayer() {
             )}
           </div>
 
-          {/* Lyrics Preview Pill */}
-          <div className="mt-4 inline-flex">
-            <div className="glass-panel px-4 py-3 rounded-2xl border border-white/5 flex items-start gap-3 max-w-sm hover:border-white/20 transition-colors">
-              <Mic2 className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />
-              <div className="text-sm font-medium text-white/80 italic leading-relaxed">
-                "I'm working late 'cause I'm a singer... <br/>
-                <span className="text-primary font-bold">Oh, he looks so cute wrapped around my finger...</span>"
+          {/* Lyrics Preview Pill (Only show for default song demo) */}
+          {activeSong.song_title === 'Espresso' && (
+            <div className="mt-4 inline-flex">
+              <div className="glass-panel px-4 py-3 rounded-2xl border border-white/5 flex items-start gap-3 max-w-sm hover:border-white/20 transition-colors">
+                <Mic2 className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />
+                <div className="text-sm font-medium text-white/80 italic leading-relaxed">
+                  "I'm working late 'cause I'm a singer... <br/>
+                  <span className="text-primary font-bold">Oh, he looks so cute wrapped around my finger...</span>"
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </motion.div>
       </motion.div>
     </header>
