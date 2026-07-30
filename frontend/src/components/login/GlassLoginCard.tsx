@@ -21,23 +21,6 @@ export function GlassLoginCard({
   handleSignup,
   handleGoogleSuccess
 }: any) {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  const rotateX = useTransform(y, [-100, 100], [10, -10]);
-  const rotateY = useTransform(x, [-100, 100], [-10, 10]);
-
-  function handleMouse(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-    const rect = event.currentTarget.getBoundingClientRect();
-    x.set(event.clientX - rect.left - rect.width / 2);
-    y.set(event.clientY - rect.top - rect.height / 2);
-  }
-
-  function handleMouseLeave() {
-    x.set(0);
-    y.set(0);
-  }
-
   return (
     <div className="w-full md:w-[450px] lg:w-[500px] flex items-center justify-center p-8 md:p-12 relative z-10 perspective-1000">
       <motion.div
@@ -45,12 +28,6 @@ export function GlassLoginCard({
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.5, type: "spring", stiffness: 100 }}
         className="w-full preserve-3d"
-        onMouseMove={handleMouse}
-        onMouseLeave={handleMouseLeave}
-        style={{
-          rotateX,
-          rotateY,
-        }}
       >
         <Card className="relative overflow-hidden bg-black/40 backdrop-blur-2xl border-white/10 shadow-2xl shadow-purple-900/20 group">
           {/* Noise texture overlay */}
