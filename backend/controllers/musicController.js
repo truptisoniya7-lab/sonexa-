@@ -88,7 +88,21 @@ const search = async (req, res) => {
     return res.json(dbCache);
   }
 
-  // 2. Prevent concurrent identical live searches
+  try {
+    const fallbackData = require('../fallback_data.json');
+    const exactMatch = fallbackData.find(d => d.query === cacheKey);
+    if (exactMatch && exactMatch.results && exactMatch.results.length > 0) {
+      return res.json(exactMatch.results);
+    }
+    const partialMatch = fallbackData.find(d => cacheKey.includes(d.query) || d.query.includes(cacheKey));
+    if (partialMatch && partialMatch.results && partialMatch.results.length > 0) {
+      return res.json(partialMatch.results);
+    }
+  } catch (e) {
+    // Ignore fallback read errors
+  }
+
+  // 3. Prevent concurrent identical live searches
   if (activeSearches.has(cacheKey)) {
     try {
       const results = await activeSearches.get(cacheKey);
@@ -113,14 +127,6 @@ const search = async (req, res) => {
     console.error('Error in music search (likely Vercel IP block):', error);
     try {
       const fallbackData = require('../fallback_data.json');
-      const exactMatch = fallbackData.find(d => d.query === cacheKey);
-      if (exactMatch && exactMatch.results && exactMatch.results.length > 0) {
-        return res.json(exactMatch.results);
-      }
-      const partialMatch = fallbackData.find(d => cacheKey.includes(d.query) || d.query.includes(cacheKey));
-      if (partialMatch && partialMatch.results && partialMatch.results.length > 0) {
-        return res.json(partialMatch.results);
-      }
       return res.json(fallbackData[0].results);
     } catch (fallbackError) {
       return res.json([]);
@@ -153,6 +159,22 @@ const discover = async (req, res) => {
     return res.json(dbCache);
   }
 
+  // FORCE CONSISTENCY: Always serve curated fallback data first if it exists
+  // This guarantees Vercel (US IPs) shows the exact same Indian/Bollywood songs as localhost
+  try {
+    const fallbackData = require('../fallback_data.json');
+    const exactMatch = fallbackData.find(d => d.query === cacheKey);
+    if (exactMatch && exactMatch.results && exactMatch.results.length > 0) {
+      return res.json(exactMatch.results);
+    }
+    const partialMatch = fallbackData.find(d => cacheKey.includes(d.query) || d.query.includes(cacheKey));
+    if (partialMatch && partialMatch.results && partialMatch.results.length > 0) {
+      return res.json(partialMatch.results);
+    }
+  } catch (e) {
+    // Ignore read errors
+  }
+
   if (activeSearches.has(cacheKey)) {
     try {
       const results = await activeSearches.get(cacheKey);
@@ -161,7 +183,13 @@ const discover = async (req, res) => {
   }
 
   const searchPromise = (async () => {
-    const results = await performLiveSearch(searchStr);
+    // Append 'bollywood' to generic queries to force Indian content on live searches
+    let liveQuery = searchStr;
+    if (["for you mix songs", "moods songs", "recent songs", "trending songs"].includes(cacheKey)) {
+        liveQuery = `bollywood ${searchStr}`;
+    }
+    
+    const results = await performLiveSearch(liveQuery);
     if (results && results.length > 0) {
       await setCachedSearch(cacheKey, results);
     }
