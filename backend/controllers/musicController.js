@@ -131,13 +131,11 @@ const search = async (req, res) => {
 };
 
 const discover = async (req, res) => {
-  const { language, genre, section, category } = req.query;
+  const { language, genre, section } = req.query;
   
   let searchStr = "";
   
-  if (category) {
-    searchStr = category;
-  } else if (section) {
+  if (section) {
     searchStr = section;
     if (language && language !== 'All') searchStr = `${language} ${searchStr}`;
     if (genre && genre !== 'All') searchStr = `${searchStr} ${genre}`;
