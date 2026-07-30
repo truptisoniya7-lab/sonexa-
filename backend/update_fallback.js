@@ -41,11 +41,11 @@ const queries = [
   "sai abhyankar songs",
   "anirudh ravichander songs",
   "thomas songs",
-  "for you mix songs",
-  "moods songs",
-  "recent songs",
-  "trending songs",
-  "pop songs",
+  "top hindi songs",
+  "hindi moods songs",
+  "hindi recent songs",
+  "hindi trending songs",
+  "hindi pop songs",
   "arijit singh"
 ];
 
@@ -58,11 +58,17 @@ async function generateFallback() {
     try {
       const results = await performLiveSearch(query);
       if (results.length > 0) {
+        // Strip 'hindi ' or map specific queries so they match what the frontend requests
+        let cacheKey = query.replace('hindi ', '').toLowerCase();
+        if (query === 'top hindi songs') {
+            cacheKey = 'for you mix songs';
+        }
+        
         fallbackData.push({
-          query: query.toLowerCase(),
+          query: cacheKey,
           results: results
         });
-        console.log(`✅ Found ${results.length} results for "${query}"`);
+        console.log(`✅ Found ${results.length} results for "${query}" -> caching as "${cacheKey}"`);
       } else {
         console.log(`❌ No results for "${query}"`);
       }
