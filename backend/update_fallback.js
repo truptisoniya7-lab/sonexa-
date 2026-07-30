@@ -42,7 +42,7 @@ const queries = [
   "anirudh ravichander songs",
   "bollywood songs",
   "top hindi songs",
-  "mood songs",
+  "Mood Mixes",
   "hindi recent songs",
   "hindi trending songs",
   "hindi pop songs",

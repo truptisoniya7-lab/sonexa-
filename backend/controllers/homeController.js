@@ -69,7 +69,7 @@ const getLayout = async (req, res) => {
         id: 'moods',
         type: 'MASONRY',
         title: 'Mood Mixes',
-        endpoint: '/api/music/discover?category=moods',
+        endpoint: '/api/music/discover?section=Mood Mixes',
         motionPreset: 'level-3',
         caching: { strategy: 'stale-while-revalidate', ttl: 86400 }
       },
