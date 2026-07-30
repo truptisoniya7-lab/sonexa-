@@ -40,7 +40,7 @@ const performLiveSearch = async (q) => {
 const queries = [
   "sai abhyankar songs",
   "anirudh ravichander songs",
-  "thomas songs",
+  "bollywood songs",
   "top hindi songs",
   "hindi moods songs",
   "hindi recent songs",

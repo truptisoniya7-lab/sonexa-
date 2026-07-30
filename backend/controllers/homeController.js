@@ -90,10 +90,10 @@ const getLayout = async (req, res) => {
         caching: { strategy: 'stale-while-revalidate', ttl: 3600 }
       },
       {
-        id: 'thomas',
+        id: 'bollywood',
         type: 'CAROUSEL',
-        title: 'Thomas',
-        endpoint: '/api/music/discover?section=Thomas',
+        title: 'Bollywood Hits',
+        endpoint: '/api/music/discover?section=Bollywood',
         motionPreset: 'level-3',
         caching: { strategy: 'stale-while-revalidate', ttl: 3600 }
       },
