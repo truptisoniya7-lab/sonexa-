@@ -29,7 +29,7 @@ const login = async (req, res) => {
       }
     }
     const token = generateToken(user);
-    res.json({ token, user: { id: user.id, email: user.email, name: user.display_name, provider: user.provider } });
+    res.json({ token, user: { id: user.id, email: user.email, name: user.name, provider: user.provider } });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });
@@ -58,8 +58,6 @@ const signup = async (req, res) => {
       .insert([{ 
         email, 
         name: name || baseUsername, 
-        display_name: name || baseUsername, 
-        username: uniqueUsername, 
         password_hash: password, 
         provider: 'local' 
       }])
@@ -72,7 +70,7 @@ const signup = async (req, res) => {
     }
     
     const token = generateToken(newUser);
-    res.json({ token, user: { id: newUser.id, email: newUser.email, name: newUser.display_name, provider: newUser.provider } });
+    res.json({ token, user: { id: newUser.id, email: newUser.email, name: newUser.name, provider: newUser.provider } });
   } catch (error) {
     console.error('Signup error:', error);
     res.status(500).json({ error: 'Internal server error', details: error.message || error });
@@ -101,7 +99,7 @@ const googleLogin = async (req, res) => {
     if (!user) {
       const { data: newUser, error: insertError } = await supabase
         .from('users')
-        .insert([{ email, display_name: name, username: email.split('@')[0], google_id: googleId, avatar: picture, provider: 'google' }])
+        .insert([{ email, name: name, google_id: googleId, profile_picture: picture, provider: 'google' }])
         .select()
         .single();
         
@@ -110,7 +108,7 @@ const googleLogin = async (req, res) => {
     } else if (!user.google_id) {
       const { data: updatedUser, error: updateError } = await supabase
         .from('users')
-        .update({ google_id: googleId, avatar: picture, provider: 'google' })
+        .update({ google_id: googleId, profile_picture: picture, provider: 'google' })
         .eq('email', email)
         .select()
         .single();
@@ -120,7 +118,7 @@ const googleLogin = async (req, res) => {
     }
     
     const token = generateToken(user);
-    res.json({ token, user: { id: user.id, email: user.email, name: user.display_name, picture: user.avatar } });
+    res.json({ token, user: { id: user.id, email: user.email, name: user.name, picture: user.profile_picture } });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Authentication failed' });
