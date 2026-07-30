@@ -4,6 +4,7 @@ import { PlayerProvider } from '@/context/PlayerContext';
 import GlobalPlayer from '@/components/GlobalPlayer';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { TopBar } from '@/components/layout/TopBar';
+import { BottomNavigation } from '@/components/layout/BottomNavigation';
 import { Aurora } from '@/components/effects/aurora';
 import { Particles } from '@/components/effects/particles';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -39,11 +40,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <Aurora />
         <Particles />
         <Sidebar unreadCount={unreadCount} toggleNotifs={() => setShowNotifs(!showNotifs)} />
+        <BottomNavigation />
         
-        <div className="flex flex-col flex-1 md:pl-64 z-10">
+        <div className="flex flex-col flex-1 md:pl-64 z-10 w-full">
           <TopBar unreadCount={unreadCount} toggleNotifs={() => setShowNotifs(!showNotifs)} />
           
-          <main className="flex-1 p-4 md:p-8 pb-32">
+          <main className="flex-1 p-4 md:p-8 pb-32 md:pb-32">
             <AnimatePresence mode="wait">
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
@@ -88,7 +90,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           )}
         </AnimatePresence>
 
-        <div className="fixed bottom-0 left-0 right-0 z-50">
+        <div className="fixed bottom-[64px] md:bottom-0 left-0 right-0 z-50">
           <GlobalPlayer />
         </div>
       </div>

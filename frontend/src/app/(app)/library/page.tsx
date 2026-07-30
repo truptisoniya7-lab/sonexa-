@@ -338,7 +338,7 @@ export default function LibraryPage() {
                     <TabsTrigger 
                       key={val} 
                       value={val} 
-                      className="rounded-full px-6 py-2.5 h-auto text-[14px] font-semibold border border-transparent data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:border-white/20 hover:bg-white/5 transition-all"
+                      className="rounded-full px-6 py-2.5 min-h-[44px] h-auto text-[14px] font-semibold border border-transparent data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:border-white/20 hover:bg-white/5 transition-all"
                     >
                       {tab}
                     </TabsTrigger>
@@ -352,7 +352,7 @@ export default function LibraryPage() {
                 placeholder="Search Library..." 
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
-                className="pl-9 bg-white/5 border-white/10 rounded-full h-10 text-[14px] focus-visible:ring-primary"
+                className="pl-9 bg-white/5 border-white/10 rounded-full h-11 text-[14px] focus-visible:ring-primary"
               />
             </div>
           </div>

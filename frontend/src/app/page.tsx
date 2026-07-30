@@ -10,6 +10,8 @@ import { AnimatedCursor } from '@/components/login/AnimatedCursor';
 import { GlassLoginCard } from '@/components/login/GlassLoginCard';
 import { AnimatedFeatures } from '@/components/login/AnimatedFeatures';
 import { LoginScene } from '@/components/login/LoginScene';
+import { FloatingMusicBackground } from '@/components/login/FloatingMusicBackground';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 export default function LoginPage() {
   const [loadingComplete, setLoadingComplete] = useState(false);
@@ -19,6 +21,7 @@ export default function LoginPage() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   // Prevent scroll during loading
   useEffect(() => {
@@ -122,12 +125,12 @@ export default function LoginPage() {
         {/* Render fallback background gradient immediately */}
         <BackgroundGradient />
 
-        {/* 3D Scene Lazy Loaded Wrapper */}
-        {loadingComplete && <LoginScene />}
+        {/* Dynamic Scene based on device */}
+        {loadingComplete && (isMobile ? <FloatingMusicBackground /> : <LoginScene />)}
 
         {/* Left Side: Immersive Text & Features */}
         <motion.div 
-          className="relative flex-1 flex flex-col justify-center px-8 md:px-16 lg:px-24 py-12 md:py-0 overflow-hidden z-10 pointer-events-none"
+          className="relative flex-1 flex flex-col justify-center px-8 md:px-16 lg:px-24 py-12 md:py-0 overflow-hidden z-10 pointer-events-none hidden md:flex"
           initial={{ opacity: 0 }}
           animate={{ opacity: loadingComplete ? 1 : 0 }}
           transition={{ duration: 1, delay: 0.5 }}

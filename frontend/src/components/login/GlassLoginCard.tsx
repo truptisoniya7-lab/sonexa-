@@ -22,7 +22,7 @@ export function GlassLoginCard({
   handleGoogleSuccess
 }: any) {
   return (
-    <div className="w-full md:w-[450px] lg:w-[500px] flex items-center justify-center p-8 md:p-12 relative z-10 perspective-1000">
+    <div className="w-[90%] sm:w-full md:w-[450px] lg:w-[500px] flex items-center justify-center py-8 md:p-12 relative z-10 perspective-1000 mx-auto">
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -60,7 +60,7 @@ export function GlassLoginCard({
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       required
-                      className="bg-white/5 border-white/10 text-white focus-visible:ring-primary focus-visible:bg-white/10 transition-all duration-300 backdrop-blur-sm"
+                      className="bg-white/5 border-white/10 text-white focus-visible:ring-primary focus-visible:bg-white/10 transition-all duration-300 backdrop-blur-sm min-h-[44px]"
                     />
                     <div className="absolute inset-0 rounded-md ring-1 ring-primary/0 group-focus-within/input:ring-primary/50 transition-all duration-500 pointer-events-none blur-sm" />
                   </div>
@@ -76,7 +76,7 @@ export function GlassLoginCard({
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="bg-white/5 border-white/10 text-white focus-visible:ring-primary focus-visible:bg-white/10 transition-all duration-300 backdrop-blur-sm"
+                    className="bg-white/5 border-white/10 text-white focus-visible:ring-primary focus-visible:bg-white/10 transition-all duration-300 backdrop-blur-sm min-h-[44px]"
                   />
                   <div className="absolute inset-0 rounded-md ring-1 ring-primary/0 group-focus-within/input:ring-primary/50 transition-all duration-500 pointer-events-none blur-sm" />
                 </div>
@@ -94,7 +94,7 @@ export function GlassLoginCard({
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="bg-white/5 border-white/10 text-white focus-visible:ring-primary focus-visible:bg-white/10 transition-all duration-300 backdrop-blur-sm"
+                    className="bg-white/5 border-white/10 text-white focus-visible:ring-primary focus-visible:bg-white/10 transition-all duration-300 backdrop-blur-sm min-h-[44px]"
                   />
                   <div className="absolute inset-0 rounded-md ring-1 ring-primary/0 group-focus-within/input:ring-primary/50 transition-all duration-500 pointer-events-none blur-sm" />
                 </div>

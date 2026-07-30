@@ -339,6 +339,38 @@ export default function ListenTogetherPage() {
       {/* Right Side Live Feed Panel */}
       <LiveFeed events={feedEvents} />
       
+      {/* Mobile Floating Action Button (Create Room) */}
+      <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+        <DialogTrigger asChild>
+          <Button 
+            className="md:hidden fixed bottom-[90px] right-6 h-14 w-14 rounded-full shadow-2xl bg-primary text-white hover:scale-105 transition-transform z-50 flex items-center justify-center p-0"
+          >
+            <Plus className="w-6 h-6" />
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px] bg-background/80 backdrop-blur-3xl border border-white/10 p-6 rounded-3xl shadow-2xl">
+          <DialogHeader className="mb-4">
+            <DialogTitle className="text-2xl font-bold flex items-center gap-2">
+              🎉 Start Listening Together
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-6">
+            <div className="space-y-3">
+              <Label className="text-white/70">Room Name</Label>
+              <Input 
+                placeholder="e.g. Late Night Lo-Fi" 
+                value={newRoomName}
+                onChange={(e) => setNewRoomName(e.target.value)}
+                className="bg-black/50 border-white/10 h-12 text-lg rounded-xl focus-visible:ring-primary min-h-[44px]"
+              />
+            </div>
+            <Button onClick={handleCreateRoom} disabled={!newRoomName.trim()} className="w-full h-14 rounded-xl font-bold text-lg shadow-lg">
+              Launch Room
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+      
       <style dangerouslySetInnerHTML={{__html: `
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
