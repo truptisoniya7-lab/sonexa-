@@ -8,7 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { Search, Plus, Radio, Music, Users, MessageSquare } from 'lucide-react';
+import { Search, Plus, Radio, Music, Users, MessageSquare, Mic } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
 import { RoomCard, RoomCardProps } from '@/components/room/RoomCard';
