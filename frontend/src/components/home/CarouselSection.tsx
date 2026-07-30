@@ -26,13 +26,13 @@ export function CarouselSection({ title, subtitle, icon, queryKey, endpoint }: C
   const [isExpanded, setIsExpanded] = useState(false);
   
   const { data: items = [], isLoading } = useQuery({
-    queryKey,
+    queryKey: [...queryKey, endpoint],
     queryFn: async () => {
       const res = await fetch(endpoint);
       if (!res.ok) throw new Error('Failed to fetch data');
       return res.json();
     },
-    staleTime: 1000 * 60 * 60, // 1 hour
+    staleTime: 60000, // 1 minute instead of 1 hour
   });
 
   const scroll = (direction: 'left' | 'right') => {

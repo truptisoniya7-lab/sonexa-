@@ -13,13 +13,13 @@ export function InfiniteCarouselModule({ module }: { module: any }) {
   const baseX = useMotionValue(0);
 
   const { data: items = [], isLoading } = useQuery({
-    queryKey: ['sdui', module.id],
+    queryKey: ['sdui', module.id, module.endpoint],
     queryFn: async () => {
       const res = await fetch(module.endpoint);
       if (!res.ok) throw new Error('Failed to fetch data');
       return res.json();
     },
-    staleTime: 1000 * 60 * 60,
+    staleTime: module.caching?.ttl !== undefined ? module.caching.ttl * 1000 : 60000,
   });
 
   useAnimationFrame((t, delta) => {
