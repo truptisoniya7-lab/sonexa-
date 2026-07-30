@@ -1,5 +1,6 @@
 import type { RoomEventType, RoomMember, ChatMessage, RoomEvent } from '../../types/room';
 import type { IRoomProvider, RoomEventCallback, UnsubscribeFn } from './RoomProvider';
+import { supabase } from '../../lib/supabase';
 import { getCurrentUser } from '../../lib/currentUser';
 import { SupabaseRealtimeService } from './SupabaseRealtimeService';
 

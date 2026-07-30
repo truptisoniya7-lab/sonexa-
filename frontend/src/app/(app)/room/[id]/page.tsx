@@ -56,14 +56,20 @@ export default function RoomPage() {
 
   useEffect(() => {
     fetch(`/api/rooms/${id}`)
-      .then(res => { if (!res.ok) throw new Error('Room not found'); return res.json(); })
+      .then(res => { 
+        if (!res.ok) return { name: `Room ${id}` };
+        return res.json(); 
+      })
       .then(data => { if (data.name) setRoomName(data.name); })
-      .catch(err => { console.error(err); setRoomName(`Room ${id}`); });
+      .catch(err => { setRoomName(`Room ${id}`); });
 
     fetch(`/api/spotify/trending`)
-      .then(res => { if (!res.ok) throw new Error('Trending not found'); return res.json(); })
+      .then(res => { 
+        if (!res.ok) return [];
+        return res.json(); 
+      })
       .then(data => { if (Array.isArray(data)) setTrendingSongs(data); })
-      .catch(console.error);
+      .catch(() => setTrendingSongs([]));
   }, [id]);
 
   useEffect(() => {
