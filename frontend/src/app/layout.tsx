@@ -16,7 +16,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sonexa",
+  title: {
+    template: "Sonexa • %s",
+    default: "Sonexa",
+  },
   description: "Synchronized music streaming and chat rooms.",
   icons: {
     icon: [

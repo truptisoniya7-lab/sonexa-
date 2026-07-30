@@ -2,7 +2,7 @@ const sharp = require('sharp');
 const path = require('path');
 const fs = require('fs');
 
-const inputFile = 'C:\\Users\\hp\\.gemini\\antigravity\\brain\\1edeb36d-4e11-417c-a83b-28a8af129fe1\\sonexa_logo_waveform_s_1785413163026.jpg';
+const inputFile = 'C:\\Users\\hp\\.gemini\\antigravity\\brain\\1edeb36d-4e11-417c-a83b-28a8af129fe1\\sonexa_favicon_bold_s_1785413500818.jpg';
 const outputDir = path.join(__dirname, 'public');
 
 if (!fs.existsSync(outputDir)) {
