@@ -30,12 +30,12 @@ export function HeroMobile({
   rotateY
 }: HeroMobileProps) {
   return (
-    <div className="flex flex-col gap-4 relative z-10 preserve-3d mt-2 px-2 lg:hidden">
+    <div className="flex flex-col gap-3 relative z-10 preserve-3d mt-1 px-1 lg:hidden">
       <motion.div 
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         style={{ rotateX, rotateY }}
-        className="relative overflow-visible rounded-3xl border border-white/10 glass-panel p-4 md:p-6 flex flex-row items-center gap-6 cursor-pointer group shadow-glass-hover transition-dominant duration-700 max-h-[220px]"
+        className="relative overflow-visible rounded-[24px] border border-white/10 glass-panel p-3 flex flex-row items-center gap-4 cursor-pointer group shadow-glass-hover transition-dominant duration-700"
       >
         {/* Animated Glow Background behind the card */}
         <div 
@@ -48,7 +48,7 @@ export function HeroMobile({
           isPlaying={isPlaying}
           togglePlay={togglePlay}
           dominantColor={dominantColor}
-          className="w-20 h-20 shrink-0"
+          className="w-[72px] h-[72px] shrink-0"
           hideVinyl={true}
         />
 

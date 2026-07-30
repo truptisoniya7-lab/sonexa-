@@ -37,13 +37,13 @@ export function SharedMetadata({
         
         {isMobileLayout ? (
           <>
-            <h2 className="text-xl font-black text-white drop-shadow-md mb-0.5 truncate">{activeSong.song_title}</h2>
-            <p className="text-sm text-muted-foreground font-medium truncate">{activeSong.song_artist}</p>
+            <h2 className="text-[18px] font-black text-white drop-shadow-md mb-0.5 truncate">{activeSong.song_title}</h2>
+            <p className="text-xs text-muted-foreground font-medium truncate">{activeSong.song_artist?.replace('@', '')}</p>
           </>
         ) : (
           <>
             <h2 className="text-4xl lg:text-5xl font-black text-white drop-shadow-md mb-2">{activeSong.song_title}</h2>
-            <p className="text-xl text-muted-foreground font-medium">{activeSong.song_artist}</p>
+            <p className="text-xl text-muted-foreground font-medium">{activeSong.song_artist?.replace('@', '')}</p>
           </>
         )}
       </div>
@@ -51,7 +51,7 @@ export function SharedMetadata({
       <div className={`flex items-center gap-4 ${isMobileLayout ? 'pt-1' : 'pt-2 lg:pt-4 justify-center lg:justify-start'}`}>
         <button 
           onClick={(e) => { e.stopPropagation(); togglePlay(); }} 
-          className={`rounded-full font-bold bg-white text-black hover:scale-105 active:scale-95 transition-all shadow-xl flex items-center gap-2 ${isMobileLayout ? 'px-6 py-2 text-sm' : 'px-8 py-3'}`}
+          className={`rounded-full font-bold transition-all shadow-xl flex items-center justify-center gap-2 ${isMobileLayout ? 'px-5 py-1.5 text-xs bg-gradient-to-r from-primary to-primary/80 text-white border border-white/20' : 'px-8 py-3 bg-white text-black hover:scale-105 active:scale-95'}`}
         >
           {isPlaying ? 'Pause' : 'Resume'}
         </button>

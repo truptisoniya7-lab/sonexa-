@@ -51,7 +51,7 @@ export default function HomePage() {
   return (
     <div className="max-w-[1600px] mx-auto pb-12 relative z-10 preserve-3d perspective-1000">
       {/* Main Content Area - Cinematic Single Column */}
-      <div className="w-full space-y-16">
+      <div className="w-full space-y-6 lg:space-y-16">
         {isLoading ? (
           <div className="space-y-6">
             <Skeleton className="h-[40vh] w-full rounded-2xl glass" />

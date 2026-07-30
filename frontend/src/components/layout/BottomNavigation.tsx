@@ -66,7 +66,7 @@ export function BottomNavigation() {
                     {...hoverButton}
                     className={cn(
                       "flex items-center justify-center rounded-full transition-all relative z-10",
-                      isActive ? "w-14 h-10 text-primary" : "w-12 h-12 text-muted-foreground hover:text-white"
+                      isActive ? "w-14 h-10 text-primary" : "w-12 h-12 text-white/70 hover:text-white"
                     )}
                   >
                     <item.icon className="w-6 h-6 relative z-20" strokeWidth={isActive ? 2.5 : 2} />

@@ -46,18 +46,18 @@ export function CarouselSection({ title, subtitle, icon, queryKey, endpoint }: C
   if (isLoading) {
     return (
       <section className="space-y-6">
-        <div className="flex items-end justify-between">
-          <div>
-            <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-              {icon} {title}
+        <div className="flex items-end justify-between px-2 mb-3">
+          <div className="flex flex-col gap-1">
+            <h2 className="text-[28px] md:text-3xl font-black tracking-tight flex items-center gap-2">
+              {icon && icon} {title}
             </h2>
             {subtitle && <p className="text-sm text-muted-foreground mt-1">{subtitle}</p>}
           </div>
         </div>
         <div className="flex gap-4 md:gap-6 lg:gap-8 overflow-x-auto pb-6 scrollbar-none snap-x">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="min-w-[160px] md:min-w-[200px] xl:min-w-[220px] space-y-4">
-              <Skeleton className="w-full aspect-square rounded-xl bg-background/40" />
+            <div key={i} className="min-w-[240px] sm:min-w-[280px] md:min-w-[200px] xl:min-w-[220px] space-y-4">
+              <Skeleton className="w-full aspect-square rounded-[16px] bg-background/40" />
               <Skeleton className="h-4 w-3/4 bg-background/40" />
               <Skeleton className="h-3 w-1/2 bg-background/40" />
             </div>
@@ -71,20 +71,22 @@ export function CarouselSection({ title, subtitle, icon, queryKey, endpoint }: C
 
   return (
     <section className="space-y-6 relative group/section">
-      <div className="flex items-end justify-between px-1">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2 text-foreground">
-            {icon} {title}
+      <div className="flex items-end justify-between px-2 mb-3">
+        <div className="flex flex-col gap-1">
+          <h2 className="text-[28px] md:text-3xl font-black tracking-tight flex items-center gap-2 text-foreground">
+            {icon && icon} {title}
           </h2>
-          {subtitle && <p className="text-sm text-muted-foreground mt-1">{subtitle}</p>}
+          {subtitle && <p className="text-sm text-muted-foreground font-medium">{subtitle}</p>}
         </div>
-        <Button 
-          variant="link" 
-          className="text-muted-foreground hover:text-primary pr-0"
-          onClick={() => setIsExpanded(!isExpanded)}
-        >
-          {isExpanded ? 'Show Less' : 'See All \u2192'}
-        </Button>
+        {items.length > 5 && (
+          <Button 
+            variant="link" 
+            className="text-muted-foreground hover:text-primary pr-0"
+            onClick={() => setIsExpanded(!isExpanded)}
+          >
+            {isExpanded ? 'Show Less' : 'See All \u2192'}
+          </Button>
+        )}
       </div>
       
       {/* Scroll Controls (Hidden when expanded) */}
@@ -125,7 +127,7 @@ export function CarouselSection({ title, subtitle, icon, queryKey, endpoint }: C
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 20, delay: idx * 0.05 }}
             whileHover={{ y: -8, transition: { duration: 0.2 } }}
-            className={isExpanded ? "w-full cursor-pointer group" : "w-[160px] md:w-[200px] xl:w-[220px] shrink-0 snap-start group cursor-pointer"}
+            className={isExpanded ? "w-full cursor-pointer group" : "w-[240px] sm:w-[280px] md:w-[200px] xl:w-[220px] shrink-0 snap-start group cursor-pointer"}
             onClick={() => {
               if (track.type === 'Room' || track.type === 'ROOM') {
                 router.push(`/rooms`);
@@ -142,7 +144,6 @@ export function CarouselSection({ title, subtitle, icon, queryKey, endpoint }: C
             }}
           >
             <div className="glass-panel p-3 h-full border-white/5 group-hover:border-primary/30 transition-all duration-300 bg-background/40 group-hover:bg-white/10 shadow-glass group-hover:shadow-glass-hover rounded-2xl relative overflow-hidden">
-              {/* Subtle inner glow on hover */}
               <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl pointer-events-none" />
               
               <div className="relative aspect-square rounded-xl overflow-hidden mb-3 shadow-xl">
@@ -155,35 +156,12 @@ export function CarouselSection({ title, subtitle, icon, queryKey, endpoint }: C
                   onError={(e: any) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=500&q=80'; }}
                 />
 
-                {/* Like Button */}
                 <div className="absolute top-2 left-2 z-20">
                   <button className="p-1.5 rounded-full bg-black/40 backdrop-blur-md opacity-0 group-hover:opacity-100 hover:bg-black/60 transition-all shadow-lg text-white/70 hover:text-red-500 hover:scale-110" onClick={(e) => { e.stopPropagation(); console.log('Liked'); }}>
                     <Heart className="w-4 h-4" />
                   </button>
                 </div>
                 
-                {/* Micro-Interaction: Tiny Playing Waveform Indicator (Simulated active state) */}
-                {idx === 0 && (
-                  <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md rounded-full px-2 py-1 flex items-end gap-[2px] h-5 shadow-lg z-20">
-                    {[...Array(4)].map((_, i) => (
-                      <motion.div 
-                        key={i}
-                        animate={{ height: ['20%', '80%', '40%', '100%', '30%'] }} 
-                        transition={{ repeat: Infinity, duration: 0.6 + Math.random() * 0.4, ease: "easeInOut" }} 
-                        className="w-1 bg-primary rounded-t-sm"
-                      />
-                    ))}
-                  </div>
-                )}
-                
-                {/* Duration Tag */}
-                <div className="absolute bottom-2 right-2 z-20">
-                  <span className="text-[10px] font-bold bg-black/70 backdrop-blur-md text-white px-2 py-0.5 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
-                    3:42
-                  </span>
-                </div>
-                
-                {/* Progress Bar for 'Continue Listening' */}
                 {track.progress !== undefined && (
                   <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/60 z-20">
                     <div 
@@ -193,7 +171,6 @@ export function CarouselSection({ title, subtitle, icon, queryKey, endpoint }: C
                   </div>
                 )}
                 
-                {/* Glass Play Overlay */}
                 <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none translate-y-4 group-hover:translate-y-0 z-10">
                   <div className="w-16 h-16 rounded-full bg-primary/90 flex items-center justify-center shadow-[0_0_30px_rgba(139,92,246,0.5)]">
                     <PlayCircle className="w-8 h-8 text-white fill-white shadow-inner" />
