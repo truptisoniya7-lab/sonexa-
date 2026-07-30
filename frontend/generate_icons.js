@@ -20,17 +20,41 @@ const sizes = [
 
 async function generateIcons() {
   try {
+    // Generate rounded corner favicons
     for (const s of sizes) {
+      const roundedCorners = Buffer.from(
+        `<svg><rect x="0" y="0" width="${s.size}" height="${s.size}" rx="${s.size * 0.2}" ry="${s.size * 0.2}"/></svg>`
+      );
+
       await sharp(inputFile)
         .resize(s.size, s.size)
+        .composite([{ input: roundedCorners, blend: 'dest-in' }])
+        .png()
         .toFile(path.join(outputDir, s.name));
-      console.log(`Generated ${s.name}`);
+      console.log(`Generated rounded ${s.name}`);
     }
     
-    // Also generate a generic favicon.ico which is standard
-    // (though modern browsers prefer PNG)
+    // Generate Maskable Icon (Full square, no rounded corners)
+    await sharp(inputFile)
+      .resize(512, 512)
+      .png()
+      .toFile(path.join(outputDir, 'icon-maskable.png'));
+    console.log('Generated icon-maskable.png');
+
+    // Generate Apple Touch Icon (Full square, Apple rounds it automatically)
+    await sharp(inputFile)
+      .resize(180, 180)
+      .png()
+      .toFile(path.join(outputDir, 'apple-touch-icon.png'));
+    console.log('Generated apple-touch-icon.png');
+
+    // Generate Safari Pinned Tab (Usually a monochrome SVG, but we'll supply a placeholder if needed, Next.js supports just linking it)
+    
+    // Generate a generic favicon.ico which is standard
     await sharp(inputFile)
         .resize(32, 32)
+        .composite([{ input: Buffer.from(`<svg><rect x="0" y="0" width="32" height="32" rx="6.4" ry="6.4"/></svg>`), blend: 'dest-in' }])
+        .png()
         .toFile(path.join(outputDir, 'favicon.ico'));
     console.log('Generated favicon.ico');
 
