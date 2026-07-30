@@ -1,8 +1,8 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { PlayCircle, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -23,6 +23,7 @@ export function CarouselSection({ title, subtitle, icon, queryKey, endpoint }: C
   const router = useRouter();
   const { playSong } = usePlayer();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
   
   const { data: items = [], isLoading } = useQuery({
     queryKey,
@@ -77,38 +78,53 @@ export function CarouselSection({ title, subtitle, icon, queryKey, endpoint }: C
           </h2>
           {subtitle && <p className="text-sm text-muted-foreground mt-1">{subtitle}</p>}
         </div>
-        <Button variant="link" className="text-muted-foreground hover:text-primary pr-0">
-          See All &rarr;
+        <Button 
+          variant="link" 
+          className="text-muted-foreground hover:text-primary pr-0"
+          onClick={() => setIsExpanded(!isExpanded)}
+        >
+          {isExpanded ? 'Show Less' : 'See All \u2192'}
         </Button>
       </div>
       
-      {/* Scroll Controls */}
-      <Button 
-        variant="secondary" 
-        size="icon" 
-        className="absolute left-0 top-[55%] -translate-y-1/2 z-10 opacity-0 group-hover/section:opacity-100 transition-opacity -ml-4 shadow-xl hidden md:flex"
-        onClick={() => scroll('left')}
-      >
-        <ChevronLeft className="w-5 h-5" />
-      </Button>
+      {/* Scroll Controls (Hidden when expanded) */}
+      {!isExpanded && (
+        <>
+          <Button 
+            variant="secondary" 
+            size="icon" 
+            className="absolute left-0 top-[55%] -translate-y-1/2 z-10 opacity-0 group-hover/section:opacity-100 transition-opacity -ml-4 shadow-xl hidden md:flex"
+            onClick={() => scroll('left')}
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </Button>
 
-      <Button 
-        variant="secondary" 
-        size="icon" 
-        className="absolute right-0 top-[55%] -translate-y-1/2 z-10 opacity-0 group-hover/section:opacity-100 transition-opacity -mr-4 shadow-xl hidden md:flex"
-        onClick={() => scroll('right')}
-      >
-        <ChevronRight className="w-5 h-5" />
-      </Button>
+          <Button 
+            variant="secondary" 
+            size="icon" 
+            className="absolute right-0 top-[55%] -translate-y-1/2 z-10 opacity-0 group-hover/section:opacity-100 transition-opacity -mr-4 shadow-xl hidden md:flex"
+            onClick={() => scroll('right')}
+          >
+            <ChevronRight className="w-5 h-5" />
+          </Button>
+        </>
+      )}
 
-      <div ref={scrollRef} className="flex gap-4 md:gap-6 overflow-x-auto pb-6 snap-x scrollbar-none px-1">
+      <div 
+        ref={scrollRef} 
+        className={
+          isExpanded 
+            ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 px-1" 
+            : "flex gap-4 md:gap-6 overflow-x-auto pb-6 snap-x scrollbar-none px-1"
+        }
+      >
         {items.map((track: any, idx: number) => (
           <motion.div 
             key={track.id || idx}
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: idx * 0.05 }}
-            className="w-[160px] md:w-[200px] shrink-0 snap-start group cursor-pointer"
+            className={isExpanded ? "w-full cursor-pointer group" : "w-[160px] md:w-[200px] shrink-0 snap-start group cursor-pointer"}
             onClick={() => playSong({
               song_uri: track.uri,
               song_title: track.title,
