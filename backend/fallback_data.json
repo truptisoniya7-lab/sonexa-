@@ -3,51 +3,6 @@
     "query": "sai abhyankar songs",
     "results": [
       {
-        "id": "b68HETiNO98",
-        "uri": "b68HETiNO98",
-        "title": "@SaiAbhyankkar - Pavazha Malli  | Kayadu | Shruti Haasan | Vivek | Thejo | Think Indie",
-        "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/b68HETiNO98/hq720.jpg",
-        "duration": 309,
-        "youtubeId": "b68HETiNO98"
-      },
-      {
-        "id": "a3Ue-LN5B9U",
-        "uri": "a3Ue-LN5B9U",
-        "title": "@SaiAbhyankkar - Aasa Kooda  | Thejo Bharathwaj | Preity Mukundhan | Sai Smriti",
-        "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/a3Ue-LN5B9U/hq720.jpg",
-        "duration": 229,
-        "youtubeId": "a3Ue-LN5B9U"
-      },
-      {
-        "id": "VU23OPQ1Pmc",
-        "uri": "VU23OPQ1Pmc",
-        "title": "@SaiAbhyankkar - Katchi Sera  | Samyuktha | Ken Royson | Think Indie",
-        "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/VU23OPQ1Pmc/hq720.jpg",
-        "duration": 185,
-        "youtubeId": "VU23OPQ1Pmc"
-      },
-      {
-        "id": "_e45NEdNMXE",
-        "uri": "_e45NEdNMXE",
-        "title": "​@SaiAbhyankkar - Vizhi Veekura | Saanve Megghana| Sai Smriti|Adesh| Thejo| Think Indie",
-        "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/_e45NEdNMXE/hqdefault.jpg",
-        "duration": 294,
-        "youtubeId": "_e45NEdNMXE"
-      },
-      {
-        "id": "PqVvrF7pwDQ",
-        "uri": "PqVvrF7pwDQ",
-        "title": "@SaiAbhyankkar - Sithira Puthiri  | Meenakshi Chaudhary| Akshay Sundher | Think Indie",
-        "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/PqVvrF7pwDQ/hqdefault.jpg",
-        "duration": 288,
-        "youtubeId": "PqVvrF7pwDQ"
-      },
-      {
         "id": "7VsejGzcJmM",
         "uri": "7VsejGzcJmM",
         "title": "Alaakaa Loova Lyrical  | OM | Dhanush | Mammootty | Sai Pallavi | Sreeleela | Rajkumar | Sai",
@@ -57,13 +12,13 @@
         "youtubeId": "7VsejGzcJmM"
       },
       {
-        "id": "GoAAlACyXBg",
-        "uri": "GoAAlACyXBg",
-        "title": "The Wild Theme",
-        "artist": "Sai Abhyankkar",
-        "image": "https://i.ytimg.com/vi/GoAAlACyXBg/hq720.jpg",
-        "duration": 106,
-        "youtubeId": "GoAAlACyXBg"
+        "id": "b68HETiNO98",
+        "uri": "b68HETiNO98",
+        "title": "@SaiAbhyankkar - Pavazha Malli  | Kayadu | Shruti Haasan | Vivek | Thejo | Think Indie",
+        "artist": "Think Music India",
+        "image": "https://i.ytimg.com/vi/b68HETiNO98/hq720.jpg",
+        "duration": 309,
+        "youtubeId": "b68HETiNO98"
       },
       {
         "id": "IW6ct9S4MYc",
@@ -75,13 +30,22 @@
         "youtubeId": "IW6ct9S4MYc"
       },
       {
-        "id": "ZpZZvIOcdwE",
-        "uri": "ZpZZvIOcdwE",
-        "title": "@SaiAbhyankkar  - Pavazha Malli  | Shruti Haasan | Vivek | Think Indie",
+        "id": "PqVvrF7pwDQ",
+        "uri": "PqVvrF7pwDQ",
+        "title": "@SaiAbhyankkar - Sithira Puthiri  | Meenakshi Chaudhary| Akshay Sundher | Think Indie",
         "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/ZpZZvIOcdwE/hq720.jpg",
-        "duration": 85,
-        "youtubeId": "ZpZZvIOcdwE"
+        "image": "https://i.ytimg.com/vi/PqVvrF7pwDQ/hqdefault.jpg",
+        "duration": 288,
+        "youtubeId": "PqVvrF7pwDQ"
+      },
+      {
+        "id": "Le_toR6sXXE",
+        "uri": "Le_toR6sXXE",
+        "title": "PR Show - Launch Video | Mamitha |Ashwath Marimuthu| Sai Abhyankkar |Alpha Unit |Pradeep Ranganathan",
+        "artist": "PR Show and 2 more",
+        "image": "https://i.ytimg.com/vi/Le_toR6sXXE/hq720.jpg",
+        "duration": 147,
+        "youtubeId": "Le_toR6sXXE"
       },
       {
         "id": "E2U3GIsndrk",
@@ -91,6 +55,42 @@
         "image": "https://i.ytimg.com/vi/E2U3GIsndrk/hq720.jpg",
         "duration": 218,
         "youtubeId": "E2U3GIsndrk"
+      },
+      {
+        "id": "_e45NEdNMXE",
+        "uri": "_e45NEdNMXE",
+        "title": "​@SaiAbhyankkar - Vizhi Veekura | Saanve Megghana| Sai Smriti|Adesh| Thejo| Think Indie",
+        "artist": "Think Music India",
+        "image": "https://i.ytimg.com/vi/_e45NEdNMXE/hqdefault.jpg",
+        "duration": 294,
+        "youtubeId": "_e45NEdNMXE"
+      },
+      {
+        "id": "a3Ue-LN5B9U",
+        "uri": "a3Ue-LN5B9U",
+        "title": "@SaiAbhyankkar - Aasa Kooda  | Thejo Bharathwaj | Preity Mukundhan | Sai Smriti",
+        "artist": "Think Music India",
+        "image": "https://i.ytimg.com/vi/a3Ue-LN5B9U/hq720.jpg",
+        "duration": 229,
+        "youtubeId": "a3Ue-LN5B9U"
+      },
+      {
+        "id": "GoAAlACyXBg",
+        "uri": "GoAAlACyXBg",
+        "title": "The Wild Theme",
+        "artist": "Sai Abhyankkar",
+        "image": "https://i.ytimg.com/vi/GoAAlACyXBg/hq720.jpg",
+        "duration": 106,
+        "youtubeId": "GoAAlACyXBg"
+      },
+      {
+        "id": "4Bsc2uI_LsM",
+        "uri": "4Bsc2uI_LsM",
+        "title": "Oorum Blood | Dude | Pradeep Ranganathan, Mamitha | Sai Abhyankkar| Keerthiswaran|Paal Dabba| Mythri",
+        "artist": "Think Music India",
+        "image": "https://i.ytimg.com/vi/4Bsc2uI_LsM/hq720.jpg",
+        "duration": 269,
+        "youtubeId": "4Bsc2uI_LsM"
       }
     ]
   },
@@ -107,13 +107,13 @@
         "youtubeId": "NAkQVL61BRI"
       },
       {
-        "id": "qP8e7lFdEho",
-        "uri": "qP8e7lFdEho",
-        "title": "Kanaa - Othaiyadi Pathayila Video | Arunraja Kamaraj | Dhibu Ninan Thomas",
-        "artist": "SonyMusicSouthVEVO",
-        "image": "https://i.ytimg.com/vi/qP8e7lFdEho/hq720.jpg",
-        "duration": 254,
-        "youtubeId": "qP8e7lFdEho"
+        "id": "OXHTlMPbX7o",
+        "uri": "OXHTlMPbX7o",
+        "title": "Powerhouse - Official  | Coolie | Superstar Rajinikanth | Sun Pictures | Lokesh | Anirudh",
+        "artist": "Sun TV",
+        "image": "https://i.ytimg.com/vi/OXHTlMPbX7o/hq720.jpg",
+        "duration": 209,
+        "youtubeId": "OXHTlMPbX7o"
       },
       {
         "id": "q6e_b0NERCA",
@@ -125,22 +125,22 @@
         "youtubeId": "q6e_b0NERCA"
       },
       {
-        "id": "A_z5g0_hJN8",
-        "uri": "A_z5g0_hJN8",
-        "title": "Maari - Don’u Don’u Don’u Video | Dhanush, Kajal | Anirudh | Super Hit Song",
+        "id": "qP8e7lFdEho",
+        "uri": "qP8e7lFdEho",
+        "title": "Kanaa - Othaiyadi Pathayila Video | Arunraja Kamaraj | Dhibu Ninan Thomas",
         "artist": "SonyMusicSouthVEVO",
-        "image": "https://i.ytimg.com/vi/A_z5g0_hJN8/hq720.jpg",
-        "duration": 188,
-        "youtubeId": "A_z5g0_hJN8"
+        "image": "https://i.ytimg.com/vi/qP8e7lFdEho/hq720.jpg",
+        "duration": 254,
+        "youtubeId": "qP8e7lFdEho"
       },
       {
-        "id": "OXHTlMPbX7o",
-        "uri": "OXHTlMPbX7o",
-        "title": "Powerhouse - Official  | Coolie | Superstar Rajinikanth | Sun Pictures | Lokesh | Anirudh",
-        "artist": "Sun TV",
-        "image": "https://i.ytimg.com/vi/OXHTlMPbX7o/hq720.jpg",
-        "duration": 209,
-        "youtubeId": "OXHTlMPbX7o"
+        "id": "IxDvpoCmAaY",
+        "uri": "IxDvpoCmAaY",
+        "title": "Lokiverse Theme Video - Vikram | Kamal Haasan | ANIRUDH RAVICHANDER | Lokesh Kanagaraj",
+        "artist": "Sony Music South",
+        "image": "https://i.ytimg.com/vi/IxDvpoCmAaY/hq720.jpg",
+        "duration": 153,
+        "youtubeId": "IxDvpoCmAaY"
       },
       {
         "id": "DsjRNPrvq6U",
@@ -161,13 +161,22 @@
         "youtubeId": "1F3hm6MfR1k"
       },
       {
-        "id": "TKeU1bLlAcc",
-        "uri": "TKeU1bLlAcc",
-        "title": "Petta - Ilamai Thirumbudhe   | Rajinikanth, Simran | Anirudh Ravichander",
+        "id": "RTF5_6Au3A4",
+        "uri": "RTF5_6Au3A4",
+        "title": "Powerhouse - Telugu  | Coolie | Superstar Rajinikanth | Sun Pictures | Lokesh | Anirudh",
+        "artist": "Sun Gemini",
+        "image": "https://i.ytimg.com/vi/RTF5_6Au3A4/hq720.jpg",
+        "duration": 209,
+        "youtubeId": "RTF5_6Au3A4"
+      },
+      {
+        "id": "3wDiqlTNlfQ",
+        "uri": "3wDiqlTNlfQ",
+        "title": "LEO - Naa Ready Song Video | Thalapathy Vijay | Lokesh Kanagaraj | Anirudh Ravichander",
         "artist": "Sony Music South",
-        "image": "https://i.ytimg.com/vi/TKeU1bLlAcc/hq720.jpg",
-        "duration": 222,
-        "youtubeId": "TKeU1bLlAcc"
+        "image": "https://i.ytimg.com/vi/3wDiqlTNlfQ/hq720.jpg",
+        "duration": 262,
+        "youtubeId": "3wDiqlTNlfQ"
       },
       {
         "id": "Fyj5wbzRPC8",
@@ -177,15 +186,6 @@
         "image": "https://i.ytimg.com/vi/Fyj5wbzRPC8/hqdefault.jpg",
         "duration": 192,
         "youtubeId": "Fyj5wbzRPC8"
-      },
-      {
-        "id": "CKpbdCciELk",
-        "uri": "CKpbdCciELk",
-        "title": "Fear Song | Devara Part - 1 | NTR | Koratala Siva | Anirudh Ravichander | 27 Sep 2024",
-        "artist": "T-Series Telugu",
-        "image": "https://i.ytimg.com/vi/CKpbdCciELk/hq720.jpg",
-        "duration": 197,
-        "youtubeId": "CKpbdCciELk"
       }
     ]
   },
@@ -229,15 +229,6 @@
         "youtubeId": "yDv0WSgXJVg"
       },
       {
-        "id": "LX2zshAgECQ",
-        "uri": "LX2zshAgECQ",
-        "title": "Aankhon Se Tune 2.0 | Bhai Tera Star Hai | Raghav, Niharika | Lijo, Dev, Palak, Kumar, Alka, Mohsin",
-        "artist": "Tips Official and 3 more",
-        "image": "https://i.ytimg.com/vi/LX2zshAgECQ/hq720.jpg",
-        "duration": 229,
-        "youtubeId": "LX2zshAgECQ"
-      },
-      {
         "id": "zC3UbTf4qrM",
         "uri": "zC3UbTf4qrM",
         "title": "अफगान जलेबी  पूरा वीडियो गाना | फैंटम| सैफ अली खान, कैटरीना कैफ | टी-सीरीज",
@@ -245,6 +236,15 @@
         "image": "https://i.ytimg.com/vi/zC3UbTf4qrM/hq720.jpg",
         "duration": 206,
         "youtubeId": "zC3UbTf4qrM"
+      },
+      {
+        "id": "LX2zshAgECQ",
+        "uri": "LX2zshAgECQ",
+        "title": "Aankhon Se Tune 2.0 | Bhai Tera Star Hai | Raghav, Niharika | Lijo, Dev, Palak, Kumar, Alka, Mohsin",
+        "artist": "Tips Official and 3 more",
+        "image": "https://i.ytimg.com/vi/LX2zshAgECQ/hq720.jpg",
+        "duration": 229,
+        "youtubeId": "LX2zshAgECQ"
       },
       {
         "id": "0RxUcKE13ZI",
@@ -265,15 +265,6 @@
         "youtubeId": "fyno2GRGgVg"
       },
       {
-        "id": "N4wK3NtVRT0",
-        "uri": "N4wK3NtVRT0",
-        "title": "Pardesiya - Param Sundari | Sidharth M, Janhvi K | Sachin-Jigar, Sonu Nigam, Krishnakali, Amitabh B",
-        "artist": "Universal Music India",
-        "image": "https://i.ytimg.com/vi/N4wK3NtVRT0/hq720.jpg",
-        "duration": 178,
-        "youtubeId": "N4wK3NtVRT0"
-      },
-      {
         "id": "zAEA3h529ZU",
         "uri": "zAEA3h529ZU",
         "title": "Dhamaal 4: SAREE MV | Sanju Rathod, Tanishk | Ajay Devgn, Ritiesh Deshmukh, Anjali, Arshad, Jaaved",
@@ -281,12 +272,30 @@
         "image": "https://i.ytimg.com/vi/zAEA3h529ZU/hq720.jpg",
         "duration": 144,
         "youtubeId": "zAEA3h529ZU"
+      },
+      {
+        "id": "N4wK3NtVRT0",
+        "uri": "N4wK3NtVRT0",
+        "title": "Pardesiya - Param Sundari | Sidharth M, Janhvi K | Sachin-Jigar, Sonu Nigam, Krishnakali, Amitabh B",
+        "artist": "Universal Music India",
+        "image": "https://i.ytimg.com/vi/N4wK3NtVRT0/hq720.jpg",
+        "duration": 178,
+        "youtubeId": "N4wK3NtVRT0"
       }
     ]
   },
   {
     "query": "for you mix songs",
     "results": [
+      {
+        "id": "GVizJ_jpUnw",
+        "uri": "GVizJ_jpUnw",
+        "title": "Gehra Hua - Lyrical  | Dhurandhar, Ranveer Singh, Sara A,Shashwat Sachdev,Arijit Singh",
+        "artist": "Saregama Music",
+        "image": "https://i.ytimg.com/vi/GVizJ_jpUnw/hq720.jpg",
+        "duration": 364,
+        "youtubeId": "GVizJ_jpUnw"
+      },
       {
         "id": "orYf6VDtj_k",
         "uri": "orYf6VDtj_k",
@@ -315,90 +324,99 @@
         "youtubeId": "TRa9IMvccjg"
       },
       {
-        "id": "k4yXQkG2s1E",
-        "uri": "k4yXQkG2s1E",
-        "title": "काला चश्मा | बार बार देखों | सिद्धार्थ मल्होत्रा ​​कैटरीना कैफ | बादशाह नेहा कक्कड़ इंदीप बख्शी",
-        "artist": "Zee Music Company",
-        "image": "https://i.ytimg.com/vi/k4yXQkG2s1E/hq720.jpg",
-        "duration": 174,
-        "youtubeId": "k4yXQkG2s1E"
+        "id": "VYnhTXsXqH4",
+        "uri": "VYnhTXsXqH4",
+        "title": "Dil Ka Kya Kare Sahib Hum Unhi Pe Marte Hain | Jeet | Sunny Deol, Tabu | Kavita Krishnamurthy",
+        "artist": "Tips Official",
+        "image": "https://i.ytimg.com/vi/VYnhTXsXqH4/hq720.jpg",
+        "duration": 435,
+        "youtubeId": "VYnhTXsXqH4"
       },
       {
-        "id": "nfNc0XJdZWk",
-        "uri": "nfNc0XJdZWk",
-        "title": "Param Sundari - Full Song | Mimi | Kriti Sanon, Pankaj T | A.R. Rahman | Shreya | Amitabh",
-        "artist": "Sony Music India",
-        "image": "https://i.ytimg.com/vi/nfNc0XJdZWk/hq720.jpg",
-        "duration": 201,
-        "youtubeId": "nfNc0XJdZWk"
-      },
-      {
-        "id": "CbFjVMEZA5k",
-        "uri": "CbFjVMEZA5k",
-        "title": "Aaye Ho Meri Zindagi Mein | Udit Narayan | Aamir | Karisma | Evergreen Hindi Song",
-        "artist": "New Music Hindi",
-        "image": "https://i.ytimg.com/vi/CbFjVMEZA5k/hq720.jpg",
-        "duration": 360,
-        "youtubeId": "CbFjVMEZA5k"
+        "id": "cfaybWG25D4",
+        "uri": "cfaybWG25D4",
+        "title": "",
+        "artist": "Saregama Music",
+        "image": "https://i.ytimg.com/vi/GVizJ_jpUnw/hq720.jpg",
+        "duration": 364,
+        "youtubeId": "cfaybWG25D4"
       }
     ]
   },
   {
-    "query": "moods songs",
+    "query": "mood songs",
     "results": [
       {
         "id": "nJZcbidTutE",
         "uri": "nJZcbidTutE",
-        "title": "सूरज डूबा हैं 'पूरा वीडियो गाना | अरिजीत सिंह | टी-सीरीज",
+        "title": "'Sooraj Dooba Hain' FULL VIDEO SONG | Arijit singh Aditi Singh Sharma | T-SERIES",
         "artist": "T-Series",
         "image": "https://i.ytimg.com/vi/nJZcbidTutE/hq720.jpg",
         "duration": 248,
         "youtubeId": "nJZcbidTutE"
       },
       {
-        "id": "qpIdoaaPa6U",
-        "uri": "qpIdoaaPa6U",
-        "title": "जीने लगा हूँ बॉलीवुड सिंग एलांग - रम्माया वास्तावैया - गिरीश कुमार, श्रुति हासन",
-        "artist": "Tips Official",
-        "image": "https://i.ytimg.com/vi/qpIdoaaPa6U/hq720.jpg",
-        "duration": 202,
-        "youtubeId": "qpIdoaaPa6U"
+        "id": "WxtJqyIyThU",
+        "uri": "WxtJqyIyThU",
+        "title": "Kashmir Main Tu Kanyakumari|Chennai Express |Shahrukh K, Deepika P,Sunidhi C,Arijit S,Neeti",
+        "artist": "T-Series",
+        "image": "https://i.ytimg.com/vi/WxtJqyIyThU/hq720.jpg",
+        "duration": 327,
+        "youtubeId": "WxtJqyIyThU"
       },
       {
-        "id": "pon8irRa8II",
-        "uri": "pon8irRa8II",
-        "title": "AGAR TUM SAATH HO' Full 4k  song | Tamasha | Ranbir Kapoor, Deepika Padukone",
-        "artist": "music lover ",
-        "image": "https://i.ytimg.com/vi/pon8irRa8II/hq720.jpg",
-        "duration": 342,
-        "youtubeId": "pon8irRa8II"
+        "id": "TwFBtV13KQQ",
+        "uri": "TwFBtV13KQQ",
+        "title": "'One Bottle Down' Full Song with LYRICS | Yo Yo Honey Singh | T-SERIES",
+        "artist": "T-Series",
+        "image": "https://i.ytimg.com/vi/TwFBtV13KQQ/hq720.jpg",
+        "duration": 197,
+        "youtubeId": "TwFBtV13KQQ"
       },
       {
-        "id": "Ci0WbaUH3no",
-        "uri": "Ci0WbaUH3no",
-        "title": "She Move It Like -  | Badshah | Warina Hussain | ONE Album",
-        "artist": "Sony Music India",
-        "image": "https://i.ytimg.com/vi/Ci0WbaUH3no/hq720.jpg",
-        "duration": 186,
-        "youtubeId": "Ci0WbaUH3no"
+        "id": "6w67NOaRe-w",
+        "uri": "6w67NOaRe-w",
+        "title": "Illahi - Yeh Jawaani Hai Deewani | Ranbir Kapoor, Deepika Padukone",
+        "artist": "Dharma Productions",
+        "image": "https://i.ytimg.com/vi/6w67NOaRe-w/hq720.jpg",
+        "duration": 204,
+        "youtubeId": "6w67NOaRe-w"
       },
       {
-        "id": "xT9RSUOpFtk",
-        "uri": "xT9RSUOpFtk",
-        "title": "Dekha Zamana Sara Bharam Hai |  Tere Hawale | Arijit Singh |  Hindi Lyrics Song 2024",
-        "artist": "Sadabahar Gane ",
-        "image": "https://i.ytimg.com/vi/xT9RSUOpFtk/hq720.jpg",
-        "duration": 487,
-        "youtubeId": "xT9RSUOpFtk"
+        "id": "51Oz0l-qR3M",
+        "uri": "51Oz0l-qR3M",
+        "title": "The Humma Song",
+        "artist": "A. R. Rahman",
+        "image": "https://i.ytimg.com/vi/51Oz0l-qR3M/hq720.jpg",
+        "duration": 180,
+        "youtubeId": "51Oz0l-qR3M"
       },
       {
-        "id": "tD8M2BpSnwc",
-        "uri": "tD8M2BpSnwc",
-        "title": "Dekhne Walon Ne - Udit Narayan | Alka Yagnik | Best Hindi Song",
-        "artist": "Madhur Sangeet",
-        "image": "https://i.ytimg.com/vi/tD8M2BpSnwc/hq720.jpg",
-        "duration": 444,
-        "youtubeId": "tD8M2BpSnwc"
+        "id": "GrAchTdepsU",
+        "uri": "GrAchTdepsU",
+        "title": "24kGoldn - Mood",
+        "artist": "24kGoldn",
+        "image": "https://i.ytimg.com/vi/GrAchTdepsU/hq720.jpg",
+        "duration": 151,
+        "youtubeId": "GrAchTdepsU"
+      },
+      {
+        "id": "0jSpCxmb2VQ",
+        "uri": "0jSpCxmb2VQ",
+        "title": "24kGoldn - Mood",
+        "artist": "7clouds",
+        "image": "https://i.ytimg.com/vi/0jSpCxmb2VQ/hq720.jpg",
+        "duration": 139,
+        "youtubeId": "0jSpCxmb2VQ"
+      },
+      {
+        "id": "e3DOI2YiaNk",
+        "uri": "e3DOI2YiaNk",
+        "title": "Mood Refreshing Lofi Mashup 💗🥀 | Arijit Singh Lofi Mashup | Morning Lofi Song | Luvr Beats ♡",
+        "artist": "Luvr Beats",
+        "image": "https://i.ytimg.com/vi/e3DOI2YiaNk/hq720.jpg",
+        "duration": 425,
+        "youtubeId": "e3DOI2YiaNk"
       }
     ]
   },
@@ -501,6 +519,24 @@
     "query": "trending songs",
     "results": [
       {
+        "id": "aRNfSqsgrgE",
+        "uri": "aRNfSqsgrgE",
+        "title": "Sheesha  | Mitta Ror",
+        "artist": "Sony Music India and Mitta Ror",
+        "image": "https://i.ytimg.com/vi/aRNfSqsgrgE/hq720.jpg",
+        "duration": 195,
+        "youtubeId": "aRNfSqsgrgE"
+      },
+      {
+        "id": "nDjloeIB3Pc",
+        "uri": "nDjloeIB3Pc",
+        "title": "Sitaare | Ikkis | Agastya Nanda, Simar Bhatia, Dharmendra Deol, Jaideep A | Arijit Singh, Amitabh B",
+        "artist": "Sony Music India and Maddock Films",
+        "image": "https://i.ytimg.com/vi/nDjloeIB3Pc/hq720.jpg",
+        "duration": 196,
+        "youtubeId": "nDjloeIB3Pc"
+      },
+      {
         "id": "0A1DdZ7Lf4c",
         "uri": "0A1DdZ7Lf4c",
         "title": "Udi udi song  🥹❤️ #fyp #viral #song #aesthetic",
@@ -508,6 +544,15 @@
         "image": "https://i.ytimg.com/vi/0A1DdZ7Lf4c/hqdefault.jpg",
         "duration": 156,
         "youtubeId": "0A1DdZ7Lf4c"
+      },
+      {
+        "id": "GX9x62kFsVU",
+        "uri": "GX9x62kFsVU",
+        "title": "Gehra Hua | Dhurandhar | Ranveer Singh, Sara Arjun, Shashwat Sachdev, Arijit Singh, Irshad Kamil",
+        "artist": "Saregama Music",
+        "image": "https://i.ytimg.com/vi/GX9x62kFsVU/hq720.jpg",
+        "duration": 231,
+        "youtubeId": "GX9x62kFsVU"
       },
       {
         "id": "VAdGW7QDJiU",
@@ -519,13 +564,13 @@
         "youtubeId": "VAdGW7QDJiU"
       },
       {
-        "id": "aRNfSqsgrgE",
-        "uri": "aRNfSqsgrgE",
-        "title": "Sheesha  | Mitta Ror",
-        "artist": "Sony Music India and Mitta Ror",
-        "image": "https://i.ytimg.com/vi/aRNfSqsgrgE/hq720.jpg",
-        "duration": 195,
-        "youtubeId": "aRNfSqsgrgE"
+        "id": "LX2zshAgECQ",
+        "uri": "LX2zshAgECQ",
+        "title": "Aankhon Se Tune 2.0 | Bhai Tera Star Hai | Raghav, Niharika | Lijo, Dev, Palak, Kumar, Alka, Mohsin",
+        "artist": "Tips Official and 3 more",
+        "image": "https://i.ytimg.com/vi/LX2zshAgECQ/hq720.jpg",
+        "duration": 229,
+        "youtubeId": "LX2zshAgECQ"
       },
       {
         "id": "ZhhBlQC_5N8",
@@ -537,72 +582,13 @@
         "youtubeId": "ZhhBlQC_5N8"
       },
       {
-        "id": "-MPHg4wPiyg",
-        "uri": "-MPHg4wPiyg",
-        "title": "Bairan 💗 New Haryanvi Song| Heart Touching Love Story | Viral Song 2026 #bairan #bairansong",
-        "artist": "Awaaj De",
-        "image": "https://i.ytimg.com/vi/-MPHg4wPiyg/hq720.jpg",
-        "duration": 294,
-        "youtubeId": "-MPHg4wPiyg"
-      },
-      {
-        "id": "LX2zshAgECQ",
-        "uri": "LX2zshAgECQ",
-        "title": "Aankhon Se Tune 2.0 | Bhai Tera Star Hai | Raghav, Niharika | Lijo, Dev, Palak, Kumar, Alka, Mohsin",
-        "artist": "Tips Official and 3 more",
-        "image": "https://i.ytimg.com/vi/LX2zshAgECQ/hq720.jpg",
-        "duration": 229,
-        "youtubeId": "LX2zshAgECQ"
-      },
-      {
-        "id": "nfNc0XJdZWk",
-        "uri": "nfNc0XJdZWk",
-        "title": "Param Sundari - Full Song | Mimi | Kriti Sanon, Pankaj T | A.R. Rahman | Shreya | Amitabh",
-        "artist": "Sony Music India",
-        "image": "https://i.ytimg.com/vi/nfNc0XJdZWk/hq720.jpg",
-        "duration": 201,
-        "youtubeId": "nfNc0XJdZWk"
-      },
-      {
-        "id": "6tFM-QTzmxU",
-        "uri": "6tFM-QTzmxU",
-        "title": "O Meri Laila Lyrics - Atif Aslam, Jyotica Tangri | Laila Majnu | Trending Hindi Song",
-        "artist": "Vibe Bird",
-        "image": "https://i.ytimg.com/vi/6tFM-QTzmxU/hq720.jpg",
-        "duration": 283,
-        "youtubeId": "6tFM-QTzmxU"
-      }
-    ]
-  },
-  {
-    "query": "pop songs",
-    "results": [
-      {
-        "id": "qPzpD3tvY-U",
-        "uri": "qPzpD3tvY-U",
-        "title": "Dekha Hai Teri Aankhon Ko  Aryans | Nandini Singh & Sailesh Gulabani",
-        "artist": "Universal Music India",
-        "image": "https://i.ytimg.com/vi/qPzpD3tvY-U/hq720.jpg",
-        "duration": 249,
-        "youtubeId": "qPzpD3tvY-U"
-      },
-      {
-        "id": "yIIGQB6EMAM",
-        "uri": "yIIGQB6EMAM",
-        "title": "Bom Diggy Diggy   | Zack Knight | Jasmin Walia | Sonu Ke Titu Ki Sweety",
-        "artist": "T-Series",
-        "image": "https://i.ytimg.com/vi/yIIGQB6EMAM/hq720.jpg",
+        "id": "qpIdoaaPa6U",
+        "uri": "qpIdoaaPa6U",
+        "title": "जीने लगा हूँ बॉलीवुड सिंग एलांग - रम्माया वास्तावैया - गिरीश कुमार, श्रुति हासन",
+        "artist": "Tips Official",
+        "image": "https://i.ytimg.com/vi/qpIdoaaPa6U/hq720.jpg",
         "duration": 202,
-        "youtubeId": "yIIGQB6EMAM"
-      },
-      {
-        "id": "yDv0WSgXJVg",
-        "uri": "yDv0WSgXJVg",
-        "title": "\"Senorita Zindagi Na Milegi Dobara\" Full HD Video Song | Farhan Akhtar, Hrithik Roshan, Abhay Deol",
-        "artist": "T-Series",
-        "image": "https://i.ytimg.com/vi/yDv0WSgXJVg/hq720.jpg",
-        "duration": 232,
-        "youtubeId": "yDv0WSgXJVg"
+        "youtubeId": "qpIdoaaPa6U"
       },
       {
         "id": "v5jVX0QYwQo",
@@ -614,82 +600,114 @@
         "youtubeId": "v5jVX0QYwQo"
       },
       {
-        "id": "e_vl5aFXB4Q",
-        "uri": "e_vl5aFXB4Q",
-        "title": "Full Video: Akh Lad Jaave | Loveyatri | Aayush S|Warina H |Badshah, Tanishk Bagchi,Jubin N, ,Asees K",
-        "artist": "T-Series",
-        "image": "https://i.ytimg.com/vi/e_vl5aFXB4Q/hq720.jpg",
-        "duration": 181,
-        "youtubeId": "e_vl5aFXB4Q"
-      },
+        "id": "xvT1jH8B9AM",
+        "uri": "xvT1jH8B9AM",
+        "title": "KALYANI  OFFICIAL  | ARJN | KDS | FIFTY4 | RONN | SHREYA GHOSHAL |",
+        "artist": "MONEY VERSE RECORDS and ARJN",
+        "image": "https://i.ytimg.com/vi/xvT1jH8B9AM/hq720.jpg",
+        "duration": 288,
+        "youtubeId": "xvT1jH8B9AM"
+      }
+    ]
+  },
+  {
+    "query": "pop songs",
+    "results": [
       {
-        "id": "TRa9IMvccjg",
-        "uri": "TRa9IMvccjg",
-        "title": "DILBAR Full Song | Satyameva Jayate | John Abraham Nora Fatehi | Tanishk B Neha Kakkar Ikka Dhvani",
-        "artist": "T-Series",
-        "image": "https://i.ytimg.com/vi/TRa9IMvccjg/hq720.jpg",
-        "duration": 177,
-        "youtubeId": "TRa9IMvccjg"
-      },
-      {
-        "id": "_9geEbZIAJM",
-        "uri": "_9geEbZIAJM",
-        "title": "O Humdum Suniyo Re - Full Song | Saathiya | Vivek Oberoi | Rani Mukerji | Shaan | A. R. Rahman",
-        "artist": "YRF",
-        "image": "https://i.ytimg.com/vi/_9geEbZIAJM/hq720.jpg",
-        "duration": 162,
-        "youtubeId": "_9geEbZIAJM"
-      },
-      {
-        "id": "zC3UbTf4qrM",
-        "uri": "zC3UbTf4qrM",
-        "title": "अफगान जलेबी  पूरा वीडियो गाना | फैंटम| सैफ अली खान, कैटरीना कैफ | टी-सीरीज",
-        "artist": "T-Series",
-        "image": "https://i.ytimg.com/vi/zC3UbTf4qrM/hq720.jpg",
-        "duration": 206,
-        "youtubeId": "zC3UbTf4qrM"
+        "id": "qPzpD3tvY-U",
+        "uri": "qPzpD3tvY-U",
+        "title": "Dekha Hai Teri Aankhon Ko  Aryans | Nandini Singh & Sailesh Gulabani",
+        "artist": "Universal Music India",
+        "image": "https://i.ytimg.com/vi/qPzpD3tvY-U/hq2.jpg",
+        "duration": 249,
+        "youtubeId": "qPzpD3tvY-U"
       },
       {
         "id": "Rbz1qFlRL_Y",
         "uri": "Rbz1qFlRL_Y",
         "title": "Falguni Pathak- Maine Payal Hai Chhankai  | Revibe | Hindi Songs",
         "artist": "Universal Music India",
-        "image": "https://i.ytimg.com/vi/Rbz1qFlRL_Y/hq720.jpg",
+        "image": "https://i.ytimg.com/vi/Rbz1qFlRL_Y/hq2.jpg",
         "duration": 276,
         "youtubeId": "Rbz1qFlRL_Y"
+      },
+      {
+        "id": "yIIGQB6EMAM",
+        "uri": "yIIGQB6EMAM",
+        "title": "Bom Diggy Diggy   | Zack Knight | Jasmin Walia | Sonu Ke Titu Ki Sweety",
+        "artist": "T-Series",
+        "image": "https://i.ytimg.com/vi/yIIGQB6EMAM/hq2.jpg",
+        "duration": 202,
+        "youtubeId": "yIIGQB6EMAM"
+      },
+      {
+        "id": "yDv0WSgXJVg",
+        "uri": "yDv0WSgXJVg",
+        "title": "\"Senorita Zindagi Na Milegi Dobara\" Full HD Video Song | Farhan Akhtar, Hrithik Roshan, Abhay Deol",
+        "artist": "T-Series",
+        "image": "https://i.ytimg.com/vi/yDv0WSgXJVg/hq2.jpg",
+        "duration": 232,
+        "youtubeId": "yDv0WSgXJVg"
+      },
+      {
+        "id": "LX2zshAgECQ",
+        "uri": "LX2zshAgECQ",
+        "title": "Aankhon Se Tune 2.0 | Bhai Tera Star Hai | Raghav, Niharika | Lijo, Dev, Palak, Kumar, Alka, Mohsin",
+        "artist": "Tips Official and 3 more",
+        "image": "https://i.ytimg.com/vi/LX2zshAgECQ/hq2.jpg",
+        "duration": 229,
+        "youtubeId": "LX2zshAgECQ"
+      },
+      {
+        "id": "_9geEbZIAJM",
+        "uri": "_9geEbZIAJM",
+        "title": "O Humdum Suniyo Re - Full Song | Saathiya | Vivek Oberoi | Rani Mukerji | Shaan | A. R. Rahman",
+        "artist": "YRF",
+        "image": "https://i.ytimg.com/vi/_9geEbZIAJM/hq2.jpg",
+        "duration": 162,
+        "youtubeId": "_9geEbZIAJM"
+      },
+      {
+        "id": "v5jVX0QYwQo",
+        "uri": "v5jVX0QYwQo",
+        "title": "Shararat - 8K Video | Dhurandhar | Ranveer Singh, Shashwat S, Jasmine, Madhubanti, Ayesha, Krystle",
+        "artist": "Saregama Music",
+        "image": "https://i.ytimg.com/vi/v5jVX0QYwQo/hq2.jpg",
+        "duration": 227,
+        "youtubeId": "v5jVX0QYwQo"
       },
       {
         "id": "G0Hx6uN2AJE",
         "uri": "G0Hx6uN2AJE",
         "title": "Harrdy Sandhu - Kya Baat Ay | Jaani | B Praak | Arvindr Khaira | Official",
         "artist": "Sony Music India",
-        "image": "https://i.ytimg.com/vi/G0Hx6uN2AJE/hq720.jpg",
+        "image": "https://i.ytimg.com/vi/G0Hx6uN2AJE/hq2.jpg",
         "duration": 191,
         "youtubeId": "G0Hx6uN2AJE"
+      },
+      {
+        "id": "e_vl5aFXB4Q",
+        "uri": "e_vl5aFXB4Q",
+        "title": "Full Video: Akh Lad Jaave | Loveyatri | Aayush S|Warina H |Badshah, Tanishk Bagchi,Jubin N, ,Asees K",
+        "artist": "T-Series",
+        "image": "https://i.ytimg.com/vi/e_vl5aFXB4Q/hq2.jpg",
+        "duration": 181,
+        "youtubeId": "e_vl5aFXB4Q"
+      },
+      {
+        "id": "hgi2MYAFgE8",
+        "uri": "hgi2MYAFgE8",
+        "title": "गुलाबी आंखें। सनम",
+        "artist": "Sanam",
+        "image": "https://i.ytimg.com/vi/hgi2MYAFgE8/hq2.jpg",
+        "duration": 229,
+        "youtubeId": "hgi2MYAFgE8"
       }
     ]
   },
   {
     "query": "arijit singh",
     "results": [
-      {
-        "id": "MJyKN-8UncM",
-        "uri": "MJyKN-8UncM",
-        "title": "Shayad - Love Aaj Kal | Kartik | Sara | Arushi | Pritam | Arijit Singh",
-        "artist": "Sony Music India",
-        "image": "https://i.ytimg.com/vi/MJyKN-8UncM/hq720.jpg",
-        "duration": 190,
-        "youtubeId": "MJyKN-8UncM"
-      },
-      {
-        "id": "v7jiFpX5SU4",
-        "uri": "v7jiFpX5SU4",
-        "title": "सुनो ना संगेमरमर पूरा गाना यंगिस्तान ​​| अरिजीत सिंह | जैकी भगनानी, नेहा शर्मा",
-        "artist": "T-Series",
-        "image": "https://i.ytimg.com/vi/v7jiFpX5SU4/hq720.jpg",
-        "duration": 149,
-        "youtubeId": "v7jiFpX5SU4"
-      },
       {
         "id": "vEe-UgJvUHE",
         "uri": "vEe-UgJvUHE",
@@ -700,22 +718,13 @@
         "youtubeId": "vEe-UgJvUHE"
       },
       {
-        "id": "vKDsAB1ccn0",
-        "uri": "vKDsAB1ccn0",
-        "title": "गीतात्मक: आयत | बोल के साथ पूर्ण गाना | बाजीराव मस्तानी",
+        "id": "MJyKN-8UncM",
+        "uri": "MJyKN-8UncM",
+        "title": "Shayad - Love Aaj Kal | Kartik | Sara | Arushi | Pritam | Arijit Singh",
         "artist": "Sony Music India",
-        "image": "https://i.ytimg.com/vi/vKDsAB1ccn0/hq720.jpg",
-        "duration": 248,
-        "youtubeId": "vKDsAB1ccn0"
-      },
-      {
-        "id": "RLzC55ai0eo",
-        "uri": "RLzC55ai0eo",
-        "title": "Heeriye  Jasleen Royal ft Arijit Singh| Dulquer Salmaan| Aditya Sharma |Taani Tanvir",
-        "artist": "Jasleen Royal",
-        "image": "https://i.ytimg.com/vi/RLzC55ai0eo/hq720.jpg",
-        "duration": 199,
-        "youtubeId": "RLzC55ai0eo"
+        "image": "https://i.ytimg.com/vi/MJyKN-8UncM/hq720.jpg",
+        "duration": 190,
+        "youtubeId": "MJyKN-8UncM"
       },
       {
         "id": "r_3zVIyblLQ",
@@ -727,13 +736,13 @@
         "youtubeId": "r_3zVIyblLQ"
       },
       {
-        "id": "aNToVeBBKn4",
-        "uri": "aNToVeBBKn4",
-        "title": "Aashiqui 2: Aasan Nahin Yahan 8K Full Video Song | Arijit Singh | Aditya Roy Kapur, Shraddha Kapoor",
-        "artist": "T-Series",
-        "image": "https://i.ytimg.com/vi/aNToVeBBKn4/hq720.jpg",
-        "duration": 215,
-        "youtubeId": "aNToVeBBKn4"
+        "id": "vKDsAB1ccn0",
+        "uri": "vKDsAB1ccn0",
+        "title": "गीतात्मक: आयत | बोल के साथ पूर्ण गाना | बाजीराव मस्तानी",
+        "artist": "Sony Music India",
+        "image": "https://i.ytimg.com/vi/vKDsAB1ccn0/hq720.jpg",
+        "duration": 248,
+        "youtubeId": "vKDsAB1ccn0"
       },
       {
         "id": "Grr0FlC8SQA",
@@ -745,46 +754,55 @@
         "youtubeId": "Grr0FlC8SQA"
       },
       {
-        "id": "liSbkrbNj6Y",
-        "uri": "liSbkrbNj6Y",
-        "title": "Sanam Re - Arijit Singh  | Lyrical Bam Hindi",
-        "artist": "LYRICAL BAM HINDI",
-        "image": "https://i.ytimg.com/vi/liSbkrbNj6Y/hq720.jpg",
-        "duration": 270,
-        "youtubeId": "liSbkrbNj6Y"
+        "id": "v7jiFpX5SU4",
+        "uri": "v7jiFpX5SU4",
+        "title": "सुनो ना संगेमरमर पूरा गाना यंगिस्तान ​​| अरिजीत सिंह | जैकी भगनानी, नेहा शर्मा",
+        "artist": "T-Series",
+        "image": "https://i.ytimg.com/vi/v7jiFpX5SU4/hq720.jpg",
+        "duration": 149,
+        "youtubeId": "v7jiFpX5SU4"
       },
       {
-        "id": "KMz2pTfRIxw",
-        "uri": "KMz2pTfRIxw",
-        "title": "Chhod Diya  - Arijit Singh, Kanika Kapoor | Baazaar",
-        "artist": "Musicroo",
-        "image": "https://i.ytimg.com/vi/KMz2pTfRIxw/hqdefault.jpg",
-        "duration": 320,
-        "youtubeId": "KMz2pTfRIxw"
+        "id": "I9tX-lFUTrw",
+        "uri": "I9tX-lFUTrw",
+        "title": "Yeh Awarapan | Emraan Hashmi, Disha Patani | Vishesh Bhatt | Amaal, Arijit, Rashmi Virag| Awarapan 2",
+        "artist": "Sony Music India and Vishesh Films",
+        "image": "https://i.ytimg.com/vi/I9tX-lFUTrw/hq720.jpg",
+        "duration": 198,
+        "youtubeId": "I9tX-lFUTrw"
+      },
+      {
+        "id": "FJ55SHCzt88",
+        "uri": "FJ55SHCzt88",
+        "title": "हमदर्द पूरा वीडियो गाना | एक विलेन | अरिजीत सिंह | मिथुन",
+        "artist": "T-Series",
+        "image": "https://i.ytimg.com/vi/FJ55SHCzt88/hq720.jpg",
+        "duration": 259,
+        "youtubeId": "FJ55SHCzt88"
+      },
+      {
+        "id": "RVOUAUMvx7A",
+        "uri": "RVOUAUMvx7A",
+        "title": "Agar Tum Saath Ho  | Arijit Singh & Alka Yagnik Song",
+        "artist": "Weathering With Lofi",
+        "image": "https://i.ytimg.com/vi/RVOUAUMvx7A/hqdefault.jpg",
+        "duration": 338,
+        "youtubeId": "RVOUAUMvx7A"
+      },
+      {
+        "id": "aNToVeBBKn4",
+        "uri": "aNToVeBBKn4",
+        "title": "Aashiqui 2: Aasan Nahin Yahan 8K Full Video Song | Arijit Singh | Aditya Roy Kapur, Shraddha Kapoor",
+        "artist": "T-Series",
+        "image": "https://i.ytimg.com/vi/aNToVeBBKn4/hq720.jpg",
+        "duration": 215,
+        "youtubeId": "aNToVeBBKn4"
       }
     ]
   },
   {
     "query": "trending songs",
     "results": [
-      {
-        "id": "0A1DdZ7Lf4c",
-        "uri": "0A1DdZ7Lf4c",
-        "title": "Udi udi song  🥹❤️ #fyp #viral #song #aesthetic",
-        "artist": "tulip 𐙚🌷!!",
-        "image": "https://i.ytimg.com/vi/0A1DdZ7Lf4c/hqdefault.jpg",
-        "duration": 156,
-        "youtubeId": "0A1DdZ7Lf4c"
-      },
-      {
-        "id": "rC-kbRanJQ0",
-        "uri": "rC-kbRanJQ0",
-        "title": "UDI UDI |  @Aneesh.Poojari &‪ @sarkarmusic.25 | The Collective Tape | Official",
-        "artist": "New Bombay Collective",
-        "image": "https://i.ytimg.com/vi/rC-kbRanJQ0/hq720.jpg",
-        "duration": 156,
-        "youtubeId": "rC-kbRanJQ0"
-      },
       {
         "id": "xvT1jH8B9AM",
         "uri": "xvT1jH8B9AM",
@@ -804,13 +822,31 @@
         "youtubeId": "M5OCLifZK1w"
       },
       {
-        "id": "aRNfSqsgrgE",
-        "uri": "aRNfSqsgrgE",
-        "title": "Sheesha  | Mitta Ror",
-        "artist": "Sony Music India and Mitta Ror",
-        "image": "https://i.ytimg.com/vi/aRNfSqsgrgE/hq720.jpg",
-        "duration": 195,
-        "youtubeId": "aRNfSqsgrgE"
+        "id": "rC-kbRanJQ0",
+        "uri": "rC-kbRanJQ0",
+        "title": "UDI UDI |  @Aneesh.Poojari &‪ @sarkarmusic.25 | The Collective Tape | Official",
+        "artist": "New Bombay Collective",
+        "image": "https://i.ytimg.com/vi/rC-kbRanJQ0/hq720.jpg",
+        "duration": 156,
+        "youtubeId": "rC-kbRanJQ0"
+      },
+      {
+        "id": "0A1DdZ7Lf4c",
+        "uri": "0A1DdZ7Lf4c",
+        "title": "Udi udi song  🥹❤️ #fyp #viral #song #aesthetic",
+        "artist": "tulip 𐙚🌷!!",
+        "image": "https://i.ytimg.com/vi/0A1DdZ7Lf4c/hqdefault.jpg",
+        "duration": 156,
+        "youtubeId": "0A1DdZ7Lf4c"
+      },
+      {
+        "id": "6d5SS0gS5bU",
+        "uri": "6d5SS0gS5bU",
+        "title": "Tainu Khabar Nahi - Arijit Singh | Munjya | Sharvari, Abhay Verma| Sachin-Jigar,Amitabh Bhattacharya",
+        "artist": "Zee Music Company",
+        "image": "https://i.ytimg.com/vi/6d5SS0gS5bU/hq720.jpg",
+        "duration": 159,
+        "youtubeId": "6d5SS0gS5bU"
       },
       {
         "id": "LX2zshAgECQ",
@@ -822,13 +858,31 @@
         "youtubeId": "LX2zshAgECQ"
       },
       {
-        "id": "Ck0WDj63CVc",
-        "uri": "Ck0WDj63CVc",
-        "title": "Ishq De Fanniyar  Song | Rang De Ranjheya",
-        "artist": "Hi Lofi",
-        "image": "https://i.ytimg.com/vi/Ck0WDj63CVc/hq720.jpg",
-        "duration": 206,
-        "youtubeId": "Ck0WDj63CVc"
+        "id": "aRNfSqsgrgE",
+        "uri": "aRNfSqsgrgE",
+        "title": "Sheesha  | Mitta Ror",
+        "artist": "Sony Music India and Mitta Ror",
+        "image": "https://i.ytimg.com/vi/aRNfSqsgrgE/hq720.jpg",
+        "duration": 195,
+        "youtubeId": "aRNfSqsgrgE"
+      },
+      {
+        "id": "undhkaMMenU",
+        "uri": "undhkaMMenU",
+        "title": "Sambavakaari Video Song | Gatta Kusthi 2 | Vishnu Vishal, Aishwarya Lekshmi | Sean Roldan",
+        "artist": "Sony Music South",
+        "image": "https://i.ytimg.com/vi/undhkaMMenU/hq720.jpg",
+        "duration": 245,
+        "youtubeId": "undhkaMMenU"
+      },
+      {
+        "id": "9dV6Hl2u3vM",
+        "uri": "9dV6Hl2u3vM",
+        "title": "Neno Butterfly | Vishwanath and Sons | Suriya, Mamitha Baiju | G.V. Prakash, Venky Atluri",
+        "artist": "Aditya Music and Sithara Entertainments",
+        "image": "https://i.ytimg.com/vi/9dV6Hl2u3vM/hq720.jpg",
+        "duration": 246,
+        "youtubeId": "9dV6Hl2u3vM"
       },
       {
         "id": "-MPHg4wPiyg",
@@ -838,24 +892,6 @@
         "image": "https://i.ytimg.com/vi/-MPHg4wPiyg/hq720.jpg",
         "duration": 294,
         "youtubeId": "-MPHg4wPiyg"
-      },
-      {
-        "id": "Bm9lLpmPM0A",
-        "uri": "Bm9lLpmPM0A",
-        "title": "Pattampoochi  | Vishwanath and Sons | Suriya, Mamitha Baiju | G.V. Prakash | Venky Atluri",
-        "artist": "Aditya Music Tamil and Sithara Entertainments",
-        "image": "https://i.ytimg.com/vi/Bm9lLpmPM0A/hq720.jpg",
-        "duration": 246,
-        "youtubeId": "Bm9lLpmPM0A"
-      },
-      {
-        "id": "0RxUcKE13ZI",
-        "uri": "0RxUcKE13ZI",
-        "title": "Bandhu 2.0 | Shahid, Kriti, Rashmika| Pritam | Kavita | Neeraj | Irshad K | Cocktail 2 | 19th June",
-        "artist": "Sony Music India and 2 more",
-        "image": "https://i.ytimg.com/vi/0RxUcKE13ZI/hq720.jpg",
-        "duration": 186,
-        "youtubeId": "0RxUcKE13ZI"
       }
     ]
   },
@@ -917,15 +953,6 @@
         "youtubeId": "hoNb6HuNmU0"
       },
       {
-        "id": "k4yXQkG2s1E",
-        "uri": "k4yXQkG2s1E",
-        "title": "𝐊𝐚𝐥𝐚 𝐂𝐡𝐚𝐬𝐡𝐦𝐚 🕶️ | Baar Baar Dekho | Sidharth M & Katrina Kaif | Badshah, Neha Kakkar, Prem & Hardeep",
-        "artist": "Zee Music Company",
-        "image": "https://i.ytimg.com/vi/k4yXQkG2s1E/hq720.jpg",
-        "duration": 174,
-        "youtubeId": "k4yXQkG2s1E"
-      },
-      {
         "id": "WxtJqyIyThU",
         "uri": "WxtJqyIyThU",
         "title": "Kashmir Main Tu Kanyakumari|Chennai Express |Shahrukh K, Deepika P,Sunidhi C,Arijit S,Neeti",
@@ -933,6 +960,15 @@
         "image": "https://i.ytimg.com/vi/WxtJqyIyThU/hq720.jpg",
         "duration": 327,
         "youtubeId": "WxtJqyIyThU"
+      },
+      {
+        "id": "k4yXQkG2s1E",
+        "uri": "k4yXQkG2s1E",
+        "title": "𝐊𝐚𝐥𝐚 𝐂𝐡𝐚𝐬𝐡𝐦𝐚 🕶️ | Baar Baar Dekho | Sidharth M & Katrina Kaif | Badshah, Neha Kakkar, Prem & Hardeep",
+        "artist": "Zee Music Company",
+        "image": "https://i.ytimg.com/vi/k4yXQkG2s1E/hq720.jpg",
+        "duration": 174,
+        "youtubeId": "k4yXQkG2s1E"
       },
       {
         "id": "TRa9IMvccjg",
@@ -985,33 +1021,6 @@
         "youtubeId": "LX2zshAgECQ"
       },
       {
-        "id": "zAEA3h529ZU",
-        "uri": "zAEA3h529ZU",
-        "title": "Dhamaal 4: SAREE MV | Sanju Rathod, Tanishk | Ajay Devgn, Ritiesh Deshmukh, Anjali, Arshad, Jaaved",
-        "artist": "T-Series and Sanju Rathod SR",
-        "image": "https://i.ytimg.com/vi/zAEA3h529ZU/hq720.jpg",
-        "duration": 144,
-        "youtubeId": "zAEA3h529ZU"
-      },
-      {
-        "id": "Ab7lgI1MYoU",
-        "uri": "Ab7lgI1MYoU",
-        "title": "New Song 2026 | New Hindi Song | Tadpaa Hai Dil | Aryan Khan | Sonam Bajwa | New Song",
-        "artist": "Vatsal Bhoya",
-        "image": "https://i.ytimg.com/vi/Ab7lgI1MYoU/hq720.jpg",
-        "duration": 270,
-        "youtubeId": "Ab7lgI1MYoU"
-      },
-      {
-        "id": "xvT1jH8B9AM",
-        "uri": "xvT1jH8B9AM",
-        "title": "KALYANI  OFFICIAL  | ARJN | KDS | FIFTY4 | RONN | SHREYA GHOSHAL |",
-        "artist": "MONEY VERSE RECORDS and ARJN",
-        "image": "https://i.ytimg.com/vi/xvT1jH8B9AM/hq720.jpg",
-        "duration": 288,
-        "youtubeId": "xvT1jH8B9AM"
-      },
-      {
         "id": "3CDOd4GdcUQ",
         "uri": "3CDOd4GdcUQ",
         "title": "Ucha Lamba Kad Forever | Welcome to the Jungle | Akshay Kumar | Disha Patani | Vikram Montrose",
@@ -1019,6 +1028,15 @@
         "image": "https://i.ytimg.com/vi/3CDOd4GdcUQ/hq720.jpg",
         "duration": 227,
         "youtubeId": "3CDOd4GdcUQ"
+      },
+      {
+        "id": "zAEA3h529ZU",
+        "uri": "zAEA3h529ZU",
+        "title": "Dhamaal 4: SAREE MV | Sanju Rathod, Tanishk | Ajay Devgn, Ritiesh Deshmukh, Anjali, Arshad, Jaaved",
+        "artist": "T-Series and Sanju Rathod SR",
+        "image": "https://i.ytimg.com/vi/zAEA3h529ZU/hq720.jpg",
+        "duration": 144,
+        "youtubeId": "zAEA3h529ZU"
       },
       {
         "id": "HX1EXb5kWwY",
@@ -1030,22 +1048,40 @@
         "youtubeId": "HX1EXb5kWwY"
       },
       {
-        "id": "lR5aQMAl36k",
-        "uri": "lR5aQMAl36k",
-        "title": "Haaniya Song | ALPHA | Alia Bhatt, Sharvari | Rohansh & Abeer | Vishal Dadlani | Kumaar",
-        "artist": "YRF",
-        "image": "https://i.ytimg.com/vi/lR5aQMAl36k/hq720.jpg",
-        "duration": 185,
-        "youtubeId": "lR5aQMAl36k"
+        "id": "ce7NfzrRrz0",
+        "uri": "ce7NfzrRrz0",
+        "title": "New Song 2026 | New Hindi Song | Baarish Aur Tum | Sidharth Malhotra | Kriti Sanon | New Song",
+        "artist": "Music World",
+        "image": "https://i.ytimg.com/vi/ce7NfzrRrz0/hq720.jpg",
+        "duration": 263,
+        "youtubeId": "ce7NfzrRrz0"
       },
       {
-        "id": "4jO8EWJutfE",
-        "uri": "4jO8EWJutfE",
-        "title": "Tu Hi Disda - Bhooth Bangla | Akshay Kumar & Wamiqa Gabbi | Pritam, Arijit Singh, Nikhita G, Kumaar",
-        "artist": "Zee Music Company",
-        "image": "https://i.ytimg.com/vi/4jO8EWJutfE/hq720.jpg",
-        "duration": 232,
-        "youtubeId": "4jO8EWJutfE"
+        "id": "q5HK8lXE_aE",
+        "uri": "q5HK8lXE_aE",
+        "title": "Massacre Song |  | ALPHA | Alia Bhatt, Sharvari | Rohansh & Abeer, Shilpa, Jonita, Kausar",
+        "artist": "YRF",
+        "image": "https://i.ytimg.com/vi/q5HK8lXE_aE/hq720.jpg",
+        "duration": 175,
+        "youtubeId": "q5HK8lXE_aE"
+      },
+      {
+        "id": "xvT1jH8B9AM",
+        "uri": "xvT1jH8B9AM",
+        "title": "KALYANI  OFFICIAL  | ARJN | KDS | FIFTY4 | RONN | SHREYA GHOSHAL |",
+        "artist": "MONEY VERSE RECORDS and ARJN",
+        "image": "https://i.ytimg.com/vi/xvT1jH8B9AM/hq720.jpg",
+        "duration": 288,
+        "youtubeId": "xvT1jH8B9AM"
+      },
+      {
+        "id": "0RxUcKE13ZI",
+        "uri": "0RxUcKE13ZI",
+        "title": "Bandhu 2.0 | Shahid, Kriti, Rashmika| Pritam | Kavita | Neeraj | Irshad K | Cocktail 2 | 19th June",
+        "artist": "Sony Music India and 2 more",
+        "image": "https://i.ytimg.com/vi/0RxUcKE13ZI/hq720.jpg",
+        "duration": 186,
+        "youtubeId": "0RxUcKE13ZI"
       }
     ]
   },
@@ -1053,51 +1089,6 @@
     "query": "popular album playlists",
     "results": [
       {
-        "id": "b68HETiNO98",
-        "uri": "b68HETiNO98",
-        "title": "@SaiAbhyankkar - Pavazha Malli  | Kayadu | Shruti Haasan | Vivek | Thejo | Think Indie",
-        "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/b68HETiNO98/hq720.jpg",
-        "duration": 309,
-        "youtubeId": "b68HETiNO98"
-      },
-      {
-        "id": "a3Ue-LN5B9U",
-        "uri": "a3Ue-LN5B9U",
-        "title": "@SaiAbhyankkar - Aasa Kooda  | Thejo Bharathwaj | Preity Mukundhan | Sai Smriti",
-        "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/a3Ue-LN5B9U/hq720.jpg",
-        "duration": 229,
-        "youtubeId": "a3Ue-LN5B9U"
-      },
-      {
-        "id": "VU23OPQ1Pmc",
-        "uri": "VU23OPQ1Pmc",
-        "title": "@SaiAbhyankkar - Katchi Sera  | Samyuktha | Ken Royson | Think Indie",
-        "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/VU23OPQ1Pmc/hq720.jpg",
-        "duration": 185,
-        "youtubeId": "VU23OPQ1Pmc"
-      },
-      {
-        "id": "_e45NEdNMXE",
-        "uri": "_e45NEdNMXE",
-        "title": "​@SaiAbhyankkar - Vizhi Veekura | Saanve Megghana| Sai Smriti|Adesh| Thejo| Think Indie",
-        "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/_e45NEdNMXE/hqdefault.jpg",
-        "duration": 294,
-        "youtubeId": "_e45NEdNMXE"
-      },
-      {
-        "id": "PqVvrF7pwDQ",
-        "uri": "PqVvrF7pwDQ",
-        "title": "@SaiAbhyankkar - Sithira Puthiri  | Meenakshi Chaudhary| Akshay Sundher | Think Indie",
-        "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/PqVvrF7pwDQ/hqdefault.jpg",
-        "duration": 288,
-        "youtubeId": "PqVvrF7pwDQ"
-      },
-      {
         "id": "7VsejGzcJmM",
         "uri": "7VsejGzcJmM",
         "title": "Alaakaa Loova Lyrical  | OM | Dhanush | Mammootty | Sai Pallavi | Sreeleela | Rajkumar | Sai",
@@ -1107,13 +1098,13 @@
         "youtubeId": "7VsejGzcJmM"
       },
       {
-        "id": "GoAAlACyXBg",
-        "uri": "GoAAlACyXBg",
-        "title": "The Wild Theme",
-        "artist": "Sai Abhyankkar",
-        "image": "https://i.ytimg.com/vi/GoAAlACyXBg/hq720.jpg",
-        "duration": 106,
-        "youtubeId": "GoAAlACyXBg"
+        "id": "b68HETiNO98",
+        "uri": "b68HETiNO98",
+        "title": "@SaiAbhyankkar - Pavazha Malli  | Kayadu | Shruti Haasan | Vivek | Thejo | Think Indie",
+        "artist": "Think Music India",
+        "image": "https://i.ytimg.com/vi/b68HETiNO98/hq720.jpg",
+        "duration": 309,
+        "youtubeId": "b68HETiNO98"
       },
       {
         "id": "IW6ct9S4MYc",
@@ -1125,13 +1116,22 @@
         "youtubeId": "IW6ct9S4MYc"
       },
       {
-        "id": "ZpZZvIOcdwE",
-        "uri": "ZpZZvIOcdwE",
-        "title": "@SaiAbhyankkar  - Pavazha Malli  | Shruti Haasan | Vivek | Think Indie",
+        "id": "PqVvrF7pwDQ",
+        "uri": "PqVvrF7pwDQ",
+        "title": "@SaiAbhyankkar - Sithira Puthiri  | Meenakshi Chaudhary| Akshay Sundher | Think Indie",
         "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/ZpZZvIOcdwE/hq720.jpg",
-        "duration": 85,
-        "youtubeId": "ZpZZvIOcdwE"
+        "image": "https://i.ytimg.com/vi/PqVvrF7pwDQ/hqdefault.jpg",
+        "duration": 288,
+        "youtubeId": "PqVvrF7pwDQ"
+      },
+      {
+        "id": "Le_toR6sXXE",
+        "uri": "Le_toR6sXXE",
+        "title": "PR Show - Launch Video | Mamitha |Ashwath Marimuthu| Sai Abhyankkar |Alpha Unit |Pradeep Ranganathan",
+        "artist": "PR Show and 2 more",
+        "image": "https://i.ytimg.com/vi/Le_toR6sXXE/hq720.jpg",
+        "duration": 147,
+        "youtubeId": "Le_toR6sXXE"
       },
       {
         "id": "E2U3GIsndrk",
@@ -1141,6 +1141,42 @@
         "image": "https://i.ytimg.com/vi/E2U3GIsndrk/hq720.jpg",
         "duration": 218,
         "youtubeId": "E2U3GIsndrk"
+      },
+      {
+        "id": "_e45NEdNMXE",
+        "uri": "_e45NEdNMXE",
+        "title": "​@SaiAbhyankkar - Vizhi Veekura | Saanve Megghana| Sai Smriti|Adesh| Thejo| Think Indie",
+        "artist": "Think Music India",
+        "image": "https://i.ytimg.com/vi/_e45NEdNMXE/hqdefault.jpg",
+        "duration": 294,
+        "youtubeId": "_e45NEdNMXE"
+      },
+      {
+        "id": "a3Ue-LN5B9U",
+        "uri": "a3Ue-LN5B9U",
+        "title": "@SaiAbhyankkar - Aasa Kooda  | Thejo Bharathwaj | Preity Mukundhan | Sai Smriti",
+        "artist": "Think Music India",
+        "image": "https://i.ytimg.com/vi/a3Ue-LN5B9U/hq720.jpg",
+        "duration": 229,
+        "youtubeId": "a3Ue-LN5B9U"
+      },
+      {
+        "id": "GoAAlACyXBg",
+        "uri": "GoAAlACyXBg",
+        "title": "The Wild Theme",
+        "artist": "Sai Abhyankkar",
+        "image": "https://i.ytimg.com/vi/GoAAlACyXBg/hq720.jpg",
+        "duration": 106,
+        "youtubeId": "GoAAlACyXBg"
+      },
+      {
+        "id": "4Bsc2uI_LsM",
+        "uri": "4Bsc2uI_LsM",
+        "title": "Oorum Blood | Dude | Pradeep Ranganathan, Mamitha | Sai Abhyankkar| Keerthiswaran|Paal Dabba| Mythri",
+        "artist": "Think Music India",
+        "image": "https://i.ytimg.com/vi/4Bsc2uI_LsM/hq720.jpg",
+        "duration": 269,
+        "youtubeId": "4Bsc2uI_LsM"
       }
     ]
   },
@@ -1148,51 +1184,6 @@
     "query": "top trending artists",
     "results": [
       {
-        "id": "b68HETiNO98",
-        "uri": "b68HETiNO98",
-        "title": "@SaiAbhyankkar - Pavazha Malli  | Kayadu | Shruti Haasan | Vivek | Thejo | Think Indie",
-        "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/b68HETiNO98/hq720.jpg",
-        "duration": 309,
-        "youtubeId": "b68HETiNO98"
-      },
-      {
-        "id": "a3Ue-LN5B9U",
-        "uri": "a3Ue-LN5B9U",
-        "title": "@SaiAbhyankkar - Aasa Kooda  | Thejo Bharathwaj | Preity Mukundhan | Sai Smriti",
-        "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/a3Ue-LN5B9U/hq720.jpg",
-        "duration": 229,
-        "youtubeId": "a3Ue-LN5B9U"
-      },
-      {
-        "id": "VU23OPQ1Pmc",
-        "uri": "VU23OPQ1Pmc",
-        "title": "@SaiAbhyankkar - Katchi Sera  | Samyuktha | Ken Royson | Think Indie",
-        "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/VU23OPQ1Pmc/hq720.jpg",
-        "duration": 185,
-        "youtubeId": "VU23OPQ1Pmc"
-      },
-      {
-        "id": "_e45NEdNMXE",
-        "uri": "_e45NEdNMXE",
-        "title": "​@SaiAbhyankkar - Vizhi Veekura | Saanve Megghana| Sai Smriti|Adesh| Thejo| Think Indie",
-        "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/_e45NEdNMXE/hqdefault.jpg",
-        "duration": 294,
-        "youtubeId": "_e45NEdNMXE"
-      },
-      {
-        "id": "PqVvrF7pwDQ",
-        "uri": "PqVvrF7pwDQ",
-        "title": "@SaiAbhyankkar - Sithira Puthiri  | Meenakshi Chaudhary| Akshay Sundher | Think Indie",
-        "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/PqVvrF7pwDQ/hqdefault.jpg",
-        "duration": 288,
-        "youtubeId": "PqVvrF7pwDQ"
-      },
-      {
         "id": "7VsejGzcJmM",
         "uri": "7VsejGzcJmM",
         "title": "Alaakaa Loova Lyrical  | OM | Dhanush | Mammootty | Sai Pallavi | Sreeleela | Rajkumar | Sai",
@@ -1202,13 +1193,13 @@
         "youtubeId": "7VsejGzcJmM"
       },
       {
-        "id": "GoAAlACyXBg",
-        "uri": "GoAAlACyXBg",
-        "title": "The Wild Theme",
-        "artist": "Sai Abhyankkar",
-        "image": "https://i.ytimg.com/vi/GoAAlACyXBg/hq720.jpg",
-        "duration": 106,
-        "youtubeId": "GoAAlACyXBg"
+        "id": "b68HETiNO98",
+        "uri": "b68HETiNO98",
+        "title": "@SaiAbhyankkar - Pavazha Malli  | Kayadu | Shruti Haasan | Vivek | Thejo | Think Indie",
+        "artist": "Think Music India",
+        "image": "https://i.ytimg.com/vi/b68HETiNO98/hq720.jpg",
+        "duration": 309,
+        "youtubeId": "b68HETiNO98"
       },
       {
         "id": "IW6ct9S4MYc",
@@ -1220,13 +1211,22 @@
         "youtubeId": "IW6ct9S4MYc"
       },
       {
-        "id": "ZpZZvIOcdwE",
-        "uri": "ZpZZvIOcdwE",
-        "title": "@SaiAbhyankkar  - Pavazha Malli  | Shruti Haasan | Vivek | Think Indie",
+        "id": "PqVvrF7pwDQ",
+        "uri": "PqVvrF7pwDQ",
+        "title": "@SaiAbhyankkar - Sithira Puthiri  | Meenakshi Chaudhary| Akshay Sundher | Think Indie",
         "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/ZpZZvIOcdwE/hq720.jpg",
-        "duration": 85,
-        "youtubeId": "ZpZZvIOcdwE"
+        "image": "https://i.ytimg.com/vi/PqVvrF7pwDQ/hqdefault.jpg",
+        "duration": 288,
+        "youtubeId": "PqVvrF7pwDQ"
+      },
+      {
+        "id": "Le_toR6sXXE",
+        "uri": "Le_toR6sXXE",
+        "title": "PR Show - Launch Video | Mamitha |Ashwath Marimuthu| Sai Abhyankkar |Alpha Unit |Pradeep Ranganathan",
+        "artist": "PR Show and 2 more",
+        "image": "https://i.ytimg.com/vi/Le_toR6sXXE/hq720.jpg",
+        "duration": 147,
+        "youtubeId": "Le_toR6sXXE"
       },
       {
         "id": "E2U3GIsndrk",
@@ -1236,6 +1236,42 @@
         "image": "https://i.ytimg.com/vi/E2U3GIsndrk/hq720.jpg",
         "duration": 218,
         "youtubeId": "E2U3GIsndrk"
+      },
+      {
+        "id": "_e45NEdNMXE",
+        "uri": "_e45NEdNMXE",
+        "title": "​@SaiAbhyankkar - Vizhi Veekura | Saanve Megghana| Sai Smriti|Adesh| Thejo| Think Indie",
+        "artist": "Think Music India",
+        "image": "https://i.ytimg.com/vi/_e45NEdNMXE/hqdefault.jpg",
+        "duration": 294,
+        "youtubeId": "_e45NEdNMXE"
+      },
+      {
+        "id": "a3Ue-LN5B9U",
+        "uri": "a3Ue-LN5B9U",
+        "title": "@SaiAbhyankkar - Aasa Kooda  | Thejo Bharathwaj | Preity Mukundhan | Sai Smriti",
+        "artist": "Think Music India",
+        "image": "https://i.ytimg.com/vi/a3Ue-LN5B9U/hq720.jpg",
+        "duration": 229,
+        "youtubeId": "a3Ue-LN5B9U"
+      },
+      {
+        "id": "GoAAlACyXBg",
+        "uri": "GoAAlACyXBg",
+        "title": "The Wild Theme",
+        "artist": "Sai Abhyankkar",
+        "image": "https://i.ytimg.com/vi/GoAAlACyXBg/hq720.jpg",
+        "duration": 106,
+        "youtubeId": "GoAAlACyXBg"
+      },
+      {
+        "id": "4Bsc2uI_LsM",
+        "uri": "4Bsc2uI_LsM",
+        "title": "Oorum Blood | Dude | Pradeep Ranganathan, Mamitha | Sai Abhyankkar| Keerthiswaran|Paal Dabba| Mythri",
+        "artist": "Think Music India",
+        "image": "https://i.ytimg.com/vi/4Bsc2uI_LsM/hq720.jpg",
+        "duration": 269,
+        "youtubeId": "4Bsc2uI_LsM"
       }
     ]
   },
@@ -1252,6 +1288,15 @@
         "youtubeId": "b68HETiNO98"
       },
       {
+        "id": "VkoXNF01HdM",
+        "uri": "VkoXNF01HdM",
+        "title": "Urvasi Urvasi 4K Song | Kadhalan Video Songs | 4K Remastered | A.R.Rahman",
+        "artist": "API Tamil Songs",
+        "image": "https://i.ytimg.com/vi/VkoXNF01HdM/hq720.jpg",
+        "duration": 331,
+        "youtubeId": "VkoXNF01HdM"
+      },
+      {
         "id": "vOt4KWjnjQs",
         "uri": "vOt4KWjnjQs",
         "title": "Arjunaru Villu – Lyrical Video | Gilli | Thalapathy Vijay | Trisha | Vidyasagar | Tamil Hit Song",
@@ -1259,24 +1304,6 @@
         "image": "https://i.ytimg.com/vi/vOt4KWjnjQs/hq720.jpg",
         "duration": 268,
         "youtubeId": "vOt4KWjnjQs"
-      },
-      {
-        "id": "undhkaMMenU",
-        "uri": "undhkaMMenU",
-        "title": "Sambavakaari Video Song | Gatta Kusthi 2 | Vishnu Vishal, Aishwarya Lekshmi | Sean Roldan",
-        "artist": "Sony Music South",
-        "image": "https://i.ytimg.com/vi/undhkaMMenU/hq720.jpg",
-        "duration": 245,
-        "youtubeId": "undhkaMMenU"
-      },
-      {
-        "id": "2qCpY38ompo",
-        "uri": "2qCpY38ompo",
-        "title": "Monica - | COOLIE | Superstar Rajinikanth | Sun Pictures | Lokesh | Anirudh | Pooja Hegde",
-        "artist": "Sun TV",
-        "image": "https://i.ytimg.com/vi/2qCpY38ompo/hq720.jpg",
-        "duration": 215,
-        "youtubeId": "2qCpY38ompo"
       },
       {
         "id": "9Yw1jCkcC-4",
@@ -1302,15 +1329,6 @@
     "query": "telugu trending hits",
     "results": [
       {
-        "id": "5vsOv_bcnhs",
-        "uri": "5vsOv_bcnhs",
-        "title": "Chuttamalle | Devara Second Single | NTR | Janhvi Kapoor | Anirudh Ravichander | Shilpa Rao | 27 Sep",
-        "artist": "T-Series Telugu",
-        "image": "https://i.ytimg.com/vi/5vsOv_bcnhs/hq720.jpg",
-        "duration": 225,
-        "youtubeId": "5vsOv_bcnhs"
-      },
-      {
         "id": "s9CL6qMyLQ4",
         "uri": "s9CL6qMyLQ4",
         "title": "Poolamme Pilla - 8K | Hanuman |Teja Sajja, Amritha | GowraHari | Telugu Hit Song",
@@ -1320,6 +1338,15 @@
         "youtubeId": "s9CL6qMyLQ4"
       },
       {
+        "id": "5vsOv_bcnhs",
+        "uri": "5vsOv_bcnhs",
+        "title": "Chuttamalle | Devara Second Single | NTR | Janhvi Kapoor | Anirudh Ravichander | Shilpa Rao | 27 Sep",
+        "artist": "T-Series Telugu",
+        "image": "https://i.ytimg.com/vi/5vsOv_bcnhs/hq720.jpg",
+        "duration": 225,
+        "youtubeId": "5vsOv_bcnhs"
+      },
+      {
         "id": "0IdqwA2GXgY",
         "uri": "0IdqwA2GXgY",
         "title": "Megham Karigena  -  Song | Thiru | Dhanush | Anirudh | Sun Pictures",
@@ -1327,33 +1354,6 @@
         "image": "https://i.ytimg.com/vi/0IdqwA2GXgY/hq720.jpg",
         "duration": 283,
         "youtubeId": "0IdqwA2GXgY"
-      },
-      {
-        "id": "-t5b7MrWENk",
-        "uri": "-t5b7MrWENk",
-        "title": "Adhento Gaani Vunnapaatuga | JERSEY | Nani, Shraddha Srinath | Anirudh Ravichander | Telugu Song",
-        "artist": "Zee Music South",
-        "image": "https://i.ytimg.com/vi/-t5b7MrWENk/hq720.jpg",
-        "duration": 293,
-        "youtubeId": "-t5b7MrWENk"
-      },
-      {
-        "id": "Pm77L5Loazc",
-        "uri": "Pm77L5Loazc",
-        "title": "Undipova Full Video Song | Savaari Movie | Nandu, Priyanka Sharma | Shekar Chandra",
-        "artist": "Aditya Music",
-        "image": "https://i.ytimg.com/vi/Pm77L5Loazc/hq720.jpg",
-        "duration": 237,
-        "youtubeId": "Pm77L5Loazc"
-      },
-      {
-        "id": "q-6w3ntAl2w",
-        "uri": "q-6w3ntAl2w",
-        "title": "Idhi Chala Baagundhile Lyrical | Sehari | Harsh Kanumilli|Sid Sriram |Prashanth R Vihari |Gnanasagar",
-        "artist": "Aditya Music",
-        "image": "https://i.ytimg.com/vi/q-6w3ntAl2w/hq720.jpg",
-        "duration": 238,
-        "youtubeId": "q-6w3ntAl2w"
       },
       {
         "id": "A_z5g0_hJN8",
@@ -1374,6 +1374,33 @@
         "youtubeId": "sh4i_WQ7Abw"
       },
       {
+        "id": "-t5b7MrWENk",
+        "uri": "-t5b7MrWENk",
+        "title": "Adhento Gaani Vunnapaatuga | JERSEY | Nani, Shraddha Srinath | Anirudh Ravichander | Telugu Song",
+        "artist": "Zee Music South",
+        "image": "https://i.ytimg.com/vi/-t5b7MrWENk/hq720.jpg",
+        "duration": 293,
+        "youtubeId": "-t5b7MrWENk"
+      },
+      {
+        "id": "hCt-H4-5wco",
+        "uri": "hCt-H4-5wco",
+        "title": "Awaara - Chiru Chiru Video | Yuvanshankar | Karthi",
+        "artist": "SonyMusicSouthVEVO",
+        "image": "https://i.ytimg.com/vi/hCt-H4-5wco/hq720.jpg",
+        "duration": 273,
+        "youtubeId": "hCt-H4-5wco"
+      },
+      {
+        "id": "q-6w3ntAl2w",
+        "uri": "q-6w3ntAl2w",
+        "title": "Idhi Chala Baagundhile Lyrical | Sehari | Harsh Kanumilli|Sid Sriram |Prashanth R Vihari |Gnanasagar",
+        "artist": "Aditya Music",
+        "image": "https://i.ytimg.com/vi/q-6w3ntAl2w/hq720.jpg",
+        "duration": 238,
+        "youtubeId": "q-6w3ntAl2w"
+      },
+      {
         "id": "5kzM6m33DTo",
         "uri": "5kzM6m33DTo",
         "title": "BRAHMĀSTRA  | Kumkumala Video | Ranbir | Alia | Pritam | Sid Sriram | Chandrabose",
@@ -1383,13 +1410,13 @@
         "youtubeId": "5kzM6m33DTo"
       },
       {
-        "id": "hhBhjtNxbwE",
-        "uri": "hhBhjtNxbwE",
-        "title": "Vibe Undi Baby - 8K | Mirai | Teja Sajja, Ritika Nayak | Gowra Hari | Armaan Malik | Telugu Hit Song",
-        "artist": "Tips Telugu",
-        "image": "https://i.ytimg.com/vi/hhBhjtNxbwE/hq720.jpg",
-        "duration": 208,
-        "youtubeId": "hhBhjtNxbwE"
+        "id": "NFbmkNCV4K4",
+        "uri": "NFbmkNCV4K4",
+        "title": "Apudo Ipudo Full Song | Siddharth, Genelia I Bommarillu Songs | Telugu Love Songs",
+        "artist": "Aditya Music",
+        "image": "https://i.ytimg.com/vi/NFbmkNCV4K4/hq720.jpg",
+        "duration": 259,
+        "youtubeId": "NFbmkNCV4K4"
       }
     ]
   },
@@ -1406,13 +1433,13 @@
         "youtubeId": "9udS0mpi1L4"
       },
       {
-        "id": "PjTU0DmBWiU",
-        "uri": "PjTU0DmBWiU",
-        "title": "PRADA - JASS MANAK  Satti Dhillon | Latest Punjabi Song 2018 | GK.DIGITAL | Geet MP3",
-        "artist": "Geet MP3",
-        "image": "https://i.ytimg.com/vi/PjTU0DmBWiU/hq720.jpg",
-        "duration": 192,
-        "youtubeId": "PjTU0DmBWiU"
+        "id": "z-ZEHL4Df-A",
+        "uri": "z-ZEHL4Df-A",
+        "title": "Patola Video Song | Blackmail | Irrfan Khan & Kirti Kulhari | Guru Randhawa",
+        "artist": "T-Series",
+        "image": "https://i.ytimg.com/vi/z-ZEHL4Df-A/hq720.jpg",
+        "duration": 150,
+        "youtubeId": "z-ZEHL4Df-A"
       },
       {
         "id": "4tywp83zkmk",
@@ -1424,6 +1451,15 @@
         "youtubeId": "4tywp83zkmk"
       },
       {
+        "id": "PjTU0DmBWiU",
+        "uri": "PjTU0DmBWiU",
+        "title": "PRADA - JASS MANAK  Satti Dhillon | Latest Punjabi Song 2018 | GK.DIGITAL | Geet MP3",
+        "artist": "Geet MP3",
+        "image": "https://i.ytimg.com/vi/PjTU0DmBWiU/hq720.jpg",
+        "duration": 192,
+        "youtubeId": "PjTU0DmBWiU"
+      },
+      {
         "id": "-YlmnPh-6rE",
         "uri": "-YlmnPh-6rE",
         "title": "For A Reason  Karan Aujla | Tania  | Ikky | Latest Punjabi Songs 2025",
@@ -1431,33 +1467,6 @@
         "image": "https://i.ytimg.com/vi/-YlmnPh-6rE/hq720.jpg",
         "duration": 189,
         "youtubeId": "-YlmnPh-6rE"
-      },
-      {
-        "id": "z-ZEHL4Df-A",
-        "uri": "z-ZEHL4Df-A",
-        "title": "Patola Video Song | Blackmail | Irrfan Khan & Kirti Kulhari | Guru Randhawa",
-        "artist": "T-Series",
-        "image": "https://i.ytimg.com/vi/z-ZEHL4Df-A/hq720.jpg",
-        "duration": 150,
-        "youtubeId": "z-ZEHL4Df-A"
-      },
-      {
-        "id": "cWMxCE2HTag",
-        "uri": "cWMxCE2HTag",
-        "title": "SOFTLY  KARAN AUJLA | IKKY | LATEST PUNJABI SONGS 2023",
-        "artist": "Karan Aujla",
-        "image": "https://i.ytimg.com/vi/cWMxCE2HTag/hq720.jpg",
-        "duration": 171,
-        "youtubeId": "cWMxCE2HTag"
-      },
-      {
-        "id": "YpkJO_GrCo0",
-        "uri": "YpkJO_GrCo0",
-        "title": "Laung Laachi Title Song | Mannat Noor | Ammy Virk, Neeru Bajwa,Amberdeep | Latest Punjabi Song 2018",
-        "artist": "T-Series Apna Punjab",
-        "image": "https://i.ytimg.com/vi/YpkJO_GrCo0/hq720.jpg",
-        "duration": 185,
-        "youtubeId": "YpkJO_GrCo0"
       },
       {
         "id": "n_FCrCQ6-bA",
@@ -1469,13 +1478,22 @@
         "youtubeId": "n_FCrCQ6-bA"
       },
       {
-        "id": "cl0a3i2wFcc",
-        "uri": "cl0a3i2wFcc",
-        "title": "Diljit Dosanjh - G.O.A.T.",
-        "artist": "Diljit Dosanjh",
-        "image": "https://i.ytimg.com/vi/cl0a3i2wFcc/hq720.jpg",
-        "duration": 224,
-        "youtubeId": "cl0a3i2wFcc"
+        "id": "YpkJO_GrCo0",
+        "uri": "YpkJO_GrCo0",
+        "title": "Laung Laachi Title Song | Mannat Noor | Ammy Virk, Neeru Bajwa,Amberdeep | Latest Punjabi Song 2018",
+        "artist": "T-Series Apna Punjab",
+        "image": "https://i.ytimg.com/vi/YpkJO_GrCo0/hq720.jpg",
+        "duration": 185,
+        "youtubeId": "YpkJO_GrCo0"
+      },
+      {
+        "id": "knGCfzm4jWs",
+        "uri": "knGCfzm4jWs",
+        "title": "Guru Randhawa - SIRRA",
+        "artist": "Guru Randhawa",
+        "image": "https://i.ytimg.com/vi/knGCfzm4jWs/hq720.jpg",
+        "duration": 154,
+        "youtubeId": "knGCfzm4jWs"
       },
       {
         "id": "TI7RQO2cuh0",
@@ -1485,6 +1503,15 @@
         "image": "https://i.ytimg.com/vi/TI7RQO2cuh0/hq720.jpg",
         "duration": 181,
         "youtubeId": "TI7RQO2cuh0"
+      },
+      {
+        "id": "cWMxCE2HTag",
+        "uri": "cWMxCE2HTag",
+        "title": "SOFTLY  KARAN AUJLA | IKKY | LATEST PUNJABI SONGS 2023",
+        "artist": "Karan Aujla",
+        "image": "https://i.ytimg.com/vi/cWMxCE2HTag/hq720.jpg",
+        "duration": 171,
+        "youtubeId": "cWMxCE2HTag"
       }
     ]
   },
@@ -1569,99 +1596,294 @@
     "query": "recommended songs based on history",
     "results": [
       {
-        "id": "b68HETiNO98",
-        "uri": "b68HETiNO98",
-        "title": "@SaiAbhyankkar - Pavazha Malli  | Kayadu | Shruti Haasan | Vivek | Thejo | Think Indie",
-        "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/b68HETiNO98/hq720.jpg",
-        "duration": 309,
-        "youtubeId": "b68HETiNO98"
+        "id": "RDmFOk_qhHo",
+        "uri": "RDmFOk_qhHo",
+        "title": "Top 100 Most Recognizable Songs Of Black & White Era || MUZIX",
+        "artist": "MUZIX",
+        "image": "https://i.ytimg.com/vi/RDmFOk_qhHo/hq720.jpg",
+        "duration": 595,
+        "youtubeId": "RDmFOk_qhHo"
       },
       {
-        "id": "a3Ue-LN5B9U",
-        "uri": "a3Ue-LN5B9U",
-        "title": "@SaiAbhyankkar - Aasa Kooda  | Thejo Bharathwaj | Preity Mukundhan | Sai Smriti",
-        "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/a3Ue-LN5B9U/hq720.jpg",
-        "duration": 229,
-        "youtubeId": "a3Ue-LN5B9U"
+        "id": "AuD7iykz_lM",
+        "uri": "AuD7iykz_lM",
+        "title": "Evolution Of Hindi Film Songs || Most Popular Song Each Year || MUZIX",
+        "artist": "MUZIX 2.0",
+        "image": "https://i.ytimg.com/vi/AuD7iykz_lM/hq720.jpg",
+        "duration": 600,
+        "youtubeId": "AuD7iykz_lM"
       },
       {
-        "id": "VU23OPQ1Pmc",
-        "uri": "VU23OPQ1Pmc",
-        "title": "@SaiAbhyankkar - Katchi Sera  | Samyuktha | Ken Royson | Think Indie",
-        "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/VU23OPQ1Pmc/hq720.jpg",
-        "duration": 185,
-        "youtubeId": "VU23OPQ1Pmc"
+        "id": "uzMa7LZuyAc",
+        "uri": "uzMa7LZuyAc",
+        "title": "Best Selling Single Of Every Decade | 2010s - 14,000BC",
+        "artist": "Adrian Gray Comedy",
+        "image": "https://i.ytimg.com/vi/uzMa7LZuyAc/hq720.jpg",
+        "duration": 281,
+        "youtubeId": "uzMa7LZuyAc"
       },
       {
-        "id": "_e45NEdNMXE",
-        "uri": "_e45NEdNMXE",
-        "title": "​@SaiAbhyankkar - Vizhi Veekura | Saanve Megghana| Sai Smriti|Adesh| Thejo| Think Indie",
-        "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/_e45NEdNMXE/hqdefault.jpg",
-        "duration": 294,
-        "youtubeId": "_e45NEdNMXE"
+        "id": "vC6okzIKQvg",
+        "uri": "vC6okzIKQvg",
+        "title": "The Monarchs Song 🎶 | Horrible Histories",
+        "artist": "Horrible Histories",
+        "image": "https://i.ytimg.com/vi/vC6okzIKQvg/hq720.jpg",
+        "duration": 267,
+        "youtubeId": "vC6okzIKQvg"
       },
       {
-        "id": "PqVvrF7pwDQ",
-        "uri": "PqVvrF7pwDQ",
-        "title": "@SaiAbhyankkar - Sithira Puthiri  | Meenakshi Chaudhary| Akshay Sundher | Think Indie",
-        "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/PqVvrF7pwDQ/hqdefault.jpg",
-        "duration": 288,
-        "youtubeId": "PqVvrF7pwDQ"
-      },
-      {
-        "id": "7VsejGzcJmM",
-        "uri": "7VsejGzcJmM",
-        "title": "Alaakaa Loova Lyrical  | OM | Dhanush | Mammootty | Sai Pallavi | Sreeleela | Rajkumar | Sai",
-        "artist": "Divo Music and 3 more",
-        "image": "https://i.ytimg.com/vi/7VsejGzcJmM/hq720.jpg",
-        "duration": 217,
-        "youtubeId": "7VsejGzcJmM"
-      },
-      {
-        "id": "GoAAlACyXBg",
-        "uri": "GoAAlACyXBg",
-        "title": "The Wild Theme",
-        "artist": "Sai Abhyankkar",
-        "image": "https://i.ytimg.com/vi/GoAAlACyXBg/hq720.jpg",
-        "duration": 106,
-        "youtubeId": "GoAAlACyXBg"
-      },
-      {
-        "id": "IW6ct9S4MYc",
-        "uri": "IW6ct9S4MYc",
-        "title": "Aane Wala Star",
-        "artist": "Sai Abhyankkar",
-        "image": "https://i.ytimg.com/vi/IW6ct9S4MYc/hq720.jpg",
-        "duration": 133,
-        "youtubeId": "IW6ct9S4MYc"
-      },
-      {
-        "id": "ZpZZvIOcdwE",
-        "uri": "ZpZZvIOcdwE",
-        "title": "@SaiAbhyankkar  - Pavazha Malli  | Shruti Haasan | Vivek | Think Indie",
-        "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/ZpZZvIOcdwE/hq720.jpg",
-        "duration": 85,
-        "youtubeId": "ZpZZvIOcdwE"
-      },
-      {
-        "id": "E2U3GIsndrk",
-        "uri": "E2U3GIsndrk",
-        "title": "Alaakaa Loova  Lyrical | OM | Dhanush | Mammootty | Sai Pallavi | Sreeleela | Rajkumar |Sai",
-        "artist": "Divo Music and 3 more",
-        "image": "https://i.ytimg.com/vi/E2U3GIsndrk/hq720.jpg",
-        "duration": 218,
-        "youtubeId": "E2U3GIsndrk"
+        "id": "xEps0m1EI9E",
+        "uri": "xEps0m1EI9E",
+        "title": "Evolution Of Hindi Songs  | CLOBD",
+        "artist": "CLOBD",
+        "image": "https://i.ytimg.com/vi/xEps0m1EI9E/hq720.jpg",
+        "duration": 533,
+        "youtubeId": "xEps0m1EI9E"
       }
     ]
   },
   {
     "query": "songs similar to recently played",
+    "results": [
+      {
+        "id": "Xi8Fabcb_MA",
+        "uri": "Xi8Fabcb_MA",
+        "title": "Chaand Baaliyan - Aditya A.",
+        "artist": "Aditya A",
+        "image": "https://i.ytimg.com/vi/Xi8Fabcb_MA/hq720.jpg",
+        "duration": 104,
+        "youtubeId": "Xi8Fabcb_MA"
+      },
+      {
+        "id": "vXuO3Yg6yKE",
+        "uri": "vXuO3Yg6yKE",
+        "title": "Harrdy Sandhu - Dance Like  | Lauren Gottlieb | Jaani | B Praak  | Latest Hit Song 2019",
+        "artist": "Sony Music India",
+        "image": "https://i.ytimg.com/vi/vXuO3Yg6yKE/hq720.jpg",
+        "duration": 189,
+        "youtubeId": "vXuO3Yg6yKE"
+      },
+      {
+        "id": "BcqxLCWn-CE",
+        "uri": "BcqxLCWn-CE",
+        "title": "Lauv - I Like Me Better",
+        "artist": "Lauv",
+        "image": "https://i.ytimg.com/vi/BcqxLCWn-CE/hq720.jpg",
+        "duration": 206,
+        "youtubeId": "BcqxLCWn-CE"
+      },
+      {
+        "id": "PMivT7MJ41M",
+        "uri": "PMivT7MJ41M",
+        "title": "Bruno Mars - That’s What I Like",
+        "artist": "Bruno Mars",
+        "image": "https://i.ytimg.com/vi/PMivT7MJ41M/hqdefault.jpg",
+        "duration": 211,
+        "youtubeId": "PMivT7MJ41M"
+      },
+      {
+        "id": "hLQl3WQQoQ0",
+        "uri": "hLQl3WQQoQ0",
+        "title": "Adele - Someone Like You",
+        "artist": "Adele",
+        "image": "https://i.ytimg.com/vi/hLQl3WQQoQ0/hq720.jpg",
+        "duration": 285,
+        "youtubeId": "hLQl3WQQoQ0"
+      }
+    ]
+  },
+  {
+    "query": "babushan songs",
+    "results": [
+      {
+        "id": "HG16cOT7vmM",
+        "uri": "HG16cOT7vmM",
+        "title": "Oda Lage | 4K Full Video | Bou Buttu Bhuta | Babushaan, Archita, Subhashree | Raja 2025 | BF | SM",
+        "artist": "Sidharth Music",
+        "image": "https://i.ytimg.com/vi/HG16cOT7vmM/hq720.jpg",
+        "duration": 298,
+        "youtubeId": "HG16cOT7vmM"
+      },
+      {
+        "id": "mZBYzpX9-mg",
+        "uri": "mZBYzpX9-mg",
+        "title": "Maula Maula Odia Song Lyrics | Halka Tora Mitha Chhuan re | Babusan Odia Movie Song | Babushan |",
+        "artist": "Odiagirl Anjali",
+        "image": "https://i.ytimg.com/vi/mZBYzpX9-mg/hq720.jpg",
+        "duration": 201,
+        "youtubeId": "mZBYzpX9-mg"
+      },
+      {
+        "id": "QZ5TWJVamqM",
+        "uri": "QZ5TWJVamqM",
+        "title": "Halka Tora Mitha",
+        "artist": "Babushan - Topic",
+        "image": "https://i.ytimg.com/vi/QZ5TWJVamqM/hq720.jpg",
+        "duration": 210,
+        "youtubeId": "QZ5TWJVamqM"
+      },
+      {
+        "id": "dqehhFHtNKY",
+        "uri": "dqehhFHtNKY",
+        "title": "Dhima Dhima Chatira Spandan | Emotional Love Song | Super Hit film Idiot | Babusan, Riya",
+        "artist": "Sidharth TV",
+        "image": "https://i.ytimg.com/vi/dqehhFHtNKY/hq720.jpg",
+        "duration": 241,
+        "youtubeId": "dqehhFHtNKY"
+      },
+      {
+        "id": "qy3jsKWCXiU",
+        "uri": "qy3jsKWCXiU",
+        "title": "Tume Uchula Nadi Ra Janha  | Babushan Mohanty | Aparajita Mohanty | Somesh Satpathy",
+        "artist": "SKS Music Company",
+        "image": "https://i.ytimg.com/vi/qy3jsKWCXiU/hq720.jpg",
+        "duration": 289,
+        "youtubeId": "qy3jsKWCXiU"
+      },
+      {
+        "id": "9tzrb2bk4iI",
+        "uri": "9tzrb2bk4iI",
+        "title": "ତୁ ଧିରେ ଧିରେ ଚାଲ୍ ରେ ସମୟ  | Tu Dhire Dhire Chal Re Samay | Chocolate | Babushaan | Goodly | Archita",
+        "artist": "HEAVEN TUNES ODIA ",
+        "image": "https://i.ytimg.com/vi/9tzrb2bk4iI/hq720.jpg",
+        "duration": 301,
+        "youtubeId": "9tzrb2bk4iI"
+      },
+      {
+        "id": "H6bJkTldxMU",
+        "uri": "H6bJkTldxMU",
+        "title": "Dura Akasa Ra Janha Tia||Babushan Mohanty||ଦୁର ଆକାଶର ଜହ୍ନ ଟିଏ||",
+        "artist": "ALL IN ONE",
+        "image": "https://i.ytimg.com/vi/H6bJkTldxMU/hqdefault.jpg",
+        "duration": 273,
+        "youtubeId": "H6bJkTldxMU"
+      },
+      {
+        "id": "IJ3uV6uvMo8",
+        "uri": "IJ3uV6uvMo8",
+        "title": "Mushkil Hai Jeena | Official Full Video | Ajab Sanjura Gajab Love | Babushan, Diptirekha",
+        "artist": "Tarang Music",
+        "image": "https://i.ytimg.com/vi/IJ3uV6uvMo8/hq720.jpg",
+        "duration": 259,
+        "youtubeId": "IJ3uV6uvMo8"
+      },
+      {
+        "id": "_5yPgOpSax0",
+        "uri": "_5yPgOpSax0",
+        "title": "Haye Re Haye Toro Chehera | Love Master | Babushaan | Poonam | Riya | Latest Odia Songs",
+        "artist": "OdiaOne",
+        "image": "https://i.ytimg.com/vi/_5yPgOpSax0/hq720.jpg",
+        "duration": 269,
+        "youtubeId": "_5yPgOpSax0"
+      },
+      {
+        "id": "tVjJRWFqe3M",
+        "uri": "tVjJRWFqe3M",
+        "title": "Rabba Rabba Full HD Video Song - Suna Pila Tike Screw Dhila - Babushaan, Sheetal, Abhijit, Pragyan",
+        "artist": "Prakash & Dhiraj Entertainment",
+        "image": "https://i.ytimg.com/vi/tVjJRWFqe3M/hq720.jpg",
+        "duration": 284,
+        "youtubeId": "tVjJRWFqe3M"
+      }
+    ]
+  },
+  {
+    "query": "anubhav songs",
+    "results": [
+      {
+        "id": "GN7BMDZcD1M",
+        "uri": "GN7BMDZcD1M",
+        "title": "Barsha Akashara Barsha |HD Video Song | Gapa Hele Bi Sata | Anubhab, Barsha | TarangTv",
+        "artist": "Tarang TV",
+        "image": "https://i.ytimg.com/vi/GN7BMDZcD1M/hq720.jpg",
+        "duration": 308,
+        "youtubeId": "GN7BMDZcD1M"
+      },
+      {
+        "id": "FcLp91VSnRM",
+        "uri": "FcLp91VSnRM",
+        "title": "CHATI TALE THAE JONE LUCHI 🌻 || MOST WANTED  || MEGHA GHSOH & ANUBHAV MOHANTY ||",
+        "artist": "Team Meghaa Ghosh",
+        "image": "https://i.ytimg.com/vi/FcLp91VSnRM/hq720.jpg",
+        "duration": 294,
+        "youtubeId": "FcLp91VSnRM"
+      },
+      {
+        "id": "_uqkzzl_FD8",
+        "uri": "_uqkzzl_FD8",
+        "title": "Tu Ki Sei Sapan Pari | Full Video Song | Chhaki Suna | Anubhav Mohanty | Sheetal | Swayam | Antara",
+        "artist": "Amara Muzik Odia and Amara Studios",
+        "image": "https://i.ytimg.com/vi/_uqkzzl_FD8/hq720.jpg",
+        "duration": 222,
+        "youtubeId": "_uqkzzl_FD8"
+      },
+      {
+        "id": "Sjx4Mx-9jaI",
+        "uri": "Sjx4Mx-9jaI",
+        "title": "Dhire Dhire | Full Video Song | Agastya | Odia Movie | Anubhav Mohanty | Jhilik Bhattacharjee",
+        "artist": "Amara Muzik Odia",
+        "image": "https://i.ytimg.com/vi/Sjx4Mx-9jaI/hq720.jpg",
+        "duration": 220,
+        "youtubeId": "Sjx4Mx-9jaI"
+      },
+      {
+        "id": "hO4ddkq2Z5U",
+        "uri": "hO4ddkq2Z5U",
+        "title": "Sunjara Sunjara - Official Full Video | Prem Kumar | Anubhav, Sivani, Humane, Ananya",
+        "artist": "Tarang Cine Productions",
+        "image": "https://i.ytimg.com/vi/hO4ddkq2Z5U/hq720.jpg",
+        "duration": 234,
+        "youtubeId": "hO4ddkq2Z5U"
+      },
+      {
+        "id": "RFq8_xfM5qg",
+        "uri": "RFq8_xfM5qg",
+        "title": "Basinda - Romantic Song | Anubhav Mohanty | Anuradha | Chardham | Odia Movie | Ananya | Satyajeet",
+        "artist": "Rajshri Odia",
+        "image": "https://i.ytimg.com/vi/RFq8_xfM5qg/hq720.jpg",
+        "duration": 242,
+        "youtubeId": "RFq8_xfM5qg"
+      },
+      {
+        "id": "AT3PTBzaP0M",
+        "uri": "AT3PTBzaP0M",
+        "title": "Ame Balunga Toka | ଆମେ ବାଳୁଙ୍ଗା ଟୋକା | Chhaki Suna | Anubhav Mohanty | Akash Hota| Gudu |Video Song",
+        "artist": "Amara Muzik Odia and Amara Studios",
+        "image": "https://i.ytimg.com/vi/AT3PTBzaP0M/hq720.jpg",
+        "duration": 207,
+        "youtubeId": "AT3PTBzaP0M"
+      },
+      {
+        "id": "76k0SlcwBWU",
+        "uri": "76k0SlcwBWU",
+        "title": "Hai Re Mun Galini Mari | Film \"Biju Babu\" Video Song | Anubhav & Supriya | Sidharth Music",
+        "artist": "Sidharth Music",
+        "image": "https://i.ytimg.com/vi/76k0SlcwBWU/hq720.jpg",
+        "duration": 139,
+        "youtubeId": "76k0SlcwBWU"
+      },
+      {
+        "id": "8f0l5HhMJHU",
+        "uri": "8f0l5HhMJHU",
+        "title": "Tate Gaidele  Full Video Song | Gapa Hele Bi Sata Odia Movie 2016 | Anubhab, Barsha - TCP",
+        "artist": "Tarang TV",
+        "image": "https://i.ytimg.com/vi/8f0l5HhMJHU/hq720.jpg",
+        "duration": 269,
+        "youtubeId": "8f0l5HhMJHU"
+      },
+      {
+        "id": "R3YsSGlAk9s",
+        "uri": "R3YsSGlAk9s",
+        "title": "Aa Kahuchi Tate | Romantic Film Song I DEEWANA I Anubhav, Varsha | ଆ କହୁଛି ତୋତେ |  Sidharth Music",
+        "artist": "Sidharth TV",
+        "image": "https://i.ytimg.com/vi/R3YsSGlAk9s/hq720.jpg",
+        "duration": 285,
+        "youtubeId": "R3YsSGlAk9s"
+      }
+    ]
+  },
+  {
+    "query": "tamil songs",
     "results": [
       {
         "id": "b68HETiNO98",
@@ -1673,42 +1895,6 @@
         "youtubeId": "b68HETiNO98"
       },
       {
-        "id": "a3Ue-LN5B9U",
-        "uri": "a3Ue-LN5B9U",
-        "title": "@SaiAbhyankkar - Aasa Kooda  | Thejo Bharathwaj | Preity Mukundhan | Sai Smriti",
-        "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/a3Ue-LN5B9U/hq720.jpg",
-        "duration": 229,
-        "youtubeId": "a3Ue-LN5B9U"
-      },
-      {
-        "id": "VU23OPQ1Pmc",
-        "uri": "VU23OPQ1Pmc",
-        "title": "@SaiAbhyankkar - Katchi Sera  | Samyuktha | Ken Royson | Think Indie",
-        "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/VU23OPQ1Pmc/hq720.jpg",
-        "duration": 185,
-        "youtubeId": "VU23OPQ1Pmc"
-      },
-      {
-        "id": "_e45NEdNMXE",
-        "uri": "_e45NEdNMXE",
-        "title": "​@SaiAbhyankkar - Vizhi Veekura | Saanve Megghana| Sai Smriti|Adesh| Thejo| Think Indie",
-        "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/_e45NEdNMXE/hqdefault.jpg",
-        "duration": 294,
-        "youtubeId": "_e45NEdNMXE"
-      },
-      {
-        "id": "PqVvrF7pwDQ",
-        "uri": "PqVvrF7pwDQ",
-        "title": "@SaiAbhyankkar - Sithira Puthiri  | Meenakshi Chaudhary| Akshay Sundher | Think Indie",
-        "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/PqVvrF7pwDQ/hqdefault.jpg",
-        "duration": 288,
-        "youtubeId": "PqVvrF7pwDQ"
-      },
-      {
         "id": "7VsejGzcJmM",
         "uri": "7VsejGzcJmM",
         "title": "Alaakaa Loova Lyrical  | OM | Dhanush | Mammootty | Sai Pallavi | Sreeleela | Rajkumar | Sai",
@@ -1718,40 +1904,171 @@
         "youtubeId": "7VsejGzcJmM"
       },
       {
-        "id": "GoAAlACyXBg",
-        "uri": "GoAAlACyXBg",
-        "title": "The Wild Theme",
-        "artist": "Sai Abhyankkar",
-        "image": "https://i.ytimg.com/vi/GoAAlACyXBg/hq720.jpg",
-        "duration": 106,
-        "youtubeId": "GoAAlACyXBg"
-      },
-      {
-        "id": "IW6ct9S4MYc",
-        "uri": "IW6ct9S4MYc",
-        "title": "Aane Wala Star",
-        "artist": "Sai Abhyankkar",
-        "image": "https://i.ytimg.com/vi/IW6ct9S4MYc/hq720.jpg",
-        "duration": 133,
-        "youtubeId": "IW6ct9S4MYc"
-      },
-      {
-        "id": "ZpZZvIOcdwE",
-        "uri": "ZpZZvIOcdwE",
-        "title": "@SaiAbhyankkar  - Pavazha Malli  | Shruti Haasan | Vivek | Think Indie",
+        "id": "QxWoYkrgpJE",
+        "uri": "QxWoYkrgpJE",
+        "title": "Nallaru Po | Dude | Pradeep Ranganathan | @SaiAbhyankkar | Tippu | Mohit Chauhan | Keerthiswaran",
         "artist": "Think Music India",
-        "image": "https://i.ytimg.com/vi/ZpZZvIOcdwE/hq720.jpg",
-        "duration": 85,
-        "youtubeId": "ZpZZvIOcdwE"
+        "image": "https://i.ytimg.com/vi/QxWoYkrgpJE/hq720.jpg",
+        "duration": 241,
+        "youtubeId": "QxWoYkrgpJE"
       },
       {
-        "id": "E2U3GIsndrk",
-        "uri": "E2U3GIsndrk",
-        "title": "Alaakaa Loova  Lyrical | OM | Dhanush | Mammootty | Sai Pallavi | Sreeleela | Rajkumar |Sai",
-        "artist": "Divo Music and 3 more",
-        "image": "https://i.ytimg.com/vi/E2U3GIsndrk/hq720.jpg",
-        "duration": 218,
-        "youtubeId": "E2U3GIsndrk"
+        "id": "undhkaMMenU",
+        "uri": "undhkaMMenU",
+        "title": "Sambavakaari Video Song | Gatta Kusthi 2 | Vishnu Vishal, Aishwarya Lekshmi | Sean Roldan",
+        "artist": "Sony Music South",
+        "image": "https://i.ytimg.com/vi/undhkaMMenU/hq720.jpg",
+        "duration": 245,
+        "youtubeId": "undhkaMMenU"
+      },
+      {
+        "id": "592mNGkpYig",
+        "uri": "592mNGkpYig",
+        "title": "Vaa Vaathi Full Video Song | Vaathi Movie | Dhanush, Samyuktha | GV Prakash Kumar | Venky Atluri",
+        "artist": "Aditya Music Tamil",
+        "image": "https://i.ytimg.com/vi/592mNGkpYig/hqdefault.jpg",
+        "duration": 195,
+        "youtubeId": "592mNGkpYig"
+      },
+      {
+        "id": "uZZ40wijW48",
+        "uri": "uZZ40wijW48",
+        "title": "Vaama Vaama - Airport Version | Idhayam Murali | Atharvaa | Preity | Thaman |Dhanush|Aakash Baskaran",
+        "artist": "Think Music India",
+        "image": "https://i.ytimg.com/vi/uZZ40wijW48/hq720.jpg",
+        "duration": 176,
+        "youtubeId": "uZZ40wijW48"
+      },
+      {
+        "id": "Zllqm2zHmpA",
+        "uri": "Zllqm2zHmpA",
+        "title": "En Kannu Kulla - Video Song | Appuchi Graamam | Vishal Chandrasekhar | Vi.Anand",
+        "artist": "Think Music India",
+        "image": "https://i.ytimg.com/vi/Zllqm2zHmpA/hq720.jpg",
+        "duration": 230,
+        "youtubeId": "Zllqm2zHmpA"
+      },
+      {
+        "id": "3TVvRETczto",
+        "uri": "3TVvRETczto",
+        "title": "Vennilave Vennilave Song | Minsara Kanavu Tamil Movie Songs | Prabhu Deva | Kajol | AR Rahman",
+        "artist": "API Tamil Songs",
+        "image": "https://i.ytimg.com/vi/3TVvRETczto/hq720.jpg",
+        "duration": 331,
+        "youtubeId": "3TVvRETczto"
+      },
+      {
+        "id": "4Bsc2uI_LsM",
+        "uri": "4Bsc2uI_LsM",
+        "title": "Oorum Blood | Dude | Pradeep Ranganathan, Mamitha | Sai Abhyankkar| Keerthiswaran|Paal Dabba| Mythri",
+        "artist": "Think Music India",
+        "image": "https://i.ytimg.com/vi/4Bsc2uI_LsM/hq720.jpg",
+        "duration": 269,
+        "youtubeId": "4Bsc2uI_LsM"
+      },
+      {
+        "id": "doqxg6ZXYF8",
+        "uri": "doqxg6ZXYF8",
+        "title": "Ghilli - Appadi Podu Song | Vijay | Trisha | Vidyasagar | KK | Anuradha Sriram | Pa. Vijay | Dharani",
+        "artist": "API Tamil Songs",
+        "image": "https://i.ytimg.com/vi/doqxg6ZXYF8/hq720.jpg",
+        "duration": 295,
+        "youtubeId": "doqxg6ZXYF8"
+      }
+    ]
+  },
+  {
+    "query": "vijay thalapathy songs",
+    "results": [
+      {
+        "id": "KUN5Uf9mObQ",
+        "uri": "KUN5Uf9mObQ",
+        "title": "Arabic Kuthu - Video Song | Beast | Thalapathy Vijay | Pooja Hegde | Sun Pictures | Nelson | Anirudh",
+        "artist": "Sun TV",
+        "image": "https://i.ytimg.com/vi/KUN5Uf9mObQ/hq720.jpg",
+        "duration": 282,
+        "youtubeId": "KUN5Uf9mObQ"
+      },
+      {
+        "id": "9OF_cF48mjA",
+        "uri": "9OF_cF48mjA",
+        "title": "Jana Nayagan - Raavana Mavandaa Lyrical | Thalapathy Vijay | Pooja Hegde | H Vinoth | Anirudh | KVN",
+        "artist": "T-Series",
+        "image": "https://i.ytimg.com/vi/9OF_cF48mjA/hq720.jpg",
+        "duration": 113,
+        "youtubeId": "9OF_cF48mjA"
+      },
+      {
+        "id": "fRD_3vJagxk",
+        "uri": "fRD_3vJagxk",
+        "title": "Master - Vaathi Coming Video | Thalapathy Vijay | Anirudh Ravichander | Lokesh Kanagaraj",
+        "artist": "Sony Music South",
+        "image": "https://i.ytimg.com/vi/fRD_3vJagxk/hq720.jpg",
+        "duration": 257,
+        "youtubeId": "fRD_3vJagxk"
+      },
+      {
+        "id": "i1BqRYMFS08",
+        "uri": "i1BqRYMFS08",
+        "title": "Appadi Podu - Video Song | Ghilli | Thalapathy Vijay | Trisha | Vidyasagar | Sun Music",
+        "artist": "Sun Music",
+        "image": "https://i.ytimg.com/vi/i1BqRYMFS08/hq720.jpg",
+        "duration": 285,
+        "youtubeId": "i1BqRYMFS08"
+      },
+      {
+        "id": "HfMTwkVQohM",
+        "uri": "HfMTwkVQohM",
+        "title": "Full Video: Jimikki Ponnu  Varisu | Thalapathy Vijay | Thaman S | Vamshi Paidipally",
+        "artist": "T-Series",
+        "image": "https://i.ytimg.com/vi/HfMTwkVQohM/hq720.jpg",
+        "duration": 236,
+        "youtubeId": "HfMTwkVQohM"
+      },
+      {
+        "id": "muGu6ObWM14",
+        "uri": "muGu6ObWM14",
+        "title": "Jana Nayagan: Thalapathy Kacheri 8K Song | Thalapathy Vijay| H Vinoth| Anirudh| Pooja Hegde| KVN",
+        "artist": "T-Series",
+        "image": "https://i.ytimg.com/vi/muGu6ObWM14/hq720.jpg",
+        "duration": 201,
+        "youtubeId": "muGu6ObWM14"
+      },
+      {
+        "id": "q6e_b0NERCA",
+        "uri": "q6e_b0NERCA",
+        "title": "Leo - Ordinary Person Video | Thalapathy Vijay | Anirudh Ravichander",
+        "artist": "SonyMusicSouthVEVO",
+        "image": "https://i.ytimg.com/vi/q6e_b0NERCA/hq720.jpg",
+        "duration": 140,
+        "youtubeId": "q6e_b0NERCA"
+      },
+      {
+        "id": "isbjM9kXd70",
+        "uri": "isbjM9kXd70",
+        "title": "Jana Nayagan: Raavana Mavandaa 8K Song | Thalapathy Vijay | Pooja Hegde | H Vinoth | Anirudh | KVN",
+        "artist": "T-Series",
+        "image": "https://i.ytimg.com/vi/isbjM9kXd70/hq720.jpg",
+        "duration": 111,
+        "youtubeId": "isbjM9kXd70"
+      },
+      {
+        "id": "qItykoFeqNE",
+        "uri": "qItykoFeqNE",
+        "title": "Master - Master Coming Video  | Thalapathy Vijay | Anirudh Ravichander | Lokesh Kanagaraj",
+        "artist": "Sony Music South",
+        "image": "https://i.ytimg.com/vi/qItykoFeqNE/hq720.jpg",
+        "duration": 257,
+        "youtubeId": "qItykoFeqNE"
+      },
+      {
+        "id": "_VjDQH_wTS0",
+        "uri": "_VjDQH_wTS0",
+        "title": "Jimikki Ponnu 8K Full Video Song  | Varisu | Thalapathy Vijay | Thaman S | Vamshi Paidipally",
+        "artist": "T-Series",
+        "image": "https://i.ytimg.com/vi/_VjDQH_wTS0/hq720.jpg",
+        "duration": 222,
+        "youtubeId": "_VjDQH_wTS0"
       }
     ]
   }

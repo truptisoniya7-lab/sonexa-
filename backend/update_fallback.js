@@ -42,7 +42,7 @@ const queries = [
   "anirudh ravichander songs",
   "bollywood songs",
   "top hindi songs",
-  "hindi moods songs",
+  "mood songs",
   "hindi recent songs",
   "hindi trending songs",
   "hindi pop songs",
@@ -57,7 +57,11 @@ const queries = [
   "Punjabi Hit Songs",
   "Bollywood Hit Songs",
   "Recommended Songs Based on History",
-  "Songs similar to recently played"
+  "Songs similar to recently played",
+  "babushan songs",
+  "anubhav songs",
+  "tamil songs",
+  "vijay thalapathy songs"
 ];
 
   async function generateFallback() {

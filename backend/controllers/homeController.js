@@ -98,6 +98,38 @@ const getLayout = async (req, res) => {
         caching: { strategy: 'stale-while-revalidate', ttl: 3600 }
       },
       {
+        id: 'babushan',
+        type: 'CAROUSEL',
+        title: 'Babushan Hits',
+        endpoint: '/api/music/discover?section=Babushan',
+        motionPreset: 'level-3',
+        caching: { strategy: 'stale-while-revalidate', ttl: 3600 }
+      },
+      {
+        id: 'anubhav',
+        type: 'CAROUSEL',
+        title: 'Anubhav Hits',
+        endpoint: '/api/music/discover?section=Anubhav',
+        motionPreset: 'level-3',
+        caching: { strategy: 'stale-while-revalidate', ttl: 3600 }
+      },
+      {
+        id: 'tamil-songs',
+        type: 'CAROUSEL',
+        title: 'Tamil Hits',
+        endpoint: '/api/music/discover?section=Tamil Songs',
+        motionPreset: 'level-3',
+        caching: { strategy: 'stale-while-revalidate', ttl: 3600 }
+      },
+      {
+        id: 'vijay',
+        type: 'CAROUSEL',
+        title: 'Vijay Thalapathy',
+        endpoint: '/api/music/discover?section=Vijay Thalapathy',
+        motionPreset: 'level-3',
+        caching: { strategy: 'stale-while-revalidate', ttl: 3600 }
+      },
+      {
         id: 'recently-played',
         type: 'INFINITE_CAROUSEL',
         title: 'Recently Played',
