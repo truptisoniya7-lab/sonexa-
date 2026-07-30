@@ -93,20 +93,13 @@ export function HeroPlayer() {
   }
 
   return (
-    <header className="flex flex-col gap-6 relative z-10 preserve-3d mt-4 lg:mt-0">
-      <div>
-        <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/50 drop-shadow-glow">
-          {greeting}, <br className="md:hidden" />
-          {userName} 👋
-        </h1>
-        <p className="text-muted-foreground mt-2 mb-8 font-medium">Ready for your next vibe?</p>
-      </div>
+    <header className="flex flex-col gap-6 relative z-10 preserve-3d mt-2 lg:mt-0 px-2">
 
       <motion.div 
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         style={{ rotateX, rotateY }}
-        className="relative overflow-visible rounded-3xl border border-white/10 glass-panel p-6 md:p-8 flex flex-col md:flex-row items-center md:items-stretch gap-8 md:gap-12 cursor-pointer group shadow-glass-hover transition-dominant duration-700 max-h-[450px]"
+        className="relative overflow-visible rounded-3xl border border-white/10 glass-panel p-4 md:p-6 flex flex-row items-center gap-6 cursor-pointer group shadow-glass-hover transition-dominant duration-700 max-h-[220px]"
       >
         {/* Animated Glow Background behind the card */}
         <div 
@@ -117,13 +110,13 @@ export function HeroPlayer() {
         {/* 3D Floating Album Art & Vinyl */}
         <motion.div 
           style={{ translateZ: 50 }}
-          className="relative w-48 h-48 md:w-56 md:h-56 shrink-0 flex items-center justify-center"
+          className="relative w-28 h-28 md:w-40 md:h-40 shrink-0 flex items-center justify-center hidden sm:flex"
         >
           {/* Rotating Vinyl Record */}
           <motion.div 
             animate={{ rotate: isPlaying ? 360 : 0 }}
             transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
-            className="absolute right-[-30px] w-40 h-40 md:w-48 md:h-48 rounded-full bg-black border border-white/10 shadow-2xl flex items-center justify-center overflow-hidden"
+            className="absolute right-[-20px] w-24 h-24 md:w-36 md:h-36 rounded-full bg-black border border-white/10 shadow-2xl flex items-center justify-center overflow-hidden"
             style={{ 
               background: 'radial-gradient(circle at center, #111 20%, #000 60%)',
               boxShadow: 'inset 0 0 20px rgba(255,255,255,0.1), 0 10px 30px rgba(0,0,0,0.5)'
@@ -132,16 +125,16 @@ export function HeroPlayer() {
             {/* Vinyl grooves */}
             <div className="absolute inset-2 border border-white/5 rounded-full pointer-events-none" />
             <div className="absolute inset-4 border border-white/5 rounded-full pointer-events-none" />
-            <div className="absolute inset-8 border border-white/5 rounded-full pointer-events-none" />
+            
             {/* Record Label */}
-            <div className="w-20 h-20 rounded-full border border-black/50" style={{ backgroundColor: `rgb(${dominantColor})` }}>
+            <div className="w-12 h-12 rounded-full border border-black/50" style={{ backgroundColor: `rgb(${dominantColor})` }}>
               <div className="w-full h-full flex items-center justify-center">
-                <div className="w-2 h-2 bg-black rounded-full" />
+                <div className="w-1.5 h-1.5 bg-black rounded-full" />
               </div>
             </div>
           </motion.div>
 
-          <div className="relative w-full h-full z-10 rounded-2xl overflow-hidden shadow-2xl">
+          <div className="relative w-full h-full z-10 rounded-xl overflow-hidden shadow-2xl">
             <img 
               src={activeSong.song_image} 
               alt="Track" 
@@ -159,21 +152,21 @@ export function HeroPlayer() {
         </motion.div>
 
         {/* Track Info */}
-        <motion.div style={{ translateZ: 30 }} className="flex-1 text-center md:text-left space-y-4 z-10 flex flex-col justify-center">
+        <motion.div style={{ translateZ: 30 }} className="flex-1 text-left space-y-2 z-10 flex flex-col justify-center min-w-0">
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-primary drop-shadow-md flex items-center gap-2 justify-center md:justify-start mb-2">
-              <Music2 className="w-3 h-3" /> {currentSong ? 'Currently Playing' : 'Featured Track'}
+            <span className="text-[10px] font-bold uppercase tracking-widest text-primary drop-shadow-md flex items-center gap-2 mb-1">
+              <Music2 className="w-3 h-3" /> {greeting}, {userName} 👋
             </span>
-            <h2 className="text-3xl md:text-4xl font-black text-white drop-shadow-md mb-1">{activeSong.song_title}</h2>
-            <p className="text-lg text-muted-foreground font-medium">{activeSong.song_artist}</p>
+            <h2 className="text-xl md:text-3xl font-black text-white drop-shadow-md mb-0.5 truncate">{activeSong.song_title}</h2>
+            <p className="text-sm md:text-base text-muted-foreground font-medium truncate">{activeSong.song_artist}</p>
           </div>
           
-          <div className="flex items-center gap-6 pt-2">
+          <div className="flex items-center gap-4 pt-1">
             <button 
               onClick={(e) => { e.stopPropagation(); togglePlay(); }} 
-              className="rounded-full font-bold px-8 py-3 bg-white text-black hover:scale-105 active:scale-95 transition-all shadow-xl flex items-center gap-2"
+              className="rounded-full font-bold px-6 py-2 bg-white text-black hover:scale-105 active:scale-95 transition-all shadow-xl flex items-center gap-2 text-sm"
             >
-              {isPlaying ? 'Pause' : 'Resume'}
+              {isPlaying ? 'Pause' : 'Play'}
             </button>
             
             {/* Fluid Waveform */}
@@ -192,18 +185,6 @@ export function HeroPlayer() {
             )}
           </div>
 
-          {/* Lyrics Preview Pill (Only show for default song demo) */}
-          {activeSong.song_title === 'Espresso' && (
-            <div className="mt-4 inline-flex">
-              <div className="glass-panel px-4 py-3 rounded-2xl border border-white/5 flex items-start gap-3 max-w-sm hover:border-white/20 transition-colors">
-                <Mic2 className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />
-                <div className="text-sm font-medium text-white/80 italic leading-relaxed">
-                  "I'm working late 'cause I'm a singer... <br/>
-                  <span className="text-primary font-bold">Oh, he looks so cute wrapped around my finger...</span>"
-                </div>
-              </div>
-            </div>
-          )}
         </motion.div>
       </motion.div>
     </header>
