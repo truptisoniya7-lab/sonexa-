@@ -28,7 +28,7 @@ export function LoginScene() {
           <AudioVisualizer />
           
           {tier === 'high' && (
-            <EffectComposer disableNormalPass>
+            <EffectComposer>
               <Bloom luminanceThreshold={0.2} mipmapBlur intensity={1.5} />
             </EffectComposer>
           )}
