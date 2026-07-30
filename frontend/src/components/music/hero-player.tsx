@@ -11,6 +11,25 @@ export function HeroPlayer() {
   
   const [dominantColor, setDominantColor] = useState('139, 92, 246'); // Default purple rgb
   const [recentSong, setRecentSong] = useState<any>(null);
+  const [userName, setUserName] = useState<string>('Guest');
+  const [greeting, setGreeting] = useState<string>('Good Evening');
+
+  useEffect(() => {
+    // Dynamic greeting based on time
+    const hour = new Date().getHours();
+    if (hour < 12) setGreeting('Good Morning');
+    else if (hour < 18) setGreeting('Good Afternoon');
+    else setGreeting('Good Evening');
+
+    // Get user from local storage
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        const parsed = JSON.parse(storedUser);
+        if (parsed.name) setUserName(parsed.name.split(' ')[0]); // first name
+      } catch(e) {}
+    }
+  }, []);
 
   const defaultSong = {
     song_uri: 'spotify:track:default',
@@ -76,16 +95,18 @@ export function HeroPlayer() {
   return (
     <header className="flex flex-col gap-6 relative z-10 preserve-3d mt-4 lg:mt-0">
       <div>
-        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/50 drop-shadow-glow mb-4">
-          Good day, Soniya 👋
+        <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/50 drop-shadow-glow">
+          {greeting}, <br className="md:hidden" />
+          {userName} 👋
         </h1>
+        <p className="text-muted-foreground mt-2 mb-8 font-medium">Ready for your next vibe?</p>
       </div>
 
       <motion.div 
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         style={{ rotateX, rotateY }}
-        className="relative overflow-visible rounded-3xl border border-white/10 glass-panel p-8 flex flex-col md:flex-row items-center md:items-stretch gap-12 cursor-pointer group shadow-glass-hover transition-dominant duration-700"
+        className="relative overflow-visible rounded-3xl border border-white/10 glass-panel p-6 md:p-8 flex flex-col md:flex-row items-center md:items-stretch gap-8 md:gap-12 cursor-pointer group shadow-glass-hover transition-dominant duration-700 max-h-[450px]"
       >
         {/* Animated Glow Background behind the card */}
         <div 
@@ -96,13 +117,13 @@ export function HeroPlayer() {
         {/* 3D Floating Album Art & Vinyl */}
         <motion.div 
           style={{ translateZ: 50 }}
-          className="relative w-64 h-64 shrink-0 flex items-center justify-center"
+          className="relative w-48 h-48 md:w-56 md:h-56 shrink-0 flex items-center justify-center"
         >
           {/* Rotating Vinyl Record */}
           <motion.div 
             animate={{ rotate: isPlaying ? 360 : 0 }}
             transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
-            className="absolute right-[-40px] w-56 h-56 rounded-full bg-black border border-white/10 shadow-2xl flex items-center justify-center overflow-hidden"
+            className="absolute right-[-30px] w-40 h-40 md:w-48 md:h-48 rounded-full bg-black border border-white/10 shadow-2xl flex items-center justify-center overflow-hidden"
             style={{ 
               background: 'radial-gradient(circle at center, #111 20%, #000 60%)',
               boxShadow: 'inset 0 0 20px rgba(255,255,255,0.1), 0 10px 30px rgba(0,0,0,0.5)'
@@ -140,11 +161,11 @@ export function HeroPlayer() {
         {/* Track Info */}
         <motion.div style={{ translateZ: 30 }} className="flex-1 text-center md:text-left space-y-4 z-10 flex flex-col justify-center">
           <div>
-            <span className="text-xs font-bold uppercase tracking-widest text-primary drop-shadow-md flex items-center gap-2 justify-center md:justify-start mb-2">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-primary drop-shadow-md flex items-center gap-2 justify-center md:justify-start mb-2">
               <Music2 className="w-3 h-3" /> {currentSong ? 'Currently Playing' : 'Featured Track'}
             </span>
-            <h2 className="text-4xl md:text-5xl font-black text-white drop-shadow-md mb-2">{activeSong.song_title}</h2>
-            <p className="text-xl text-muted-foreground font-medium">{activeSong.song_artist}</p>
+            <h2 className="text-3xl md:text-4xl font-black text-white drop-shadow-md mb-1">{activeSong.song_title}</h2>
+            <p className="text-lg text-muted-foreground font-medium">{activeSong.song_artist}</p>
           </div>
           
           <div className="flex items-center gap-6 pt-2">

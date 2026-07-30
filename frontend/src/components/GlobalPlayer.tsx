@@ -124,7 +124,7 @@ export default function GlobalPlayer() {
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 100, opacity: 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className="h-16 md:h-24 bg-background/95 backdrop-blur-xl border-t border-border/50 flex items-center justify-between px-2 md:px-6 shadow-[0_-10px_40px_-10px_rgba(0,0,0,0.1)] relative w-full"
+        className="fixed md:relative bottom-[72px] md:bottom-0 left-0 right-0 z-30 h-16 md:h-24 bg-background/95 backdrop-blur-xl border-t border-border/50 flex items-center justify-between px-2 md:px-6 shadow-[0_-10px_40px_-10px_rgba(0,0,0,0.5)] w-full"
         onClick={() => { if (isMobile) setIsExpanded(true); }}
       >
         {/* Subtle top progress bar indicating play state */}

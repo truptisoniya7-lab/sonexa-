@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Home, Search, Library, Radio, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { springTransition, hoverButton } from '@/lib/animations';
 import { useEffect, useState } from 'react';
 
 const navItems = [
@@ -49,9 +50,9 @@ export function BottomNavigation() {
           className="fixed bottom-0 left-0 right-0 z-40 md:hidden pb-safe"
         >
           {/* Glass background with extra padding for mobile safe area at bottom */}
-          <div className="absolute inset-0 bg-background/80 backdrop-blur-xl border-t border-white/5" />
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-2xl border-t border-white/10 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]" />
           
-          <nav className="relative flex items-center justify-around h-16 px-4">
+          <nav className="relative flex items-center justify-around h-20 px-4 pb-2">
             {navItems.map((item) => {
               const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
               
@@ -62,20 +63,20 @@ export function BottomNavigation() {
                   className="relative flex flex-col items-center justify-center w-full h-full min-h-[44px] min-w-[44px]"
                 >
                   <motion.div
-                    whileTap={{ scale: 0.9 }}
+                    {...hoverButton}
                     className={cn(
-                      "flex flex-col items-center justify-center w-12 h-12 rounded-full transition-colors",
-                      isActive ? "text-primary" : "text-muted-foreground hover:text-white"
+                      "flex flex-col items-center justify-center w-14 h-14 rounded-full transition-colors relative",
+                      isActive ? "text-primary scale-110" : "text-muted-foreground hover:text-white"
                     )}
                   >
-                    <item.icon className="w-5 h-5 mb-1" strokeWidth={isActive ? 2.5 : 2} />
-                    <span className="text-[10px] font-medium">{item.label}</span>
+                    <item.icon className="w-6 h-6" strokeWidth={isActive ? 2.5 : 2} />
                     
+                    {/* Glowing dot for active state instead of text */}
                     {isActive && (
                       <motion.div
                         layoutId="bottomNavIndicator"
-                        className="absolute bottom-1 w-1 h-1 rounded-full bg-primary"
-                        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                        className="absolute -bottom-1 w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_10px_rgba(139,92,246,0.8)]"
+                        transition={springTransition}
                       />
                     )}
                   </motion.div>
