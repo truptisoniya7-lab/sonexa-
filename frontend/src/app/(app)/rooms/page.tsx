@@ -128,7 +128,7 @@ export default function ListenTogetherPage() {
         const msg = payload.new;
         setFeedEvents(prev => [{
           id: `msg-${msg.id}`,
-          type: 'chat',
+          type: 'chat' as const,
           roomName: "A Room",
           user: msg.user_name || "Someone",
           content: `said: "${msg.content.substring(0, 20)}..."`,
