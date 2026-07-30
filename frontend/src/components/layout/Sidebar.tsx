@@ -25,12 +25,15 @@ export function Sidebar({ unreadCount, toggleNotifs }: { unreadCount: number, to
       initial={{ x: -100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 200, damping: 20 }}
-      className="w-64 glass-panel m-4 flex flex-col h-[calc(100vh-2rem)] fixed left-0 top-0 z-40 overflow-hidden"
+      className="w-20 lg:w-64 bg-background/20 backdrop-blur-xl border border-white/5 m-4 flex flex-col h-[calc(100vh-2rem)] fixed left-0 top-0 z-40 overflow-hidden rounded-3xl shadow-2xl"
     >
-      <div className="p-6 pb-2">
+      <div className="p-6 pb-2 hidden lg:block">
         <h2 className="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400 drop-shadow-glow">
           Sonexa
         </h2>
+      </div>
+      <div className="p-6 pb-2 block lg:hidden flex justify-center">
+        <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-purple-400 flex items-center justify-center font-bold text-white shadow-glow">S</div>
       </div>
 
       <ScrollArea className="flex-1 px-3 mt-4 pb-20">
@@ -53,9 +56,9 @@ export function Sidebar({ unreadCount, toggleNotifs }: { unreadCount: number, to
                   )}
                 >
                   <motion.div whileHover={{ scale: 1.1, rotate: isActive ? 0 : 5 }} whileTap={{ scale: 0.9 }}>
-                    <item.icon className="w-5 h-5" />
+                    <item.icon className="w-6 h-6 lg:w-5 lg:h-5" />
                   </motion.div>
-                  {item.name}
+                  <span className="hidden lg:block">{item.name}</span>
                 </div>
               </Link>
             )

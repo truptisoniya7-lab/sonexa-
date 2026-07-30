@@ -9,6 +9,7 @@ import { CarouselSection } from '@/components/home/CarouselSection';
 import { CoverFlowModule } from '@/components/modules/cover-flow-module';
 import { InfiniteCarouselModule } from '@/components/modules/infinite-carousel-module';
 import { MasonryModule } from '@/components/modules/masonry-module';
+import { BentoModule } from '@/components/modules/bento-module';
 
 function SDUIModule({ module }: { module: any }) {
   switch (module.type) {
@@ -30,6 +31,8 @@ function SDUIModule({ module }: { module: any }) {
       return <InfiniteCarouselModule module={module} />;
     case 'MASONRY':
       return <MasonryModule module={module} />;
+    case 'BENTO_GRID':
+      return <BentoModule module={module} />;
     default:
       return null;
   }
@@ -47,28 +50,19 @@ export default function HomePage() {
 
   return (
     <div className="max-w-[1600px] mx-auto pb-12 relative z-10 preserve-3d perspective-1000">
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        
-        {/* Main Content Area */}
-        <div className="lg:col-span-3 w-full space-y-12">
-          {isLoading ? (
-            <div className="space-y-6">
-              <Skeleton className="h-64 w-full rounded-2xl glass" />
-              <Skeleton className="h-48 w-full rounded-2xl glass" />
-              <Skeleton className="h-48 w-full rounded-2xl glass" />
-            </div>
-          ) : (
-            sduiData?.layout?.map((module: any) => (
-              <SDUIModule key={module.id} module={module} />
-            ))
-          )}
-        </div>
-
-        {/* Right Sidebar: Friends Activity */}
-        <aside className="lg:col-span-1 hidden lg:block border-l border-white/5 pl-8 pt-2">
-           <FriendsLiveActivity />
-        </aside>
-
+      {/* Main Content Area - Cinematic Single Column */}
+      <div className="w-full space-y-16">
+        {isLoading ? (
+          <div className="space-y-6">
+            <Skeleton className="h-[40vh] w-full rounded-2xl glass" />
+            <Skeleton className="h-48 w-full rounded-2xl glass" />
+            <Skeleton className="h-48 w-full rounded-2xl glass" />
+          </div>
+        ) : (
+          sduiData?.layout?.map((module: any) => (
+            <SDUIModule key={module.id} module={module} />
+          ))
+        )}
       </div>
     </div>
   )

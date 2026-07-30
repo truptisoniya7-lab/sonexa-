@@ -66,20 +66,44 @@ const getLayout = async (req, res) => {
         caching: { strategy: 'stale-while-revalidate', ttl: 7200 }
       },
       {
-        id: 'recently-played',
-        type: 'INFINITE_CAROUSEL',
-        title: 'Recently Played',
-        endpoint: '/api/music/discover?category=recent',
-        motionPreset: 'level-3',
-        caching: { strategy: 'cache-first', ttl: 1800 }
-      },
-      {
         id: 'moods',
         type: 'MASONRY',
         title: 'Mood Mixes',
         endpoint: '/api/music/discover?category=moods',
         motionPreset: 'level-3',
         caching: { strategy: 'stale-while-revalidate', ttl: 86400 }
+      },
+      {
+        id: 'sai-abhyankar',
+        type: 'CAROUSEL',
+        title: 'Sai Abhyankar',
+        endpoint: '/api/music/discover?section=Sai Abhyankar',
+        motionPreset: 'level-3',
+        caching: { strategy: 'stale-while-revalidate', ttl: 3600 }
+      },
+      {
+        id: 'anirudh',
+        type: 'CAROUSEL',
+        title: 'Anirudh',
+        endpoint: '/api/music/discover?section=Anirudh Ravichander',
+        motionPreset: 'level-3',
+        caching: { strategy: 'stale-while-revalidate', ttl: 3600 }
+      },
+      {
+        id: 'thomas',
+        type: 'CAROUSEL',
+        title: 'Thomas',
+        endpoint: '/api/music/discover?section=Thomas',
+        motionPreset: 'level-3',
+        caching: { strategy: 'stale-while-revalidate', ttl: 3600 }
+      },
+      {
+        id: 'recently-played',
+        type: 'INFINITE_CAROUSEL',
+        title: 'Recently Played',
+        endpoint: '/api/music/discover?category=recent',
+        motionPreset: 'level-3',
+        caching: { strategy: 'cache-first', ttl: 1800 }
       }
     ];
     res.json({ layout });

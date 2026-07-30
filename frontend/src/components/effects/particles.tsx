@@ -1,10 +1,10 @@
 'use client';
 
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-function ParticleSwarm({ count = 100 }) {
+function ParticleSwarm({ count = 100, color = "#8B5CF6" }) {
   const mesh = useRef<THREE.InstancedMesh>(null);
   const light = useRef<THREE.PointLight>(null);
 
@@ -58,21 +58,34 @@ function ParticleSwarm({ count = 100 }) {
 
   return (
     <>
-      <pointLight ref={light} distance={40} intensity={8} color="lightblue" />
+      <pointLight ref={light} distance={40} intensity={8} color={color} />
       <instancedMesh ref={mesh} args={[undefined, undefined, count]}>
         <dodecahedronGeometry args={[0.2, 0]} />
-        <meshPhongMaterial color="#8B5CF6" emissive="#8B5CF6" emissiveIntensity={0.5} opacity={0.6} transparent />
+        <meshPhongMaterial color={color} emissive={color} emissiveIntensity={0.8} opacity={0.5} transparent />
       </instancedMesh>
     </>
   );
 }
 
 export function Particles() {
+  const [particleColor, setParticleColor] = useState('#8B5CF6');
+
+  useEffect(() => {
+    // Poll for changes to the CSS variable since React doesn't natively watch CSS variables
+    const interval = setInterval(() => {
+      const rgb = getComputedStyle(document.documentElement).getPropertyValue('--dominant-color').trim();
+      if (rgb) {
+        setParticleColor(`rgb(${rgb})`);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="fixed inset-0 z-[-1] pointer-events-none opacity-50">
+    <div className="fixed inset-0 z-[-1] pointer-events-none opacity-40 mix-blend-screen transition-colors duration-700">
       <Canvas camera={{ fov: 75, position: [0, 0, 30] }}>
         <ambientLight intensity={0.5} />
-        <ParticleSwarm count={150} />
+        <ParticleSwarm count={120} color={particleColor} />
       </Canvas>
     </div>
   );

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { FloatingMusicBackground } from "@/components/FloatingMusicBackground";
 import { ThemeProvider } from "@/components/ThemeProvider";
 
 import { QueryProvider } from "@/components/QueryProvider";
@@ -36,7 +35,6 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <QueryProvider>
-            <FloatingMusicBackground />
             <div className="relative z-10">
               {children}
             </div>

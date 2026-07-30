@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
-import { PlayCircle, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
+import { PlayCircle, Clock, ChevronLeft, ChevronRight, Heart } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
@@ -146,10 +146,38 @@ export function CarouselSection({ title, subtitle, icon, queryKey, endpoint }: C
                   className="w-full h-full object-cover transition-all duration-500 bg-secondary/20" 
                   onError={(e: any) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=500&q=80'; }}
                 />
+
+                {/* Like Button */}
+                <div className="absolute top-2 left-2 z-20">
+                  <button className="p-1.5 rounded-full bg-black/40 backdrop-blur-md opacity-0 group-hover:opacity-100 hover:bg-black/60 transition-all shadow-lg text-white/70 hover:text-red-500 hover:scale-110" onClick={(e) => { e.stopPropagation(); console.log('Liked'); }}>
+                    <Heart className="w-4 h-4" />
+                  </button>
+                </div>
+                
+                {/* Micro-Interaction: Tiny Playing Waveform Indicator (Simulated active state) */}
+                {idx === 0 && (
+                  <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md rounded-full px-2 py-1 flex items-end gap-[2px] h-5 shadow-lg z-20">
+                    {[...Array(4)].map((_, i) => (
+                      <motion.div 
+                        key={i}
+                        animate={{ height: ['20%', '80%', '40%', '100%', '30%'] }} 
+                        transition={{ repeat: Infinity, duration: 0.6 + Math.random() * 0.4, ease: "easeInOut" }} 
+                        className="w-1 bg-primary rounded-t-sm"
+                      />
+                    ))}
+                  </div>
+                )}
+                
+                {/* Duration Tag */}
+                <div className="absolute bottom-2 right-2 z-20">
+                  <span className="text-[10px] font-bold bg-black/70 backdrop-blur-md text-white px-2 py-0.5 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                    3:42
+                  </span>
+                </div>
                 
                 {/* Progress Bar for 'Continue Listening' */}
                 {track.progress !== undefined && (
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/60">
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/60 z-20">
                     <div 
                       className="h-full bg-primary rounded-r-full" 
                       style={{ width: `${track.progress}%` }} 
@@ -157,8 +185,11 @@ export function CarouselSection({ title, subtitle, icon, queryKey, endpoint }: C
                   </div>
                 )}
                 
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none translate-y-2 group-hover:translate-y-0 duration-300">
-                  <PlayCircle className="w-14 h-14 text-primary fill-primary/20 shadow-2xl rounded-full bg-black/20" />
+                {/* Glass Play Overlay */}
+                <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none translate-y-4 group-hover:translate-y-0 z-10">
+                  <div className="w-16 h-16 rounded-full bg-primary/90 flex items-center justify-center shadow-[0_0_30px_rgba(139,92,246,0.5)]">
+                    <PlayCircle className="w-8 h-8 text-white fill-white shadow-inner" />
+                  </div>
                 </div>
               </div>
               <div className="overflow-hidden">

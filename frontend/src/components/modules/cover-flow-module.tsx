@@ -121,8 +121,22 @@ export function CoverFlowModule({ module }: { module: any }) {
                       <p className="text-sm text-gray-300 truncate">{track.artist}</p>
                     </div>
                     {isActive && (
-                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover/card:opacity-100 transition-opacity">
+                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover/card:opacity-100 transition-opacity z-20">
                         <PlayCircle className="w-16 h-16 text-primary drop-shadow-glow" />
+                      </div>
+                    )}
+                    
+                    {/* Tiny Waveform for active 3D card */}
+                    {isActive && (
+                      <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md rounded-full px-3 py-1.5 flex items-end gap-1 h-6 shadow-lg z-20">
+                        {[...Array(5)].map((_, i) => (
+                          <motion.div 
+                            key={i}
+                            animate={{ height: ['20%', '90%', '30%', '100%', '40%'] }} 
+                            transition={{ repeat: Infinity, duration: 0.5 + Math.random() * 0.5, ease: "easeInOut" }} 
+                            className="w-1 bg-primary rounded-full"
+                          />
+                        ))}
                       </div>
                     )}
                   </div>
