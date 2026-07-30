@@ -1,12 +1,12 @@
-// Shared Framer Motion animation variants to keep the UI consistent and reduce bundle/code duplication
+import { Transition } from "framer-motion";
 
-export const springTransition = {
+export const springTransition: Transition = {
   type: "spring",
   stiffness: 300,
   damping: 25,
 };
 
-export const slowSpring = {
+export const slowSpring: Transition = {
   type: "spring",
   stiffness: 200,
   damping: 30,
