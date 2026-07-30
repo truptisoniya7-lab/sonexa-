@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Sidebar } from "./Sidebar"
-import { SmartSearch } from "./SmartSearch"
+import { CommandPalette } from "./CommandPalette"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -48,7 +48,7 @@ export function TopBar({ unreadCount, toggleNotifs }: { unreadCount: number, tog
       </Sheet>
 
       <div className="w-full flex-1 flex items-center justify-center pr-4">
-        <SmartSearch />
+        <CommandPalette />
       </div>
 
       <div className="flex items-center gap-2 md:gap-4">

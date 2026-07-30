@@ -4,8 +4,8 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Home, Compass, Monitor, Globe, Users, Library, User, Settings } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { motion } from "framer-motion"
 
 const navItems = [
   { name: "Home", href: "/home", icon: Home },
@@ -21,34 +21,47 @@ export function Sidebar({ unreadCount, toggleNotifs }: { unreadCount: number, to
   const pathname = usePathname()
 
   return (
-    <aside className="w-64 border-r border-border/50 bg-background/50 backdrop-blur-xl hidden md:flex flex-col h-screen fixed left-0 top-0 z-40">
-      <div className="p-6">
-        <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-500">
+    <motion.aside 
+      initial={{ x: -100, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ type: "spring", stiffness: 200, damping: 20 }}
+      className="w-64 glass-panel m-4 flex flex-col h-[calc(100vh-2rem)] fixed left-0 top-0 z-40 overflow-hidden"
+    >
+      <div className="p-6 pb-2">
+        <h2 className="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400 drop-shadow-glow">
           Sonexa
         </h2>
       </div>
 
-      <ScrollArea className="flex-1 px-4 pb-20">
-        <nav className="flex flex-col gap-2">
+      <ScrollArea className="flex-1 px-3 mt-4 pb-20">
+        <nav className="flex flex-col gap-1.5 relative">
           {navItems.map((item) => {
             const isActive = pathname?.startsWith(item.href)
             return (
-              <Link key={item.href} href={item.href}>
-                <Button
-                  variant={isActive ? "secondary" : "ghost"}
+              <Link key={item.href} href={item.href} className="relative outline-none group">
+                {isActive && (
+                  <motion.div
+                    layoutId="sidebar-active"
+                    className="absolute inset-0 bg-primary/20 border border-primary/30 rounded-xl shadow-glow"
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  />
+                )}
+                <div
                   className={cn(
-                    "w-full justify-start gap-3 transition-all",
-                    isActive ? "bg-primary/10 text-primary font-medium" : "text-muted-foreground hover:text-foreground"
+                    "relative w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors z-10",
+                    isActive ? "text-primary font-medium" : "text-muted-foreground group-hover:text-foreground group-hover:bg-white/5"
                   )}
                 >
-                  <item.icon className="w-5 h-5" />
+                  <motion.div whileHover={{ scale: 1.1, rotate: isActive ? 0 : 5 }} whileTap={{ scale: 0.9 }}>
+                    <item.icon className="w-5 h-5" />
+                  </motion.div>
                   {item.name}
-                </Button>
+                </div>
               </Link>
             )
           })}
         </nav>
       </ScrollArea>
-    </aside>
+    </motion.aside>
   )
 }

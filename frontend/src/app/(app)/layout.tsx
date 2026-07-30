@@ -4,7 +4,8 @@ import { PlayerProvider } from '@/context/PlayerContext';
 import GlobalPlayer from '@/components/GlobalPlayer';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { TopBar } from '@/components/layout/TopBar';
-import { GlobalBackground } from '@/components/layout/GlobalBackground';
+import { Aurora } from '@/components/effects/aurora';
+import { Particles } from '@/components/effects/particles';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card } from '@/components/ui/card';
 
@@ -34,11 +35,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <PlayerProvider>
-      <div className="flex min-h-screen w-full relative bg-transparent">
-        <GlobalBackground />
+      <div className="flex min-h-screen w-full relative bg-transparent overflow-hidden">
+        <Aurora />
+        <Particles />
         <Sidebar unreadCount={unreadCount} toggleNotifs={() => setShowNotifs(!showNotifs)} />
         
-        <div className="flex flex-col flex-1 md:pl-64">
+        <div className="flex flex-col flex-1 md:pl-64 z-10">
           <TopBar unreadCount={unreadCount} toggleNotifs={() => setShowNotifs(!showNotifs)} />
           
           <main className="flex-1 p-4 md:p-8 pb-32">

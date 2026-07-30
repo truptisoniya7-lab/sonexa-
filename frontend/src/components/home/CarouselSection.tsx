@@ -121,9 +121,10 @@ export function CarouselSection({ title, subtitle, icon, queryKey, endpoint }: C
         {items.map((track: any, idx: number) => (
           <motion.div 
             key={track.id || idx}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: idx * 0.05 }}
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20, delay: idx * 0.05 }}
+            whileHover={{ y: -8, transition: { duration: 0.2 } }}
             className={isExpanded ? "w-full cursor-pointer group" : "w-[160px] md:w-[200px] shrink-0 snap-start group cursor-pointer"}
             onClick={() => playSong({
               song_uri: track.uri,
@@ -132,13 +133,18 @@ export function CarouselSection({ title, subtitle, icon, queryKey, endpoint }: C
               song_image: track.image
             })}
           >
-            <Card className="glass-panel p-3 h-full border-white/5 hover:border-white/20 transition-all duration-300 bg-background/40 hover:bg-white/5 shadow-md hover:shadow-2xl hover:-translate-y-1">
-              <div className="relative aspect-square rounded-md overflow-hidden mb-3 shadow-xl">
-                <img 
+            <div className="glass-panel p-3 h-full border-white/5 group-hover:border-primary/30 transition-all duration-300 bg-background/40 group-hover:bg-white/10 shadow-glass group-hover:shadow-glass-hover rounded-2xl relative overflow-hidden">
+              {/* Subtle inner glow on hover */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl pointer-events-none" />
+              
+              <div className="relative aspect-square rounded-xl overflow-hidden mb-3 shadow-xl">
+                <motion.img 
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   src={track.image || 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=500&q=80'} 
                   alt={track.title} 
-                  className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:brightness-110 bg-secondary/20" 
-                  onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=500&q=80'; }}
+                  className="w-full h-full object-cover transition-all duration-500 bg-secondary/20" 
+                  onError={(e: any) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=500&q=80'; }}
                 />
                 
                 {/* Progress Bar for 'Continue Listening' */}
@@ -168,7 +174,7 @@ export function CarouselSection({ title, subtitle, icon, queryKey, endpoint }: C
                   <Clock className="w-3 h-3" /> {track.lastListened}
                 </p>
               )}
-            </Card>
+            </div>
           </motion.div>
         ))}
       </div>
