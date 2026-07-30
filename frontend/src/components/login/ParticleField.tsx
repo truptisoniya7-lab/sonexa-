@@ -49,15 +49,11 @@ export function ParticleField({ tier }: { tier: PerformanceTier }) {
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
-          count={particleCount}
-          array={positions}
-          itemSize={3}
+          args={[positions, 3]}
         />
         <bufferAttribute
           attach="attributes-scale"
-          count={particleCount}
-          array={scales}
-          itemSize={1}
+          args={[scales, 1]}
         />
       </bufferGeometry>
       <pointsMaterial
