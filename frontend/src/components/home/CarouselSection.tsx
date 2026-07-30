@@ -54,9 +54,9 @@ export function CarouselSection({ title, subtitle, icon, queryKey, endpoint }: C
             {subtitle && <p className="text-sm text-muted-foreground mt-1">{subtitle}</p>}
           </div>
         </div>
-        <div className="flex gap-6 overflow-x-auto pb-6 scrollbar-none snap-x">
+        <div className="flex gap-4 md:gap-6 lg:gap-8 overflow-x-auto pb-6 scrollbar-none snap-x">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="min-w-[160px] md:min-w-[200px] space-y-4">
+            <div key={i} className="min-w-[160px] md:min-w-[200px] xl:min-w-[220px] space-y-4">
               <Skeleton className="w-full aspect-square rounded-xl bg-background/40" />
               <Skeleton className="h-4 w-3/4 bg-background/40" />
               <Skeleton className="h-3 w-1/2 bg-background/40" />
@@ -114,8 +114,8 @@ export function CarouselSection({ title, subtitle, icon, queryKey, endpoint }: C
         ref={scrollRef} 
         className={
           isExpanded 
-            ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 px-1" 
-            : "flex gap-4 md:gap-6 overflow-x-auto pb-6 snap-x scrollbar-none px-1"
+            ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6 px-1" 
+            : "flex gap-4 md:gap-6 lg:gap-8 overflow-x-auto pb-6 snap-x scrollbar-none px-1"
         }
       >
         {items.map((track: any, idx: number) => (
@@ -125,7 +125,7 @@ export function CarouselSection({ title, subtitle, icon, queryKey, endpoint }: C
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 300, damping: 20, delay: idx * 0.05 }}
             whileHover={{ y: -8, transition: { duration: 0.2 } }}
-            className={isExpanded ? "w-full cursor-pointer group" : "w-[160px] md:w-[200px] shrink-0 snap-start group cursor-pointer"}
+            className={isExpanded ? "w-full cursor-pointer group" : "w-[160px] md:w-[200px] xl:w-[220px] shrink-0 snap-start group cursor-pointer"}
             onClick={() => {
               if (track.type === 'Room' || track.type === 'ROOM') {
                 router.push(`/rooms`);
