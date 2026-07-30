@@ -2,12 +2,10 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { Moon, Sun, Menu, Search, Bell, User, Settings, LogOut } from "lucide-react"
+import { Moon, Sun, Search, Bell, User, Settings, LogOut } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Sidebar } from "./Sidebar"
 import { CommandPalette } from "./CommandPalette"
 import {
   DropdownMenu,
@@ -35,17 +33,7 @@ export function TopBar({ unreadCount, toggleNotifs }: { unreadCount: number, tog
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-border/50 bg-background/60 px-4 md:px-6 backdrop-blur-md">
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button variant="ghost" size="icon" className="shrink-0 md:hidden">
-            <Menu className="h-5 w-5" />
-            <span className="sr-only">Toggle navigation menu</span>
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="left" className="p-0 w-64">
-          <Sidebar unreadCount={unreadCount} toggleNotifs={toggleNotifs} />
-        </SheetContent>
-      </Sheet>
+
 
       <div className="w-full flex-1 flex items-center justify-center pr-4">
         <CommandPalette />
