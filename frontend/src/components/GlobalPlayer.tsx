@@ -135,7 +135,7 @@ export default function GlobalPlayer() {
 
         {/* Left: Song Info */}
         <div className="flex items-center gap-3 md:gap-4 w-2/3 md:w-1/3">
-          <motion.div layoutId={isMobile ? "album-art" : undefined} className="relative group overflow-hidden rounded-md shadow-md h-12 w-12 md:h-14 md:w-14 shrink-0">
+          <motion.div layoutId={isMobile ? "album-art" : undefined} className="relative group overflow-hidden rounded-md shadow-md h-12 w-12 md:h-16 md:w-16 shrink-0">
             <img 
               src={currentSong.song_image} 
               alt={currentSong.song_title} 
@@ -170,13 +170,13 @@ export default function GlobalPlayer() {
               ) : (
                 <>
                   <div className="flex items-center gap-4">
-                    <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground"><Shuffle className="w-4 h-4" /></Button>
-                    <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground" onClick={prevTrack}><SkipBack className="w-5 h-5 fill-current" /></Button>
-                    <Button onClick={togglePlay} size="icon" className="rounded-full w-10 h-10 shadow-lg hover:scale-105 transition-transform">
+                    <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground hover:bg-white/10 transition-all rounded-full"><Shuffle className="w-4 h-4" /></Button>
+                    <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground hover:bg-white/10 transition-all rounded-full" onClick={prevTrack}><SkipBack className="w-5 h-5 fill-current" /></Button>
+                    <Button onClick={togglePlay} size="icon" className="rounded-full w-10 h-10 shadow-lg hover:scale-110 active:scale-95 transition-all bg-white text-black">
                       {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current ml-1" />}
                     </Button>
-                    <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground" onClick={nextTrack}><SkipForward className="w-5 h-5 fill-current" /></Button>
-                    <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground"><Repeat className="w-4 h-4" /></Button>
+                    <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground hover:bg-white/10 transition-all rounded-full" onClick={nextTrack}><SkipForward className="w-5 h-5 fill-current" /></Button>
+                    <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground hover:bg-white/10 transition-all rounded-full"><Repeat className="w-4 h-4" /></Button>
                   </div>
                   <div className="flex items-center w-full max-w-md gap-3 mt-1">
                     <span className="text-[11px] font-medium text-muted-foreground w-10 text-right">{formatTime(progress)}</span>

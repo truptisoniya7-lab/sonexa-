@@ -137,7 +137,7 @@ export function CommandPalette() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <button className="flex items-center gap-2 px-3 md:px-4 h-12 w-full max-w-sm rounded-full glass hover:bg-white/5 transition-all text-muted-foreground group">
+        <button className="flex items-center gap-2 px-3 md:px-4 h-12 w-full max-w-md rounded-full glass hover:bg-white/5 transition-all text-muted-foreground group">
           <Search className="w-5 h-5 group-hover:text-primary transition-colors shrink-0" />
           <span className="text-[15px] flex-1 text-left truncate">Search music, artists...</span>
           <kbd className="hidden md:inline-flex h-6 items-center gap-1 rounded border border-border/50 bg-white/5 px-2 font-mono text-[11px] font-medium text-muted-foreground opacity-100 shrink-0">

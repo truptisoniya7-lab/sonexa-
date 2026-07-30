@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { SharedArtwork } from './SharedArtwork';
-import { SharedMetadata } from './SharedMetadata';
+import { MobileMetadata } from './SharedMetadata';
 
 interface HeroMobileProps {
   activeSong: any;
@@ -52,7 +52,7 @@ export function HeroMobile({
           hideVinyl={true}
         />
 
-        <SharedMetadata 
+        <MobileMetadata 
           activeSong={activeSong}
           currentSong={currentSong}
           greeting={greeting}
@@ -60,7 +60,6 @@ export function HeroMobile({
           isPlaying={isPlaying}
           togglePlay={togglePlay}
           dominantColor={dominantColor}
-          isMobileLayout={true}
         />
       </motion.div>
     </div>
