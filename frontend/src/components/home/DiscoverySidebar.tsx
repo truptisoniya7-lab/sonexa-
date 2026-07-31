@@ -48,7 +48,12 @@ function Widget({ title, icon, queryParams }: { title: string, icon: React.React
               className="flex items-center gap-3 p-1.5 rounded-lg hover:bg-white/5 cursor-pointer transition-colors"
               onClick={() => playSong(song)}
             >
-              <img src={song.image_url} alt={song.title} className="w-10 h-10 rounded-md object-cover" />
+              <img 
+                src={song.image || song.image_url || 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=500&q=80'} 
+                alt={song.title} 
+                className="w-10 h-10 rounded-md object-cover" 
+                onError={(e: any) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=500&q=80'; }}
+              />
               <div className="flex-1 overflow-hidden">
                 <p className="text-sm font-medium text-white line-clamp-1">{song.title}</p>
                 <p className="text-xs text-muted-foreground line-clamp-1">{song.artist}</p>
