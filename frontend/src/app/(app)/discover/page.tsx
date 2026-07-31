@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Search, X, Flame, Disc, Radio, Activity, Music, Sparkles, Globe, MapPin } from 'lucide-react';
 import { HeroSection } from '@/components/home/HeroSection';
 import { CarouselSection } from '@/components/home/CarouselSection';
-import { CommunitiesRecommended } from '@/components/home/CommunitiesRecommended';
+
 import { DiscoverySidebar } from '@/components/home/DiscoverySidebar';
 import { useQuery } from '@tanstack/react-query';
 
@@ -104,8 +104,7 @@ export default function DiscoverPage() {
             endpoint={buildQueryUrl("Top Trending Artists")} 
           />
 
-          {/* Community */}
-          <CommunitiesRecommended />
+
           
         </div>
 
