@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useQuery } from '@tanstack/react-query';
 import { 
   Search, UserPlus, Users, Headphones, Heart, Mic, 
   Check, X, MoreHorizontal, MessageSquare, Play, 
@@ -11,78 +12,46 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-// --- MOCK DATA ---
-const ACTIVITIES = [
-  { 
-    id: 1, 
-    user: { name: "Alex", avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150&h=150" }, 
-    type: "listening", 
-    content: "After Hours", 
-    subcontent: "The Weeknd", 
-    time: "2 mins ago",
-    icon: Headphones,
-    color: "text-blue-400 bg-blue-500/10" 
-  },
-  { 
-    id: 2, 
-    user: { name: "Sarah", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150&h=150" }, 
-    type: "liked", 
-    content: "Midnight City", 
-    subcontent: "M83", 
-    time: "5 mins ago",
-    icon: Heart,
-    color: "text-pink-400 bg-pink-500/10" 
-  },
-  { 
-    id: 3, 
-    user: { name: "John", avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=150&h=150" }, 
-    type: "joined", 
-    content: "Indie Lovers Community", 
-    subcontent: "", 
-    time: "1 hour ago",
-    icon: Users,
-    color: "text-purple-400 bg-purple-500/10" 
-  },
-  { 
-    id: 4, 
-    user: { name: "Emma", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=150&h=150" }, 
-    type: "listening", 
-    content: "Cruel Summer", 
-    subcontent: "Taylor Swift", 
-    time: "2 hours ago",
-    icon: Headphones,
-    color: "text-blue-400 bg-blue-500/10" 
-  },
-];
-
-const PENDING_REQUESTS = [
-  {
-    id: 1,
-    name: "Alex",
-    avatar: "https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=crop&q=80&w=150&h=150",
-    context: "12 Mutual Friends"
-  },
-  {
-    id: 2,
-    name: "Sarah",
-    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=150&h=150",
-    context: "Likes Rock & Jazz"
-  }
-];
-
-const FRIENDS_LIST = [
-  { id: 1, name: "Jessica Alba", online: true, status: "Listening to Starboy", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150&h=150" },
-  { id: 2, name: "David Chen", online: true, status: "In Synthwave City", avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=150&h=150" },
-  { id: 3, name: "Maria Garcia", online: false, status: "Last seen 2h ago", avatar: "https://images.unsplash.com/photo-1531123897727-8f129e1bf98c?auto=format&fit=crop&q=80&w=150&h=150" },
-  { id: 4, name: "James Smith", online: true, status: "Listening to Jazz", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150&h=150" },
-  { id: 5, name: "Linda Taylor", online: false, status: "Last seen yesterday", avatar: "https://images.unsplash.com/photo-1554151228-14d9def656e4?auto=format&fit=crop&q=80&w=150&h=150" },
-  { id: 6, name: "Robert Wilson", online: true, status: "Online", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150&h=150" },
-];
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function FriendsPage() {
   const [activeTab, setActiveTab] = useState('friends');
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Fetch Friends List
+  const { data: friendsList = [], isLoading: isLoadingFriends } = useQuery({
+    queryKey: ['friends-list'],
+    queryFn: async () => {
+      const res = await fetch('/api/friends/list');
+      if (!res.ok) return [];
+      return res.json();
+    }
+  });
+
+  // Fetch Friend Activity
+  const { data: activities = [], isLoading: isLoadingActivities } = useQuery({
+    queryKey: ['friends-activity'],
+    queryFn: async () => {
+      const res = await fetch('/api/friends/activity');
+      if (!res.ok) return [];
+      return res.json();
+    }
+  });
+
+  // Fetch Pending Requests
+  const { data: pendingRequests = [], isLoading: isLoadingRequests } = useQuery({
+    queryKey: ['friends-requests'],
+    queryFn: async () => {
+      const res = await fetch('/api/friends/requests');
+      if (!res.ok) return [];
+      return res.json();
+    }
+  });
+
+  // Filter Friends
+  const filteredFriends = friendsList.filter((friend: any) => 
+    friend.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="w-full h-full flex flex-col bg-background overflow-y-auto overflow-x-hidden hide-scrollbar scroll-smooth">
@@ -115,7 +84,6 @@ export default function FriendsPage() {
 
         {/* Hero Banner */}
         <div className="w-full rounded-[2rem] overflow-hidden relative shadow-2xl bg-gradient-to-br from-indigo-900 via-purple-900 to-fuchsia-900 p-6 md:p-8 md:py-10 border border-white/10">
-          {/* Decorative Floating Notes */}
           <div className="absolute top-8 right-20 opacity-20 animate-bounce" style={{ animationDuration: '3s' }}>
             <Music className="w-12 h-12 text-white" />
           </div>
@@ -126,7 +94,6 @@ export default function FriendsPage() {
             <Sparkles className="w-8 h-8 text-white" />
           </div>
           
-          {/* Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
           
           <div className="relative z-10 max-w-2xl flex flex-col justify-center h-full">
@@ -140,22 +107,15 @@ export default function FriendsPage() {
             
             <div className="flex flex-wrap items-center gap-4 mt-4">
               <div className="flex flex-col">
-                <span className="text-2xl font-black text-white">245</span>
+                <span className="text-2xl font-black text-white">{friendsList.length || 0}</span>
                 <span className="text-white/60 text-[10px] font-bold uppercase tracking-wider">Friends</span>
               </div>
               <div className="w-px h-8 bg-white/20" />
               <div className="flex flex-col">
                 <span className="text-2xl font-black text-white flex items-center gap-2">
-                  18 <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse mt-1" />
+                  {friendsList.filter((f: any) => f.online).length || 0} <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse mt-1" />
                 </span>
                 <span className="text-white/60 text-[10px] font-bold uppercase tracking-wider">Online</span>
-              </div>
-              <div className="w-px h-8 bg-white/20" />
-              <div className="flex flex-col">
-                <span className="text-2xl font-black text-white flex items-center gap-2">
-                  12 <Activity className="w-5 h-5 text-fuchsia-400" />
-                </span>
-                <span className="text-white/60 text-[10px] font-bold uppercase tracking-wider">Listening Together</span>
               </div>
             </div>
             
@@ -176,13 +136,10 @@ export default function FriendsPage() {
                 Friends
               </TabsTrigger>
               <TabsTrigger value="requests" className="rounded-full px-8 h-full text-base data-[state=active]:bg-primary data-[state=active]:text-white transition-all">
-                Requests <span className="ml-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">2</span>
+                Requests {pendingRequests.length > 0 && <span className="ml-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">{pendingRequests.length}</span>}
               </TabsTrigger>
               <TabsTrigger value="suggestions" className="rounded-full px-8 h-full text-base data-[state=active]:bg-primary data-[state=active]:text-white transition-all">
                 Suggestions
-              </TabsTrigger>
-              <TabsTrigger value="following" className="rounded-full px-8 h-full text-base data-[state=active]:bg-primary data-[state=active]:text-white transition-all">
-                Following
               </TabsTrigger>
             </TabsList>
           </Tabs>
@@ -207,35 +164,52 @@ export default function FriendsPage() {
                   </div>
                   
                   <div className="space-y-4">
-                    {ACTIVITIES.map((activity, i) => (
-                      <div key={activity.id} className="flex gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors group cursor-pointer">
-                        <Avatar className="w-12 h-12 border-2 border-transparent group-hover:border-primary/50 transition-colors">
-                          <AvatarImage src={activity.user.avatar} />
-                          <AvatarFallback>{activity.user.name[0]}</AvatarFallback>
-                        </Avatar>
-                        
-                        <div className="flex-1 space-y-1">
-                          <p className="text-sm text-white/90">
-                            <span className="font-bold text-white">{activity.user.name}</span> 
-                            {activity.type === 'listening' ? ' is listening to' : 
-                             activity.type === 'liked' ? ' liked' : ' joined'}
-                          </p>
-                          <div className="flex flex-col">
-                            <span className="font-bold text-white line-clamp-1">{activity.content}</span>
-                            {activity.subcontent && (
-                              <span className="text-xs text-muted-foreground">{activity.subcontent}</span>
-                            )}
+                    {isLoadingActivities ? (
+                      Array.from({ length: 3 }).map((_, i) => (
+                        <div key={i} className="flex gap-4 p-4 rounded-2xl bg-white/5 border border-white/5">
+                          <Skeleton className="w-12 h-12 rounded-full" />
+                          <div className="flex-1 space-y-2">
+                            <Skeleton className="h-4 w-3/4" />
+                            <Skeleton className="h-3 w-1/2" />
                           </div>
-                          <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-                            <Clock className="w-3 h-3" /> {activity.time}
-                          </p>
                         </div>
-                        
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${activity.color}`}>
-                          <activity.icon className="w-4 h-4" />
+                      ))
+                    ) : activities.length > 0 ? (
+                      activities.map((activity: any, i: number) => (
+                        <div key={i} className="flex gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors group cursor-pointer">
+                          <Avatar className="w-12 h-12 border-2 border-transparent group-hover:border-primary/50 transition-colors">
+                            <AvatarImage src={activity.user?.avatar} />
+                            <AvatarFallback>{activity.user?.name?.[0]}</AvatarFallback>
+                          </Avatar>
+                          
+                          <div className="flex-1 space-y-1">
+                            <p className="text-sm text-white/90">
+                              <span className="font-bold text-white">{activity.user?.name}</span> 
+                              {activity.type === 'listening' ? ' is listening to' : 
+                               activity.type === 'liked' ? ' liked' : ' joined'}
+                            </p>
+                            <div className="flex flex-col">
+                              <span className="font-bold text-white line-clamp-1">{activity.content}</span>
+                              {activity.subcontent && (
+                                <span className="text-xs text-muted-foreground">{activity.subcontent}</span>
+                              )}
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+                              <Clock className="w-3 h-3" /> {activity.time}
+                            </p>
+                          </div>
+                          
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${activity.color || 'bg-white/10'}`}>
+                            {activity.type === 'listening' ? <Headphones className="w-4 h-4 text-blue-400" /> : <Activity className="w-4 h-4 text-white" />}
+                          </div>
                         </div>
+                      ))
+                    ) : (
+                      <div className="p-8 text-center bg-white/5 rounded-2xl border border-white/5">
+                        <Activity className="w-8 h-8 text-muted-foreground mx-auto mb-3 opacity-50" />
+                        <p className="text-muted-foreground text-sm">No recent friend activity.</p>
                       </div>
-                    ))}
+                    )}
                   </div>
                 </div>
 
@@ -246,37 +220,52 @@ export default function FriendsPage() {
                       <Users className="w-5 h-5 text-primary" />
                       All Friends
                     </h2>
-                    <Button variant="ghost" className="text-muted-foreground hover:text-white">
-                      <Search className="w-4 h-4 mr-2" /> Find
-                    </Button>
                   </div>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {FRIENDS_LIST.map((friend) => (
-                      <div key={friend.id} className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-primary/30 hover:bg-white/10 transition-all cursor-pointer group">
-                        <div className="relative">
-                          <Avatar className="w-14 h-14 border-2 border-transparent group-hover:border-primary/50 transition-all">
-                            <AvatarImage src={friend.avatar} />
-                            <AvatarFallback>{friend.name[0]}</AvatarFallback>
-                          </Avatar>
-                          {friend.online && (
-                            <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-background rounded-full" />
-                          )}
+                    {isLoadingFriends ? (
+                      Array.from({ length: 4 }).map((_, i) => (
+                        <div key={i} className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5">
+                          <Skeleton className="w-14 h-14 rounded-full" />
+                          <div className="flex-1 space-y-2">
+                            <Skeleton className="h-4 w-1/2" />
+                            <Skeleton className="h-3 w-1/3" />
+                          </div>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <h4 className="font-bold text-white truncate">{friend.name}</h4>
-                          <p className="text-sm text-muted-foreground truncate">{friend.status}</p>
+                      ))
+                    ) : filteredFriends.length > 0 ? (
+                      filteredFriends.map((friend: any) => (
+                        <div key={friend.id} className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-primary/30 hover:bg-white/10 transition-all cursor-pointer group">
+                          <div className="relative">
+                            <Avatar className="w-14 h-14 border-2 border-transparent group-hover:border-primary/50 transition-all">
+                              <AvatarImage src={friend.avatar} />
+                              <AvatarFallback>{friend.name?.[0]}</AvatarFallback>
+                            </Avatar>
+                            {friend.online && (
+                              <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-background rounded-full" />
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-bold text-white truncate">{friend.name}</h4>
+                            <p className="text-sm text-muted-foreground truncate">{friend.status}</p>
+                          </div>
+                          <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Button size="icon" variant="ghost" className="h-8 w-8 rounded-full bg-white/5 hover:bg-primary hover:text-white">
+                              <MessageSquare className="w-4 h-4" />
+                            </Button>
+                            <Button size="icon" variant="ghost" className="h-8 w-8 rounded-full bg-white/5 hover:bg-primary hover:text-white">
+                              <MoreHorizontal className="w-4 h-4" />
+                            </Button>
+                          </div>
                         </div>
-                        <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Button size="icon" variant="ghost" className="h-8 w-8 rounded-full bg-white/5 hover:bg-primary hover:text-white">
-                            <MessageSquare className="w-4 h-4" />
-                          </Button>
-                          <Button size="icon" variant="ghost" className="h-8 w-8 rounded-full bg-white/5 hover:bg-primary hover:text-white">
-                            <MoreHorizontal className="w-4 h-4" />
-                          </Button>
-                        </div>
+                      ))
+                    ) : (
+                      <div className="col-span-full py-12 text-center bg-white/5 rounded-2xl border border-white/5">
+                        <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
+                        <h3 className="text-lg font-bold text-white mb-2">No friends found</h3>
+                        <p className="text-muted-foreground text-sm">You haven't added anyone yet.</p>
                       </div>
-                    ))}
+                    )}
                   </div>
                 </div>
               </motion.div>
@@ -293,39 +282,56 @@ export default function FriendsPage() {
               >
                 <h2 className="text-2xl font-bold flex items-center gap-2">
                   Pending Requests
-                  <span className="bg-primary/20 text-primary px-3 py-1 rounded-full text-sm">2</span>
                 </h2>
                 
                 <div className="space-y-4">
-                  {PENDING_REQUESTS.map((req) => (
-                    <div key={req.id} className="flex flex-col sm:flex-row sm:items-center gap-4 p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-primary/50 transition-colors group">
-                      <div className="flex items-center gap-4 flex-1">
-                        <Avatar className="w-16 h-16 border-2 border-transparent group-hover:border-primary/30 transition-colors">
-                          <AvatarImage src={req.avatar} />
-                          <AvatarFallback>{req.name[0]}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <h3 className="text-xl font-bold text-white">{req.name}</h3>
-                          <p className="text-sm text-muted-foreground mt-1">{req.context}</p>
+                  {isLoadingRequests ? (
+                     Array.from({ length: 2 }).map((_, i) => (
+                      <div key={i} className="flex gap-4 p-6 rounded-2xl bg-white/5 border border-white/10">
+                        <Skeleton className="w-16 h-16 rounded-full" />
+                        <div className="flex-1 space-y-2 mt-2">
+                          <Skeleton className="h-5 w-1/4" />
+                          <Skeleton className="h-4 w-1/3" />
                         </div>
                       </div>
-                      
-                      <div className="flex items-center gap-3 w-full sm:w-auto">
-                        <Button className="flex-1 sm:flex-none rounded-full bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20">
-                          <Check className="w-4 h-4 mr-2" /> Accept
-                        </Button>
-                        <Button variant="outline" className="flex-1 sm:flex-none rounded-full bg-transparent border-white/10 hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/20">
-                          <X className="w-4 h-4 mr-2" /> Decline
-                        </Button>
+                    ))
+                  ) : pendingRequests.length > 0 ? (
+                    pendingRequests.map((req: any) => (
+                      <div key={req.id} className="flex flex-col sm:flex-row sm:items-center gap-4 p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-primary/50 transition-colors group">
+                        <div className="flex items-center gap-4 flex-1">
+                          <Avatar className="w-16 h-16 border-2 border-transparent group-hover:border-primary/30 transition-colors">
+                            <AvatarImage src={req.avatar} />
+                            <AvatarFallback>{req.name?.[0]}</AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <h3 className="text-xl font-bold text-white">{req.name}</h3>
+                            <p className="text-sm text-muted-foreground mt-1">{req.context}</p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-3 w-full sm:w-auto">
+                          <Button className="flex-1 sm:flex-none rounded-full bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20">
+                            <Check className="w-4 h-4 mr-2" /> Accept
+                          </Button>
+                          <Button variant="outline" className="flex-1 sm:flex-none rounded-full bg-transparent border-white/10 hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/20">
+                            <X className="w-4 h-4 mr-2" /> Decline
+                          </Button>
+                        </div>
                       </div>
+                    ))
+                  ) : (
+                    <div className="py-12 text-center bg-white/5 rounded-2xl border border-white/5">
+                      <UserPlus className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
+                      <h3 className="text-lg font-bold text-white mb-2">No pending requests</h3>
+                      <p className="text-muted-foreground text-sm">You're all caught up!</p>
                     </div>
-                  ))}
+                  )}
                 </div>
               </motion.div>
             )}
 
-            {/* OTHER TABS (Placeholders for now) */}
-            {(activeTab === 'suggestions' || activeTab === 'following') && (
+            {/* SUGGESTIONS TABS (Placeholders for now) */}
+            {activeTab === 'suggestions' && (
               <motion.div 
                 key="other"
                 initial={{ opacity: 0, y: 10 }}

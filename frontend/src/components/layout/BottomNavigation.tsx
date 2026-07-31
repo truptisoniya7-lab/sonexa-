@@ -3,14 +3,14 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Home, Search, Library, Radio, User } from 'lucide-react';
+import { Home, Compass, Library, Radio, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { springTransition, hoverButton } from '@/lib/animations';
 import { useEffect, useState } from 'react';
 
 const navItems = [
   { icon: Home, label: 'Home', href: '/home' },
-  { icon: Search, label: 'Search', href: '/discover' },
+  { icon: Compass, label: 'Discover', href: '/discover' },
   { icon: Library, label: 'Library', href: '/library' },
   { icon: Radio, label: 'Live', href: '/rooms' },
   { icon: User, label: 'Profile', href: '/profile' }
