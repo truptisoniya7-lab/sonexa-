@@ -143,12 +143,12 @@ export function CarouselSection({ title, subtitle, icon, queryKey, endpoint }: C
               }
             }}
           >
-            <div className="glass-panel p-3 h-full border-white/5 group-hover:border-primary/30 transition-all duration-300 bg-background/40 group-hover:bg-white/10 shadow-glass group-hover:shadow-glass-hover rounded-2xl relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl pointer-events-none" />
+            <div className="glass-panel p-3 h-full border border-white/10 group-hover:border-white/20 transition-all duration-300 bg-background/40 group-hover:bg-white/10 shadow-lg group-hover:shadow-2xl rounded-[24px] relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[24px] pointer-events-none" />
               
-              <div className="relative aspect-square rounded-xl overflow-hidden mb-3 shadow-xl">
+              <div className="relative aspect-square rounded-[18px] overflow-hidden mb-3 shadow-xl">
                 <motion.img 
-                  whileHover={{ scale: 1.1 }}
+                  whileHover={{ scale: 1.03 }}
                   transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   src={track.image || 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=500&q=80'} 
                   alt={track.title} 

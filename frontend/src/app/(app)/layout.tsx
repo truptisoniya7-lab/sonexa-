@@ -42,7 +42,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <Sidebar unreadCount={unreadCount} toggleNotifs={() => setShowNotifs(!showNotifs)} />
         <BottomNavigation />
         
-        <div className="flex flex-col flex-1 md:pl-64 z-10 w-full">
+        <div className="flex flex-col flex-1 md:pl-20 lg:pl-56 z-10 w-full">
           <TopBar unreadCount={unreadCount} toggleNotifs={() => setShowNotifs(!showNotifs)} />
           
           <main className="flex-1 p-4 md:p-8 pb-48 md:pb-32">

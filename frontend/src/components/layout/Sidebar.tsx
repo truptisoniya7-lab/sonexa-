@@ -26,7 +26,7 @@ export function Sidebar({ unreadCount, toggleNotifs }: { unreadCount: number, to
       initial={{ x: -100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 200, damping: 20 }}
-      className="hidden md:flex w-20 lg:w-64 bg-background/20 backdrop-blur-xl border border-white/5 m-4 flex-col h-[calc(100vh-2rem)] fixed left-0 top-0 z-40 overflow-hidden rounded-3xl shadow-2xl"
+      className="hidden md:flex w-20 lg:w-56 bg-background/20 backdrop-blur-xl border border-white/5 m-4 flex-col h-[calc(100vh-2rem)] fixed left-0 top-0 z-40 overflow-hidden rounded-3xl shadow-2xl"
     >
       <div className="p-6 pb-2 hidden lg:block">
         <h2 className="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400 drop-shadow-glow">
