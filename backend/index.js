@@ -29,10 +29,11 @@ const recommendationsRoutes = require('./routes/recommendations');
 const libraryRoutes = require('./routes/library');
 const homeRoutes = require('./routes/home');
 const searchRoutes = require('./routes/search');
+const usersRoutes = require('./routes/users');
 
 app.use('/auth', authRoutes);
-app.use('/profile', typeof profileRoutes === 'function' ? profileRoutes() : profileRoutes);
-app.use('/friends', typeof friendRoutes === 'function' ? friendRoutes() : friendRoutes);
+app.use('/profile', profileRoutes);
+app.use('/friends', friendRoutes);
 app.use('/music', typeof musicRoutes === 'function' ? musicRoutes() : musicRoutes);
 app.use('/history', typeof historyRoutes === 'function' ? historyRoutes() : historyRoutes);
 app.use('/rooms', roomRoutes);
@@ -43,6 +44,7 @@ app.use('/recommendations', recommendationsRoutes);
 app.use('/library', libraryRoutes);
 app.use('/home', homeRoutes);
 app.use('/search', searchRoutes);
+app.use('/users', usersRoutes);
 
 // Global Error Handler to force JSON instead of Express default HTML
 app.use((err, req, res, next) => {

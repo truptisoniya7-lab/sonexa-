@@ -32,16 +32,29 @@ const getProfile = async (req, res) => {
 
 const updateProfile = async (req, res) => {
   const { id } = req.params;
-  const { name } = req.body;
+  const { name, profile_picture } = req.body;
+  const currentUserId = req.user?.userId || req.user?.id;
+  
+  console.log('UPDATE PROFILE DEBUG:', { id, name, profile_picture, currentUserId, reqUser: req.user });
+  
+  if (currentUserId != id) {
+    console.log('Forbidden! currentUserId != id');
+    return res.status(403).json({ error: 'Forbidden' });
+  }
   
   if (!name) {
     return res.status(400).json({ error: 'Name is required' });
   }
   
   try {
+    const updateData = { name };
+    if (profile_picture !== undefined) {
+      updateData.profile_picture = profile_picture;
+    }
+
     const { data, error } = await supabase
       .from('users')
-      .update({ name })
+      .update(updateData)
       .eq('id', id)
       .select('id, email, name, profile_picture, provider');
       

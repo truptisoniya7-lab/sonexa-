@@ -92,11 +92,7 @@ export function DiscoverySidebar() {
         </div>
 
         <div className="relative z-10">
-          <DiscoveryWidget 
-            title="Trending Now" 
-            icon={<Flame className="w-4 h-4 text-red-500" />} 
-            queryParams="Trending Songs" 
-          />
+
           <DiscoveryWidget 
             title="Top Charts" 
             icon={<BarChart3 className="w-4 h-4 text-blue-500" />} 

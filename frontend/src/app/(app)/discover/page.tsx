@@ -4,8 +4,6 @@ import { useState } from 'react';
 import { Search, X, Flame, Disc, Radio, Activity, Music, Sparkles, Globe, MapPin, Heart, Clock, BarChart } from 'lucide-react';
 import { HeroSection } from '@/components/home/HeroSection';
 import { CarouselSection } from '@/components/home/CarouselSection';
-import { CommunitiesRecommended } from '@/components/home/CommunitiesRecommended';
-import { DiscoverySidebar } from '@/components/home/DiscoverySidebar';
 import { motion } from 'framer-motion';
 
 const GENRES = [
@@ -29,10 +27,7 @@ export default function DiscoverPage() {
 
   return (
     <div className="max-w-[1600px] mx-auto pb-12 pt-6 px-4">
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        
-        {/* Main Content Area (75%) */}
-        <div className="lg:col-span-3 space-y-10 lg:space-y-14">
+      <div className="w-full space-y-10 lg:space-y-14">
           
           <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div>
@@ -44,15 +39,6 @@ export default function DiscoverPage() {
                  Explore the world of music
               </p>
             </div>
-            
-            <div className="relative w-full md:w-auto">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <input 
-                type="text" 
-                placeholder="Search songs, artists..." 
-                className="w-full md:w-64 h-12 rounded-full bg-white/5 border border-white/10 pl-12 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all shadow-inner"
-              />
-            </div>
           </header>
 
           <motion.div
@@ -61,61 +47,6 @@ export default function DiscoverPage() {
             transition={{ duration: 0.5 }}
           >
             <HeroSection />
-          </motion.div>
-
-          {/* Trending Songs */}
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <CarouselSection 
-              title="🔥 Trending Songs" 
-              subtitle="Most played in your country today."
-              queryKey={['discover', 'trending-songs', selectedGenre]} 
-              endpoint={buildQueryUrl("Trending Songs")} 
-            />
-          </motion.div>
-
-          {/* Recommended For You */}
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <CarouselSection 
-              title="🎵 Recommended For You" 
-              subtitle="Curated picks based on your recent activity."
-              queryKey={['discover', 'recommended', selectedGenre]} 
-              endpoint={buildQueryUrl("Recommended Songs Based on History")} 
-            />
-          </motion.div>
-
-          {/* Because You Listened To... */}
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <CarouselSection 
-              title="🔄 Because You Listened To..." 
-              subtitle="Deep dives into vibes you've been loving."
-              queryKey={['discover', 'similar', selectedGenre]} 
-              endpoint={buildQueryUrl("Songs similar to recently played")} 
-            />
-          </motion.div>
-
-          {/* Live Communities */}
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <CommunitiesRecommended />
-          </motion.div>
-
-          {/* New Releases */}
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <CarouselSection 
-              title="💿 New Releases" 
-              subtitle="Fresh tracks hitting the airwaves."
-              queryKey={['discover', 'new-releases', selectedGenre]} 
-              endpoint={buildQueryUrl("New Release Songs")} 
-            />
-          </motion.div>
-
-          {/* Popular Artists */}
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <CarouselSection 
-              title="🎤 Popular Artists" 
-              subtitle="The voices defining the charts right now."
-              queryKey={['discover', 'popular-artists', selectedGenre]} 
-              endpoint={buildQueryUrl("Top Trending Artists")} 
-            />
           </motion.div>
 
           {/* Genre Filter inside Flow */}
@@ -156,6 +87,57 @@ export default function DiscoverPage() {
             </section>
           </motion.div>
 
+          {/* Trending Songs */}
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <CarouselSection 
+              title="🔥 Trending Songs" 
+              subtitle="Most played in your country today."
+              queryKey={['discover', 'trending-songs', selectedGenre]} 
+              endpoint={buildQueryUrl("Trending Songs")} 
+            />
+          </motion.div>
+
+          {/* Recommended For You */}
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <CarouselSection 
+              title="🎵 Recommended For You" 
+              subtitle="Curated picks based on your recent activity."
+              queryKey={['discover', 'recommended', selectedGenre]} 
+              endpoint={buildQueryUrl("Recommended Songs Based on History")} 
+            />
+          </motion.div>
+
+          {/* Because You Listened To... */}
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <CarouselSection 
+              title="🔄 Because You Listened To..." 
+              subtitle="Deep dives into vibes you've been loving."
+              queryKey={['discover', 'similar', selectedGenre]} 
+              endpoint={buildQueryUrl("Songs similar to recently played")} 
+            />
+          </motion.div>
+
+
+          {/* New Releases */}
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <CarouselSection 
+              title="💿 New Releases" 
+              subtitle="Fresh tracks hitting the airwaves."
+              queryKey={['discover', 'new-releases', selectedGenre]} 
+              endpoint={buildQueryUrl("New Release Songs")} 
+            />
+          </motion.div>
+
+          {/* Popular Artists */}
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <CarouselSection 
+              title="🎤 Popular Artists" 
+              subtitle="The voices defining the charts right now."
+              queryKey={['discover', 'popular-artists', selectedGenre]} 
+              endpoint={buildQueryUrl("Top Trending Artists")} 
+            />
+          </motion.div>
+
           {/* Top Charts */}
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <CarouselSection 
@@ -167,13 +149,6 @@ export default function DiscoverPage() {
           </motion.div>
           
         </div>
-
-        {/* Right Sidebar: Discovery Hub (25%) */}
-        <div className="hidden lg:block lg:col-span-1">
-          <DiscoverySidebar />
-        </div>
-
-      </div>
     </div>
   )
 }

@@ -1,17 +1,13 @@
-const { createClient } = require('@supabase/supabase-js');
+const { supabase } = require('./config/db');
 
-const supabaseUrl = "https://homxxtclvugnqvolnqby.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhvbXh4dGNsdnVnbnF2b2xucWJ5Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NDg4Mjk0NywiZXhwIjoyMTAwNDU4OTQ3fQ.pjnmnrD-3VFxfYPfDjfbNP-0b7Ls3ufdsdPm4T9yZV0";
+async function test() {
+  console.log("Testing lowercase 'rooms'...");
+  const res1 = await supabase.from('rooms').select('*').limit(1);
+  console.log("rooms error:", res1.error ? res1.error.message : "Success");
 
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-async function checkTable() {
-  const { data, error } = await supabase.from('listening_history').select('*').limit(1);
-  if (error) {
-    console.error('Table error:', error);
-  } else {
-    console.log('Table exists:', data);
-  }
+  console.log("\nTesting uppercase 'Rooms'...");
+  const res2 = await supabase.from('Rooms').select('*').limit(1);
+  console.log("Rooms error:", res2.error ? res2.error.message : "Success");
 }
 
-checkTable();
+test();

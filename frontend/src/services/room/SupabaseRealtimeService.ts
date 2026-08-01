@@ -10,6 +10,12 @@ export class SupabaseRealtimeService {
 
   constructor(roomId: string) {
     this.roomId = roomId;
+    // Clean up any existing channels with this roomId before creating new ones
+    supabase.getChannels().forEach(c => {
+      if (c.topic.startsWith(`realtime:room:${this.roomId}:`)) {
+        supabase.removeChannel(c);
+      }
+    });
     this.setupChannels();
   }
 
@@ -18,7 +24,7 @@ export class SupabaseRealtimeService {
     const chatChannel = supabase.channel(`room:${this.roomId}:chat`)
       .on(
         'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'room_messages', filter: `room_id=eq.${this.roomId}` },
+        { event: 'INSERT', schema: 'public', table: 'messages', filter: `room_id=eq.${this.roomId}` },
         (payload) => this.notify('chat:message', payload.new)
       );
 
@@ -26,13 +32,8 @@ export class SupabaseRealtimeService {
     const queueChannel = supabase.channel(`room:${this.roomId}:data`)
       .on(
         'postgres_changes',
-        { event: '*', schema: 'public', table: 'room_queue', filter: `room_id=eq.${this.roomId}` },
+        { event: '*', schema: 'public', table: 'queue', filter: `room_id=eq.${this.roomId}` },
         (payload) => this.notify('queue:update', payload)
-      )
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'room_events', filter: `room_id=eq.${this.roomId}` },
-        (payload) => this.notify('room:event', payload.new)
       );
 
     // 3. Ephemeral Broadcasts Channel (Reactions, Typing, Player Scrubbing)
@@ -76,7 +77,10 @@ export class SupabaseRealtimeService {
   }
 
   public disconnect() {
-    this.channels.forEach(channel => channel.unsubscribe());
+    this.channels.forEach(channel => {
+      channel.unsubscribe();
+      supabase.removeChannel(channel);
+    });
     this.channels.clear();
     this.subscribers.clear();
   }

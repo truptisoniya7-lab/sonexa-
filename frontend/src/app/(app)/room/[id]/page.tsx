@@ -63,7 +63,7 @@ export default function RoomPage() {
       .then(data => { if (data.name) setRoomName(data.name); })
       .catch(err => { setRoomName(`Room ${id}`); });
 
-    fetch(`/api/spotify/trending`)
+    fetch(`/api/music/discover?section=trending`)
       .then(res => { 
         if (!res.ok) return [];
         return res.json(); 
@@ -94,7 +94,11 @@ export default function RoomPage() {
     const fetchResults = async () => {
       setIsSearching(true);
       try {
-        const res = await fetch(`/api/spotify/search?q=${encodeURIComponent(newSong)}`);
+        const res = await fetch(`/api/music/search?q=${encodeURIComponent(newSong)}`);
+        if (!res.ok) {
+          setSearchResults([]);
+          return;
+        }
         const data = await res.json();
         if (Array.isArray(data)) setSearchResults(data);
       } catch (error) { console.error(error); } finally { setIsSearching(false); }

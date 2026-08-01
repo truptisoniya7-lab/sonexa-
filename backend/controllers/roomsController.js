@@ -2,20 +2,55 @@ const { supabase } = require('../config/db');
 
 exports.getRooms = async (req, res) => {
   try {
-    const { data, error } = await supabase
+    const { data: rooms, error } = await supabase
       .from('rooms')
       .select('id, name, is_public, host_id, users!rooms_host_id_fkey(name)')
       .order('created_at', { ascending: false });
 
     if (error) throw error;
     
-    // Map response to match old SQL format
-    const formattedData = data.map(r => ({
-      id: r.id,
-      name: r.name,
-      is_public: r.is_public,
-      host_id: r.host_id,
-      host_name: r.users?.name
+    // Fetch aggregated data for each room
+    const formattedData = await Promise.all(rooms.map(async (r) => {
+      // Fetch listeners count
+      const { count: listenersCount } = await supabase
+        .from('roommembers')
+        .select('*', { count: 'exact', head: true })
+        .eq('room_id', r.id);
+        
+      // Fetch current song from queue
+      const { data: queueData } = await supabase
+        .from('queue')
+        .select('song_title, song_artist, song_image')
+        .eq('room_id', r.id)
+        .order('created_at', { ascending: true })
+        .limit(1);
+        
+      const currentSong = queueData?.[0] || null;
+      
+      // Fetch recent message
+      const { data: messages } = await supabase
+        .from('messages')
+        .select('content, users!messages_user_id_fkey(name)')
+        .eq('room_id', r.id)
+        .order('created_at', { ascending: false })
+        .limit(1);
+        
+      const recentMessage = messages?.[0] || null;
+
+      return {
+        id: r.id,
+        name: r.name,
+        is_public: r.is_public,
+        host_id: r.host_id,
+        host_name: r.users?.name || 'Host',
+        listeners: listenersCount || 1,
+        nowPlaying: currentSong ? {
+          title: currentSong.song_title,
+          artist: currentSong.song_artist,
+          image: currentSong.song_image
+        } : null,
+        recentActivity: recentMessage ? `${recentMessage.users?.name || 'User'}: ${recentMessage.content}` : "Room created"
+      };
     }));
 
     res.json(formattedData);

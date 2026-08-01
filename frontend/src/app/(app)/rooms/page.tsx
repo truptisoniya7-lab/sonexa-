@@ -38,68 +38,36 @@ export default function ListenTogetherPage() {
   const [isPublic, setIsPublic] = useState(true);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
-  // Helper to fetch full room data including current song and activity
   const fetchRooms = async () => {
     try {
-      // 1. Fetch active rooms
-      const { data: roomsData, error: roomsError } = await supabase
-        .from('Rooms')
-        .select('*');
-        
-      if (roomsError) throw roomsError;
+      const res = await fetch('/api/rooms');
+      if (!res.ok) throw new Error('Failed to fetch rooms');
+      const roomsData = await res.json();
       
-      const mappedRooms: RoomCardProps[] = [];
-      
-      for (const r of roomsData || []) {
-        // 2. Fetch current song
-        const { data: queueData } = await supabase
-          .from('room_queue')
-          .select('*')
-          .eq('room_id', r.id)
-          .eq('state', 'playing')
-          .order('created_at', { ascending: false })
-          .limit(1);
-          
-        const currentSong = queueData?.[0] || {
-          song_title: "Waiting for DJ",
-          song_artist: "Silence",
-          song_image: "https://images.unsplash.com/photo-1614680376573-df3480f0c6ff?q=80&w=600&auto=format&fit=crop",
-        };
-        
-        // 3. Fetch recent chat
-        const { data: chatData } = await supabase
-          .from('room_messages')
-          .select('*')
-          .eq('room_id', r.id)
-          .order('created_at', { ascending: false })
-          .limit(1);
-          
-        const recentChat = chatData?.[0] 
-          ? `${chatData[0].user_name}: ${chatData[0].content}` 
-          : "Room created";
-          
-        // 4. Fetch listeners (We use a random number for now if presence is hard to aggregate globally, 
-        // but ideally we query a presence aggregate view. We'll set it to 1 + random to make it look alive if empty)
-        
-        mappedRooms.push({
-          id: r.id,
-          name: r.name || "Untitled Room",
-          genre: "Chill", // In a real app, this comes from Rooms table
-          listeners: Math.floor(Math.random() * 50) + 1, // Placeholder until presence aggregate
-          chatting: Math.floor(Math.random() * 10),
-          isVoiceActive: Math.random() > 0.7,
-          nowPlaying: {
-            title: currentSong.song_title,
-            artist: currentSong.song_artist,
-            image: currentSong.song_image,
-            progress: 0, // Mock progress for global view
-            duration: 180 
-          },
-          host: "Host", // Placeholder
-          recentActivity: recentChat,
-          isTrending: Math.random() > 0.8
-        });
-      }
+      const mappedRooms: RoomCardProps[] = roomsData.map((r: any) => ({
+        id: r.id,
+        name: r.name || "Untitled Room",
+        genre: r.genre || "Community Room", // Dynamic if added, default otherwise
+        listeners: r.listeners || 1,
+        chatting: r.recentActivity !== "Room created" ? 1 : 0, // Fallback if no chat aggregate
+        isVoiceActive: false, // Default to false
+        nowPlaying: r.nowPlaying ? {
+          title: r.nowPlaying.title,
+          artist: r.nowPlaying.artist,
+          image: r.nowPlaying.image,
+          progress: 0,
+          duration: 180 
+        } : {
+          title: "Waiting for DJ",
+          artist: "Silence",
+          image: "https://images.unsplash.com/photo-1614680376573-df3480f0c6ff?q=80&w=600&auto=format&fit=crop",
+          progress: 0,
+          duration: 180 
+        },
+        host: r.host_name || "Host",
+        recentActivity: r.recentActivity || "Room created",
+        isTrending: (r.listeners || 1) > 5
+      }));
       
       setRooms(mappedRooms);
       

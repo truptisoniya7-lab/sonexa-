@@ -28,7 +28,7 @@ export class LiveRoomProvider implements IRoomProvider {
     try {
       // Fetch queue
       const { data: queueData, error: queueError } = await supabase
-        .from('room_queue')
+        .from('queue')
         .select('*')
         .eq('room_id', roomId)
         .order('created_at', { ascending: true });
@@ -40,7 +40,7 @@ export class LiveRoomProvider implements IRoomProvider {
 
       // Fetch messages (paginated chat - last 50)
       const { data: msgData, error: msgError } = await supabase
-        .from('room_messages')
+        .from('messages')
         .select('*')
         .eq('room_id', roomId)
         .order('created_at', { ascending: false })
@@ -148,10 +148,9 @@ export class LiveRoomProvider implements IRoomProvider {
     this.notify('message_received', optimisticMsg);
     
     try {
-      await supabase.from('room_messages').insert({
+      await supabase.from('messages').insert({
           room_id: this.currentRoomId,
           user_id: parseInt(user.id) || 1,
-          user_name: user.name,
           content,
           type
       });
@@ -177,14 +176,13 @@ export class LiveRoomProvider implements IRoomProvider {
     this.notify('queue_updated', this.queue);
 
     try {
-      await supabase.from('room_queue').insert({
+      await supabase.from('queue').insert({
           room_id: this.currentRoomId,
           song_uri: song.song_uri,
           song_title: song.song_title,
           song_artist: song.song_artist,
           song_image: song.song_image,
-          added_by: parseInt(user.id) || 1,
-          state: 'queued'
+          added_by: parseInt(user.id) || 1
       });
     } catch (error) {
       console.error('Failed to add song', error);

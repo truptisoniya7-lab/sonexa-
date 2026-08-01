@@ -70,7 +70,7 @@ const performLiveSearch = async (q) => {
         !video.title.toLowerCase().includes("hours")
     );
     
-    return songs.slice(0, 10).map(mapYoutubeTrack).filter(t => t.image);
+    return songs.slice(0, 20).map(mapYoutubeTrack).filter(t => t.image);
 };
 
 // In-memory locks for concurrent requests
@@ -199,13 +199,30 @@ const discover = async (req, res) => {
   activeSearches.set(cacheKey, searchPromise);
 
   try {
-    const results = await searchPromise;
+    let results = await searchPromise;
+    
+    if (!results || results.length === 0) {
+      try {
+        const fallbackData = require('../fallback_data.json');
+        const exactMatch = fallbackData.find(d => d.query === cacheKey);
+        if (exactMatch && exactMatch.results && exactMatch.results.length > 0) {
+          results = exactMatch.results;
+        } else {
+          // generic fallback
+          results = fallbackData[0]?.results || [];
+        }
+      } catch (e) {
+        results = [];
+      }
+    }
+    
     res.json(results);
   } catch (error) {
     console.error(`Discover error for [${cacheKey}]:`, error);
     try {
       const fallbackData = require('../fallback_data.json');
-      return res.json(fallbackData[0]?.results || []);
+      const exactMatch = fallbackData.find(d => d.query === cacheKey);
+      return res.json(exactMatch?.results || fallbackData[0]?.results || []);
     } catch (e) {
       return res.json([]);
     }

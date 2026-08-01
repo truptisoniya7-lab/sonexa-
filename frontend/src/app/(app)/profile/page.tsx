@@ -10,20 +10,21 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Camera } from 'lucide-react';
 
-// --- MOCK DATA ---
-const TOP_ARTISTS = [
-  { id: 1, name: "The Weeknd", plays: "2.4K plays", image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150&h=150" },
-  { id: 2, name: "Daft Punk", plays: "1.8K plays", image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&q=80&w=150&h=150" },
-  { id: 3, name: "Tame Impala", plays: "1.2K plays", image: "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?auto=format&fit=crop&q=80&w=150&h=150" },
-  { id: 4, name: "Dua Lipa", plays: "950 plays", image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150&h=150" },
+const STICKER_AVATARS = [
+  "https://api.dicebear.com/7.x/notionists/svg?seed=Felix",
+  "https://api.dicebear.com/7.x/notionists/svg?seed=Aneka",
+  "https://api.dicebear.com/7.x/micah/svg?seed=Jack&backgroundColor=b6e3f4",
+  "https://api.dicebear.com/7.x/micah/svg?seed=Jasmine&backgroundColor=ffdfbf",
+  "https://api.dicebear.com/7.x/avataaars/svg?seed=Oliver&backgroundColor=c0aede",
+  "https://api.dicebear.com/7.x/avataaars/svg?seed=Sophia&backgroundColor=ffdfbf",
+  "https://api.dicebear.com/7.x/adventurer/svg?seed=Leo",
+  "https://api.dicebear.com/7.x/adventurer/svg?seed=Mia",
 ];
 
-const RECENT_ACTIVITY = [
-  { id: 1, action: "Listened to", target: "Starboy", context: "by The Weeknd", time: "2 hours ago", icon: Music },
-  { id: 2, action: "Joined community", target: "Synthwave City", context: "560 members", time: "5 hours ago", icon: Users },
-  { id: 3, action: "Created playlist", target: "Late Night Drive", context: "45 songs", time: "Yesterday", icon: Activity },
-];
+
 
 export default function ProfilePage() {
   const [loading, setLoading] = useState(false);
@@ -35,33 +36,35 @@ export default function ProfilePage() {
     email: '',
     profile_picture: null as string | null
   });
-  const [editForm, setEditForm] = useState({ name: '', bio: '' });
+  const [editForm, setEditForm] = useState({ name: '', bio: '', profile_picture: '' as string | null });
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isAvatarDialogOpen, setIsAvatarDialogOpen] = useState(false);
 
   useEffect(() => {
-    // Simulated fetch
     const fetchProfile = async () => {
       try {
-        const res = await fetch(`/api/profile/1`);
+        const storedUser = localStorage.getItem('user');
+        if (!storedUser) return;
+        const authUser = JSON.parse(storedUser);
+
+        const res = await fetch(`/api/profile/${authUser.id}`);
         if (res.ok) {
           const data = await res.json();
-          if (data.name) {
+          if (data.user?.name || data.name) {
+            const u = data.user || data;
             setUserInfo(prev => ({ 
               ...prev, 
-              name: data.name, 
-              email: data.email, 
-              handle: `@${data.name.toLowerCase().replace(/\s+/g, '')}`,
-              profile_picture: data.profile_picture 
+              name: u.name, 
+              email: u.email, 
+              handle: `@${u.name.toLowerCase().replace(/\s+/g, '')}`,
+              profile_picture: u.profile_picture 
             }));
-            setEditForm({ name: data.name, bio: userInfo.bio });
-          }
-          if (data.streaming_accounts?.some((acc: any) => acc.provider === 'spotify')) {
-            setIsSpotifyConnected(true);
+            setEditForm({ name: u.name, bio: userInfo.bio, profile_picture: u.profile_picture });
           }
         }
       } catch (err) {
-        console.error('Failed to fetch profile (using mock data instead)', err);
+        console.error('Failed to fetch profile', err);
       }
     };
     fetchProfile();
@@ -84,14 +87,36 @@ export default function ProfilePage() {
   const handleSaveProfile = async () => {
     try {
       setIsSaving(true);
-      const res = await fetch(`/api/profile/1`, {
+      const storedUser = localStorage.getItem('user');
+      if (!storedUser) return;
+      const authUser = JSON.parse(storedUser);
+      const token = localStorage.getItem('token');
+
+      const res = await fetch(`/api/profile/${authUser.id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: editForm.name })
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` 
+        },
+        body: JSON.stringify({ 
+          name: editForm.name,
+          profile_picture: editForm.profile_picture
+        })
       });
       
       if (res.ok) {
-        setUserInfo(prev => ({ ...prev, name: editForm.name, bio: editForm.bio }));
+        const data = await res.json();
+        setUserInfo(prev => ({ 
+          ...prev, 
+          name: editForm.name, 
+          bio: editForm.bio,
+          profile_picture: editForm.profile_picture
+        }));
+        
+        // Update local storage so navbar picks it up on next reload
+        const newLocalUser = { ...authUser, name: editForm.name, profile_picture: editForm.profile_picture };
+        localStorage.setItem('user', JSON.stringify(newLocalUser));
+        
         setIsEditing(false);
       } else {
         console.error('Failed to update profile');
@@ -116,12 +141,53 @@ export default function ProfilePage() {
       </div>
 
       <div className="max-w-[1200px] mx-auto w-full px-6 relative -mt-20 md:-mt-24 z-10 flex flex-col md:flex-row gap-6 md:items-end">
-            <Avatar className="w-32 h-32 md:w-40 md:h-40 border-4 border-background shadow-2xl bg-black">
-               {userInfo.profile_picture && <AvatarImage src={userInfo.profile_picture} alt="Profile" className="object-cover" />}
-               <AvatarFallback className="text-4xl bg-primary/20 text-primary font-bold">
-                 {userInfo.name ? userInfo.name.substring(0, 2).toUpperCase() : 'U'}
-               </AvatarFallback>
-            </Avatar>
+            <div className="relative group w-32 h-32 md:w-40 md:h-40">
+              <Avatar className="w-full h-full border-4 border-background shadow-2xl bg-black">
+                 <AvatarImage src={(isEditing ? editForm.profile_picture : userInfo.profile_picture) || ''} alt="Profile" className="object-cover bg-primary/20" />
+                 <AvatarFallback className="text-4xl bg-primary/20 text-primary font-bold">
+                   {(isEditing ? editForm.name : userInfo.name) ? (isEditing ? editForm.name : userInfo.name).substring(0, 2).toUpperCase() : 'U'}
+                 </AvatarFallback>
+              </Avatar>
+              
+              {isEditing && (
+                <Dialog open={isAvatarDialogOpen} onOpenChange={setIsAvatarDialogOpen}>
+                  <DialogTrigger asChild>
+                    <div className="absolute inset-0 bg-black/60 rounded-full flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer border-4 border-transparent z-20">
+                      <Camera className="w-8 h-8 text-white mb-1" />
+                      <span className="text-xs font-bold text-white uppercase tracking-wider">Change</span>
+                    </div>
+                  </DialogTrigger>
+                  <DialogContent className="bg-background border-white/10 sm:max-w-2xl">
+                    <DialogHeader>
+                      <DialogTitle>Choose a Profile Sticker</DialogTitle>
+                    </DialogHeader>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-4">
+                      {STICKER_AVATARS.map((url, i) => (
+                        <div 
+                          key={i} 
+                          onClick={() => {
+                            setEditForm({ ...editForm, profile_picture: url });
+                            setIsAvatarDialogOpen(false);
+                          }}
+                          className="aspect-square rounded-2xl overflow-hidden bg-white/5 border-2 border-transparent hover:border-primary cursor-pointer transition-all hover:scale-105 hover:shadow-xl hover:shadow-primary/20"
+                        >
+                          <img src={url} alt={`Sticker ${i}`} className="w-full h-full object-cover" />
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <span className="text-sm font-bold text-muted-foreground">Or provide a custom image URL:</span>
+                      <Input 
+                        placeholder="https://..." 
+                        value={editForm.profile_picture || ''}
+                        onChange={(e) => setEditForm({...editForm, profile_picture: e.target.value})}
+                        className="bg-white/5 border-white/10"
+                      />
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              )}
+            </div>
         
         <div className="flex-1 space-y-2 mt-4 md:mt-0">
            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -132,7 +198,7 @@ export default function ProfilePage() {
               <div className="flex gap-3">
                  <Button variant="outline" className="rounded-full bg-background/50 backdrop-blur-sm hover:bg-white/10 border-white/10" onClick={() => {
                     if (isEditing) {
-                       setEditForm({ name: userInfo.name, bio: userInfo.bio }); // Reset form
+                       setEditForm({ name: userInfo.name, bio: userInfo.bio, profile_picture: userInfo.profile_picture }); // Reset form
                        setIsEditing(false);
                     } else {
                        setIsEditing(true);
@@ -149,14 +215,6 @@ export default function ProfilePage() {
            </div>
            
            <p className="text-muted-foreground max-w-2xl">{userInfo.bio}</p>
-           
-           <div className="flex flex-wrap items-center gap-4 text-sm font-semibold text-white/80 pt-2">
-              <span className="flex items-center gap-1.5"><Users className="w-4 h-4 text-primary" /> 1.2K Followers</span>
-              <span className="text-white/20">•</span>
-              <span>450 Following</span>
-              <span className="text-white/20">•</span>
-              <span className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-primary" /> 15K Mins Listened</span>
-           </div>
         </div>
       </div>
 
@@ -164,52 +222,11 @@ export default function ProfilePage() {
         
         {/* Primary Content (Left/Center) */}
         <div className="lg:col-span-2 space-y-10">
-          
-          {/* Top Artists Rail */}
-          <section>
-             <h2 className="text-xl font-bold flex items-center gap-2 mb-4">
-               <Sparkles className="w-5 h-5 text-primary" /> Your Top Artists
-             </h2>
-             <div className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar snap-x">
-               {TOP_ARTISTS.map((artist) => (
-                 <div key={artist.id} className="snap-start shrink-0 w-36 group cursor-pointer text-center">
-                    <div className="w-36 h-36 rounded-full overflow-hidden mb-3 relative border-4 border-transparent group-hover:border-primary/50 transition-all shadow-lg">
-                       <img src={artist.image} alt={artist.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                          <Music className="w-8 h-8 text-white drop-shadow-md" />
-                       </div>
-                    </div>
-                    <h3 className="font-bold text-white truncate">{artist.name}</h3>
-                    <p className="text-xs text-muted-foreground">{artist.plays}</p>
-                 </div>
-               ))}
-             </div>
-          </section>
-
-          {/* Recent Activity */}
-          <section>
-             <h2 className="text-xl font-bold flex items-center gap-2 mb-4">
-               <Activity className="w-5 h-5 text-primary" /> Recent Activity
-             </h2>
-             <div className="space-y-4">
-               {RECENT_ACTIVITY.map((activity) => (
-                 <div key={activity.id} className="flex items-start gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
-                    <div className="w-10 h-10 rounded-full bg-primary/20 text-primary flex items-center justify-center shrink-0">
-                       <activity.icon className="w-5 h-5" />
-                    </div>
-                    <div className="flex-1">
-                       <p className="text-white/90">
-                         <span className="text-muted-foreground">{activity.action}</span>{" "}
-                         <span className="font-bold text-white">{activity.target}</span>
-                       </p>
-                       <p className="text-sm text-muted-foreground">{activity.context}</p>
-                    </div>
-                    <span className="text-xs text-muted-foreground whitespace-nowrap">{activity.time}</span>
-                 </div>
-               ))}
-             </div>
-          </section>
-
+          <div className="p-8 text-center bg-white/5 rounded-2xl border border-white/5 h-full flex flex-col items-center justify-center min-h-[300px]">
+            <Sparkles className="w-12 h-12 text-muted-foreground opacity-50 mb-4" />
+            <h3 className="text-xl font-bold text-white mb-2">More coming soon!</h3>
+            <p className="text-muted-foreground">We are working on adding your listening activity, top artists, and playlists here.</p>
+          </div>
         </div>
 
         {/* Secondary Content (Right Sidebar) */}
