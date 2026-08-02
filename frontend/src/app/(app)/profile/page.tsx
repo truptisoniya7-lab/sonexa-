@@ -22,6 +22,22 @@ const STICKER_AVATARS = [
   "https://api.dicebear.com/7.x/avataaars/svg?seed=Sophia&backgroundColor=ffdfbf",
   "https://api.dicebear.com/7.x/adventurer/svg?seed=Leo",
   "https://api.dicebear.com/7.x/adventurer/svg?seed=Mia",
+  "https://api.dicebear.com/7.x/notionists/svg?seed=Jude",
+  "https://api.dicebear.com/7.x/notionists/svg?seed=Avery",
+  "https://api.dicebear.com/7.x/micah/svg?seed=Simon&backgroundColor=ffdfbf",
+  "https://api.dicebear.com/7.x/micah/svg?seed=Max&backgroundColor=c0aede",
+  "https://api.dicebear.com/7.x/avataaars/svg?seed=Bella&backgroundColor=b6e3f4",
+  "https://api.dicebear.com/7.x/avataaars/svg?seed=Caleb&backgroundColor=ffdfbf",
+  "https://api.dicebear.com/7.x/adventurer/svg?seed=Zoe",
+  "https://api.dicebear.com/7.x/adventurer/svg?seed=Sam",
+  "https://api.dicebear.com/7.x/bottts/svg?seed=Robot1",
+  "https://api.dicebear.com/7.x/bottts/svg?seed=Robot2",
+  "https://api.dicebear.com/7.x/fun-emoji/svg?seed=Happy",
+  "https://api.dicebear.com/7.x/fun-emoji/svg?seed=Cool",
+  "https://api.dicebear.com/7.x/lorelei/svg?seed=Lorelei1",
+  "https://api.dicebear.com/7.x/lorelei/svg?seed=Lorelei2",
+  "https://api.dicebear.com/7.x/pixel-art/svg?seed=Pixel1",
+  "https://api.dicebear.com/7.x/pixel-art/svg?seed=Pixel2",
 ];
 
 
@@ -161,7 +177,7 @@ export default function ProfilePage() {
                     <DialogHeader>
                       <DialogTitle>Choose a Profile Sticker</DialogTitle>
                     </DialogHeader>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-4">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-4 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
                       {STICKER_AVATARS.map((url, i) => (
                         <div 
                           key={i} 
@@ -321,6 +337,20 @@ export default function ProfilePage() {
         .hide-scrollbar {
           -ms-overflow-style: none;
           scrollbar-width: none;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.2);
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.3);
         }
       `}} />
     </div>
