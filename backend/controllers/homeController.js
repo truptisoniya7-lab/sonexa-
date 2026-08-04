@@ -53,7 +53,7 @@ const getLayout = async (req, res) => {
       { id: 'vijay', title: 'Vijay Thalapathy', search: 'Vijay Thalapathy' }
     ];
 
-    let madeForYouEndpoint = '/api/music/discover?category=for you mix';
+    let madeForYouEndpoint = '/api/music/discover?section=recommended songs based on history';
 
     // Personalization Logic: Override static artists with user's top artists if history exists
     if (supabase) {
@@ -109,31 +109,48 @@ const getLayout = async (req, res) => {
         motionPreset: 'level-3',
         caching: { strategy: 'stale-while-revalidate', ttl: 3600 }
       },
+      // Because You Played This (first dynamic artist)
+      ...(dynamicArtistSections[0] ? [{
+        id: 'because-you-played',
+        type: 'CAROUSEL',
+        title: `Because You Played ${dynamicArtistSections[0].search}`,
+        endpoint: `/api/music/discover?section=${encodeURIComponent(dynamicArtistSections[0].search + ' songs')}`,
+        motionPreset: 'level-3',
+        caching: { strategy: 'stale-while-revalidate', ttl: 3600 }
+      }] : []),
+      // Similar Artists (second dynamic artist)
+      ...(dynamicArtistSections[1] ? [{
+        id: 'similar-artists',
+        type: 'CAROUSEL',
+        title: `Similar to ${dynamicArtistSections[1].search}`,
+        endpoint: `/api/music/discover?section=${encodeURIComponent(dynamicArtistSections[1].search + ' hit songs')}`,
+        motionPreset: 'level-3',
+        caching: { strategy: 'stale-while-revalidate', ttl: 3600 }
+      }] : []),
       {
         id: 'trending',
         type: 'COVER_FLOW',
-        title: 'Trending Playlists',
+        title: 'Trending in India',
         endpoint: '/api/home/trending',
         motionPreset: 'level-2',
         caching: { strategy: 'stale-while-revalidate', ttl: 7200 }
       },
       {
-        id: 'moods',
-        type: 'MASONRY',
-        title: 'Mood Mixes',
-        endpoint: '/api/music/discover?section=Mood Mixes',
-        motionPreset: 'level-3',
+        id: 'the-pulse',
+        type: 'BENTO_GRID',
+        title: 'The Pulse',
+        endpoint: null,
+        motionPreset: 'level-1',
+        caching: { strategy: 'cache-first', ttl: 0 }
+      },
+      {
+        id: 'mood-mixes',
+        type: 'CAROUSEL',
+        title: 'Your Mood Mixes',
+        endpoint: `/api/music/discover?section=${encodeURIComponent((dynamicArtistSections[0]?.search || 'Bollywood') + ' mood mix songs')}`,
+        motionPreset: 'level-1',
         caching: { strategy: 'stale-while-revalidate', ttl: 86400 }
       },
-      // Inject Dynamic Artist Sections here
-      ...dynamicArtistSections.map((section) => ({
-        id: section.id,
-        type: 'CAROUSEL',
-        title: section.title,
-        endpoint: `/api/music/discover?section=${encodeURIComponent(section.search)}`,
-        motionPreset: 'level-3',
-        caching: { strategy: 'stale-while-revalidate', ttl: 3600 }
-      })),
       {
         id: 'recently-played',
         type: 'INFINITE_CAROUSEL',
@@ -141,7 +158,24 @@ const getLayout = async (req, res) => {
         endpoint: `/api/history/recent/${userId}`,
         motionPreset: 'level-3',
         caching: { strategy: 'cache-first', ttl: 0 }
-      }
+      },
+      {
+        id: 'albums-you-will-like',
+        type: 'CAROUSEL',
+        title: 'Albums You\'ll Like',
+        endpoint: `/api/music/discover?section=Trending Albums`,
+        motionPreset: 'level-3',
+        caching: { strategy: 'stale-while-revalidate', ttl: 86400 }
+      },
+      // Additional dynamic sections for depth
+      ...dynamicArtistSections.slice(2).map((section) => ({
+        id: section.id,
+        type: 'CAROUSEL',
+        title: section.title,
+        endpoint: `/api/music/discover?section=${encodeURIComponent(section.search)}`,
+        motionPreset: 'level-3',
+        caching: { strategy: 'stale-while-revalidate', ttl: 3600 }
+      }))
     ];
 
     res.json({ layout });

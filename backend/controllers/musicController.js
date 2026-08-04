@@ -1,5 +1,6 @@
 const ytSearch = require('yt-search');
 const { supabase } = require('../config/db');
+const SearchRankingService = require('../services/SearchRankingService');
 
 const sanitizeTitle = (title) => {
   return title
@@ -7,6 +8,7 @@ const sanitizeTitle = (title) => {
     .trim();
 };
 
+// We will replace mapYoutubeTrack with SearchRankingService internally in performLiveSearch
 const mapYoutubeTrack = (item) => {
   if (!item) return null;
   return {
@@ -57,20 +59,27 @@ const setCachedSearch = async (queryKey, results) => {
   }
 };
 
-const performLiveSearch = async (q) => {
+const performLiveSearch = async (q, skipDedupe = false) => {
     const result = await ytSearch(q);
     if (!result.videos) return [];
     
-    const songs = result.videos.filter(video =>
+    // Pipe through the robust SearchRankingService
+    const cleanResults = SearchRankingService.processResults(result.videos, q, skipDedupe);
+    
+    // Fallback: If strict ranking removed everything, return standard results
+    if (cleanResults.length === 0) {
+      const basicSongs = result.videos.filter(video =>
         video.seconds >= 60 &&
         video.seconds <= 600 &&
         !video.title.toLowerCase().includes("live") &&
         !video.title.toLowerCase().includes("mix") &&
         !video.title.toLowerCase().includes("playlist") &&
         !video.title.toLowerCase().includes("hours")
-    );
+      );
+      return basicSongs.slice(0, 20).map(mapYoutubeTrack).filter(t => t.image);
+    }
     
-    return songs.slice(0, 20).map(mapYoutubeTrack).filter(t => t.image);
+    return cleanResults.slice(0, 20); // Top 20 best results
 };
 
 // In-memory locks for concurrent requests
@@ -78,16 +87,11 @@ const activeSearches = new Map();
 
 const search = async (req, res) => {
   const q = req.query.q;
+  const skipDedupe = req.query.skipDedupe === 'true';
   if (!q) return res.json([]);
   
   const cacheKey = q.toLowerCase();
   
-  // 1. Check Supabase DB Cache
-  const dbCache = await getCachedSearch(cacheKey);
-  if (dbCache) {
-    return res.json(dbCache);
-  }
-
   try {
     const fallbackData = require('../fallback_data.json');
     const exactMatch = fallbackData.find(d => d.query === cacheKey);
@@ -102,6 +106,12 @@ const search = async (req, res) => {
     // Ignore fallback read errors
   }
 
+  // 1. Check Supabase DB Cache
+  const dbCache = await getCachedSearch(cacheKey);
+  if (dbCache) {
+    return res.json(dbCache);
+  }
+
   // 3. Prevent concurrent identical live searches
   if (activeSearches.has(cacheKey)) {
     try {
@@ -111,7 +121,7 @@ const search = async (req, res) => {
   }
   
   const searchPromise = (async () => {
-    const results = await performLiveSearch(q);
+    const results = await performLiveSearch(q, skipDedupe);
     if (results && results.length > 0) {
       await setCachedSearch(cacheKey, results);
     }
@@ -154,11 +164,6 @@ const discover = async (req, res) => {
   const cacheKey = searchStr.trim().toLowerCase();
   if (!cacheKey) return res.json([]);
   
-  const dbCache = await getCachedSearch(cacheKey);
-  if (dbCache) {
-    return res.json(dbCache);
-  }
-
   // FORCE CONSISTENCY: Always serve curated fallback data first if it exists
   // This guarantees Vercel (US IPs) shows the exact same Indian/Bollywood songs as localhost
   try {
@@ -173,6 +178,11 @@ const discover = async (req, res) => {
     }
   } catch (e) {
     // Ignore read errors
+  }
+
+  const dbCache = await getCachedSearch(cacheKey);
+  if (dbCache) {
+    return res.json(dbCache);
   }
 
   if (activeSearches.has(cacheKey)) {

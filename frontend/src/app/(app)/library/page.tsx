@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { usePlayer } from '@/context/PlayerContext';
+import { PlayerService } from '@/services/PlayerService';
 
 import { supabase } from '@/lib/supabase';
 
@@ -64,22 +65,40 @@ export default function LibraryPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>(null);
-  const { currentSong } = usePlayer();
+  const { currentSong, playSong } = usePlayer();
 
   const recentScrollRef = useRef<HTMLDivElement>(null);
   const artistScrollRef = useRef<HTMLDivElement>(null);
 
-  const fetchLibraryData = () => {
-    fetch('/api/library')
-      .then(res => res.json())
-      .then(d => {
-        setData(d);
-        setLoading(false);
-      })
-      .catch(e => {
-        console.error(e);
-        setLoading(false);
-      });
+  const fetchLibraryData = async () => {
+    try {
+      const res = await fetch('/api/library');
+      const d = await res.json();
+      
+      const localLikes = await PlayerService.getLikedSongs();
+      const localPlaylists = await PlayerService.getPlaylists();
+      
+      d.summary.likedSongs = localLikes.length;
+      
+      const mappedPlaylists = localPlaylists.map((p: any) => ({
+          id: p.id,
+          type: 'Playlist',
+          title: p.name,
+          image: p.cover_image || 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=500&q=80',
+          count: '0 Songs',
+          creator: 'You'
+      }));
+      
+      d.playlists = [...mappedPlaylists, ...(d.playlists || [])];
+      d.summary.playlists = d.playlists.length;
+      d.likedSongsList = localLikes;
+      
+      setData(d);
+      setLoading(false);
+    } catch (e) {
+      console.error(e);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -517,8 +536,43 @@ export default function LibraryPage() {
               </>
             )}
 
+            {/* Songs Tab (Liked Songs) */}
+            {activeTab === 'songs' && (
+              <div className="flex flex-col gap-2">
+                {(!data.likedSongsList || data.likedSongsList.length === 0) ? (
+                  <div className="col-span-full flex flex-col items-center justify-center py-20 text-center bg-white/5 rounded-2xl border border-dashed border-white/10">
+                    <Heart className="w-16 h-16 text-muted-foreground mb-4 opacity-50" />
+                    <h3 className="text-[24px] font-bold mb-2 text-white">No liked songs</h3>
+                    <p className="text-[14px] text-muted-foreground">Songs you like will appear here.</p>
+                  </div>
+                ) : (
+                  data.likedSongsList.map((song: any, i: number) => (
+                    <div 
+                      key={i} 
+                      onClick={() => playSong(song)}
+                      className="group flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors cursor-pointer border border-transparent hover:border-white/5"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="relative w-12 h-12 rounded-md overflow-hidden shadow-md">
+                          <img src={song.song_image} alt={song.song_title} className="w-full h-full object-cover" />
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                            <Play className="w-4 h-4 text-white fill-white" />
+                          </div>
+                        </div>
+                        <div>
+                          <h3 className="text-[16px] font-bold text-white mb-0.5">{song.song_title}</h3>
+                          <p className="text-[14px] text-muted-foreground">{song.song_artist}</p>
+                        </div>
+                      </div>
+                      <Heart className="w-5 h-5 text-primary fill-primary" />
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+
             {/* Empty States for other tabs */}
-            {['songs', 'albums'].includes(activeTab) && (
+            {['albums'].includes(activeTab) && (
               <div className="col-span-full flex flex-col items-center justify-center py-20 text-center bg-white/5 rounded-2xl border border-dashed border-white/10">
                 <Music2 className="w-16 h-16 text-muted-foreground mb-4 opacity-50" />
                 <h3 className="text-[24px] font-bold mb-2 text-white">No items found</h3>

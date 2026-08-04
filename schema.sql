@@ -121,3 +121,36 @@ CREATE TABLE IF NOT EXISTS search_cache (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS liked_songs (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  song_uri TEXT NOT NULL,
+  song_title TEXT,
+  song_artist TEXT,
+  song_image TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(user_id, song_uri)
+);
+
+CREATE TABLE IF NOT EXISTS playlists (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  description TEXT,
+  cover_image TEXT,
+  is_public BOOLEAN DEFAULT false,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS playlist_songs (
+  id SERIAL PRIMARY KEY,
+  playlist_id INTEGER REFERENCES playlists(id) ON DELETE CASCADE,
+  song_uri TEXT NOT NULL,
+  song_title TEXT,
+  song_artist TEXT,
+  song_image TEXT,
+  added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  position INTEGER DEFAULT 0,
+  UNIQUE(playlist_id, song_uri)
+);

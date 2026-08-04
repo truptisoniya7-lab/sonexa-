@@ -3,11 +3,8 @@ export function parseTrackMetadata(rawTitle: string, rawArtist: string) {
   let artist = rawArtist?.replace('@', '') || '';
   let album = 'Unknown Album';
   
-  // Remove common YouTube cruft
-  const cruft = ['(Official Video)', '(Official Audio)', '(Lyric Video)', 'Lyrical Video', 'Lyrical:', 'Lyrical -', 'Lyrical', '[Official Video]', 'Music Video'];
-  cruft.forEach(c => {
-    title = title.replace(new RegExp(c, 'gi'), '').trim();
-  });
+  // Remove common YouTube cruft using a safe regex
+  title = title.replace(/\[.*?\]|\(.*?\)|official video|music video|lyric video|lyrical video|lyrical:|lyrical -|lyrical|audio|remix/gi, '').trim();
 
   // Try to parse format: "Song Title - Album Name | Artist" or "Song Title | Album | Artist"
   const parts = title.split(/[-|]/).map(p => p.trim()).filter(Boolean);

@@ -14,7 +14,7 @@ export async function GET(request: Request) {
     // Call our backend music search endpoint which uses yt-search internally
     // This avoids needing a YOUTUBE_API_KEY and avoids quota limits
     const backendUrl = process.env.BACKEND_URL || 'http://127.0.0.1:5000';
-    const res = await fetch(`${backendUrl}/music/search?q=${encodeURIComponent(query)}`);
+    const res = await fetch(`${backendUrl}/music/search?q=${encodeURIComponent(query)}&skipDedupe=true`);
     
     if (!res.ok) {
       return NextResponse.json({ error: 'Failed to fetch from backend API' }, { status: res.status });
@@ -23,9 +23,12 @@ export async function GET(request: Request) {
     const data = await res.json();
     
     if (data && data.length > 0) {
-      // The backend returns an array of mapped songs, the youtubeId is what we need
-      const videoId = data[0].youtubeId;
-      return NextResponse.json({ videoId });
+      let selectedVideo = data[0];
+      const excludeId = searchParams.get('excludeId');
+      if (excludeId) {
+        selectedVideo = data.find((v: any) => v.youtubeId !== excludeId) || data[0];
+      }
+      return NextResponse.json({ videoId: selectedVideo.youtubeId });
     } else {
       return NextResponse.json({ error: 'No video found' }, { status: 404 });
     }

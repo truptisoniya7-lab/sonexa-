@@ -22,7 +22,7 @@ interface PlayerContextType {
   hasSpotifyToken: boolean;
   deviceId: string | null;
   hasSpotifyError: boolean;
-  playSong: (song: Song, addToHistory?: boolean) => void;
+  playSong: (song: Song, addToHistory?: boolean, reason?: 'manual' | 'auto') => void;
   addToQueue: (song: Song) => void;
   togglePlay: () => void;
   pause: () => void;
@@ -31,6 +31,11 @@ interface PlayerContextType {
   prevTrack: () => void;
   seekTo: (seconds: number) => void;
   setVolume: (v: number) => void;
+  removeFromQueue: (index: number) => void;
+  reorderQueue: (startIndex: number, endIndex: number) => void;
+  clearQueue: () => void;
+  isAutoplayEnabled: boolean;
+  setIsAutoplayEnabled: (v: boolean) => void;
 }
 
 const PlayerContext = createContext<PlayerContextType | null>(null);
@@ -56,6 +61,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   const [duration, setDuration] = useState(0);
   const [volume, setVolumeState] = useState(1);
   const [isReady, setIsReady] = useState(false);
+  const [isAutoplayEnabled, setIsAutoplayEnabled] = useState(true);
   const [deviceId] = useState<string | null>('youtube-player');
   const [token, setToken] = useState<string | null>(null);
   
@@ -65,6 +71,8 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const [currentVideoId, setCurrentVideoId] = useState<string | null>(null);
   const currentVideoIdRef = useRef<string | null>(null);
+  const playReasonRef = useRef<'manual' | 'auto'>('manual');
+  const retryCountRef = useRef<number>(0);
 
   useEffect(() => {
     currentVideoIdRef.current = currentVideoId;
@@ -106,6 +114,34 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, [isPlaying, currentSong]);
 
+  // Effect to generate and refresh recommendations when current song changes
+  useEffect(() => {
+    if (!currentSong || !isAutoplayEnabled) return;
+
+    const refreshSmartQueue = async () => {
+      const { RecommendationEngine } = await import('../services/RecommendationEngine');
+      
+      // Clear old recommendations ONLY if the user manually selected a completely new song
+      if (playReasonRef.current === 'manual') {
+        queueManager.clearAutoTracks();
+      }
+      
+      // Collect IDs to exclude (history + manual queue items + current song)
+      const excludeIds = new Set<string>();
+      history.forEach(s => s.song_uri && excludeIds.add(s.song_uri));
+      queueManager.getQueue().forEach((s: any) => s.song_uri && excludeIds.add(s.song_uri));
+      excludeIds.add(currentSong.song_uri);
+
+      const recs = await RecommendationEngine.fetchRecommendations(currentSong, 10, excludeIds);
+      if (recs.length > 0) {
+        queueManager.addAutoTracks(recs as any);
+        setQueueState(queueManager.getQueue());
+      }
+    };
+
+    refreshSmartQueue();
+  }, [currentSong?.song_uri, isAutoplayEnabled]); // Triggered precisely when song changes
+
   const fetchYoutubeVideo = async (song: Song) => {
     const query = `${song.song_title} ${song.song_artist} audio`;
     const res = await fetch(`/api/youtube?q=${encodeURIComponent(query)}`);
@@ -114,7 +150,10 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     return data.videoId;
   };
 
-  const playSong = async (song: Song, addToHistory = true) => {
+  const playSong = async (song: Song, addToHistory = true, reason: 'manual' | 'auto' = 'manual') => {
+    playReasonRef.current = reason;
+    retryCountRef.current = 0;
+
     if (addToHistory && currentSong) {
       setHistory(prev => [...prev, currentSong]);
     }
@@ -122,8 +161,36 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     setCurrentSong(song);
     setIsReady(false);
     
+    // Check if the song is already in the queue and update currentIndex if so
+    const q = queueManager.getQueue();
+    const currentIdx = q.findIndex((s: any) => s.song_uri === song.song_uri);
+    if (currentIdx !== -1) {
+      queueManager.jumpToIndex(currentIdx);
+    }
+    
     // Log immediately when starting a song so it's instantly in history
     HistoryManager.logListen(song);
+
+    // Infinite playback: Auto-fetch more recommendations if queue is running low
+    if (isAutoplayEnabled) {
+      const q = queueManager.getQueue();
+      const currentIdx = q.findIndex((s: any) => s.song_uri === song.song_uri);
+      const remaining = q.length - (currentIdx >= 0 ? currentIdx + 1 : 0);
+      if (remaining > 0 && remaining < 3) {
+        import('../services/RecommendationEngine').then(({ RecommendationEngine }) => {
+          const excludeIds = new Set<string>();
+          history.forEach(s => s.song_uri && excludeIds.add(s.song_uri));
+          q.forEach((s: any) => s.song_uri && excludeIds.add(s.song_uri));
+          
+          RecommendationEngine.fetchRecommendations(song, 5, excludeIds).then(recs => {
+            if (recs.length > 0) {
+              queueManager.addAutoTracks(recs as any);
+              setQueueState(queueManager.getQueue());
+            }
+          });
+        });
+      }
+    }
 
     let videoId = null;
     if (song.song_uri && !song.song_uri.startsWith('spotify:')) {
@@ -150,8 +217,23 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const addToQueue = (song: Song) => {
-    queueManager.addTrack(song);
+    queueManager.addTrack({ ...song, queueSource: 'manual' });
     setQueueState(queueManager.getQueue());
+  };
+
+  const removeFromQueue = (index: number) => {
+    queueManager.removeTrack(index);
+    setQueueState(queueManager.getQueue());
+  };
+
+  const reorderQueue = (startIndex: number, endIndex: number) => {
+    queueManager.reorderQueue(startIndex, endIndex);
+    setQueueState(queueManager.getQueue());
+  };
+
+  const clearQueue = () => {
+    queueManager.clearQueue();
+    setQueueState([]);
   };
 
   const togglePlay = () => {
@@ -190,7 +272,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     const next = queueManager.next();
     if (next) {
       setQueueState(queueManager.getQueue());
-      playSong(next, true);
+      playSong(next, true, 'auto');
     } else if (currentSong) {
       setIsReady(false);
       try {
@@ -206,7 +288,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
             song_title: similar.title,
             song_artist: similar.artist,
             song_image: similar.image
-          }, true);
+          }, true, 'auto');
         } else {
           setIsReady(true);
         }
@@ -230,7 +312,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
       queueManager.setQueue([currentSong, ...queueManager.getQueue()]);
       setQueueState(queueManager.getQueue());
     }
-    playSong(previous, false);
+    playSong(previous, false, 'auto');
   };
 
   const onPlayerReady = (event: YouTubeEvent) => {
@@ -240,6 +322,30 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     if (currentVideoIdRef.current) {
       event.target.playVideo();
     }
+  };
+
+  const handlePlayerError = async (errorCode: number) => {
+    if (retryCountRef.current < 2 && currentSong) {
+      retryCountRef.current += 1;
+      const query = `${currentSong.song_title} ${currentSong.song_artist} audio`;
+      try {
+        const res = await fetch(`/api/youtube?q=${encodeURIComponent(query)}&excludeId=${currentVideoIdRef.current}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.videoId && data.videoId !== currentVideoIdRef.current) {
+             setCurrentVideoId(data.videoId);
+             if (ytPlayerRef.current) {
+               ytPlayerRef.current.loadVideoById(data.videoId);
+             }
+             return;
+          }
+        }
+      } catch (e) {
+        console.warn('Failed to fetch alternative track', e);
+      }
+    }
+    // Fallback: skip track if retries exhausted
+    nextTrack();
   };
 
   const onPlayerStateChange = (event: YouTubeEvent) => {
@@ -261,7 +367,8 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <PlayerContext.Provider value={{ 
       currentSong, queue, isPlaying, progress, duration, volume, isReady, hasSpotifyToken: !!token, deviceId, hasSpotifyError,
-      playSong, addToQueue, togglePlay, play, pause, nextTrack, prevTrack, seekTo, setVolume 
+      playSong, addToQueue, togglePlay, play, pause, nextTrack, prevTrack, seekTo, setVolume,
+      removeFromQueue, reorderQueue, clearQueue, isAutoplayEnabled, setIsAutoplayEnabled
     }}>
       {/* Hidden YouTube Player */}
       <div className="fixed -top-[1000px] -left-[1000px] opacity-0 pointer-events-none w-0 h-0">
@@ -282,6 +389,10 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
             }}
             onReady={onPlayerReady}
             onStateChange={onPlayerStateChange}
+            onError={(e) => {
+              console.warn('YouTube Player Error:', e.data);
+              handlePlayerError(e.data);
+            }}
           />
         )}
       </div>

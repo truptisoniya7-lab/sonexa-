@@ -59,9 +59,9 @@ export function SmartSearch() {
     queryKey: ['search', debouncedQuery],
     queryFn: async () => {
       if (!debouncedQuery.trim()) return null
-      const res = await fetch(`/api/search?q=${encodeURIComponent(debouncedQuery)}`)
+      const res = await fetch(`/api/music/search?q=${encodeURIComponent(debouncedQuery)}`)
       if (!res.ok) throw new Error('Search failed')
-      return res.json()
+      return { songs: await res.json() }
     },
     enabled: debouncedQuery.trim().length > 0,
     staleTime: 1000 * 60 * 5,
@@ -91,7 +91,6 @@ export function SmartSearch() {
       if (selectedIndex >= 0 && selectedIndex < allItems.length) {
         const item = allItems[selectedIndex]
         if ('uri' in item) handlePlaySong(item) // It's a song
-        // Add navigation for rooms/playlists if needed
       } else {
         handleSelectText(query)
       }
@@ -133,6 +132,8 @@ export function SmartSearch() {
   const handleSelectText = (text: string) => {
     saveRecentSearch(text)
     setQuery(text)
+    setIsOpen(false)
+    router.push(`/search?q=${encodeURIComponent(text)}`)
   }
 
   const handlePlaySong = (song: any) => {

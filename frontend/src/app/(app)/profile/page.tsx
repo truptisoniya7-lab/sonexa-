@@ -4,14 +4,30 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Settings, Link as LinkIcon, Music, Users, 
-  Clock, Share2, Edit3, Check, Loader2, Sparkles, Activity
+  Clock, Share2, Edit3, Check, Loader2, Sparkles, Activity,
+  Camera, BadgeCheck, Headphones, Mic2, ListMusic, Heart, ImageIcon
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Camera } from 'lucide-react';
+
+const COVER_PRESETS = [
+  { name: 'Purple Galaxy', value: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=2000&auto=format&fit=crop' },
+  { name: 'Neon City', value: 'https://images.unsplash.com/photo-1555680202-c86f0e12f086?q=80&w=2000&auto=format&fit=crop' },
+  { name: 'Vinyl Records', value: 'https://images.unsplash.com/photo-1603048297172-c92544798d5e?q=80&w=2000&auto=format&fit=crop' },
+  { name: 'Night Sky', value: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=2000&auto=format&fit=crop' },
+  { name: 'Sunset', value: 'https://images.unsplash.com/photo-1495616811223-4d98c6e9c869?q=80&w=2000&auto=format&fit=crop' },
+  { name: 'Anime Theme', value: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=2000&auto=format&fit=crop' },
+];
+
+const GRADIENT_PRESETS = [
+  'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600',
+  'bg-gradient-to-r from-emerald-500 to-teal-500',
+  'bg-gradient-to-r from-rose-500 to-orange-500',
+  'bg-gradient-to-r from-slate-900 to-slate-700',
+];
 
 const STICKER_AVATARS = [
   "https://api.dicebear.com/7.x/notionists/svg?seed=Felix",
@@ -50,12 +66,29 @@ export default function ProfilePage() {
     handle: '',
     bio: 'Music enthusiast. Always looking for new indie gems and synthwave beats.',
     email: '',
-    profile_picture: null as string | null
+    profile_picture: null as string | null,
+    cover_photo: 'bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600',
+    stats: {
+      followers: 0,
+      following: 0,
+      friends: 0,
+      playlists: 0,
+      songsLiked: 0,
+      songsPlayed: 0,
+      artists: 0,
+      listeningTime: 0
+    }
   });
-  const [editForm, setEditForm] = useState({ name: '', bio: '', profile_picture: '' as string | null });
+  const [editForm, setEditForm] = useState({ 
+    name: '', 
+    bio: '', 
+    profile_picture: '' as string | null,
+    cover_photo: '' as string
+  });
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isAvatarDialogOpen, setIsAvatarDialogOpen] = useState(false);
+  const [isCoverDialogOpen, setIsCoverDialogOpen] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -74,9 +107,10 @@ export default function ProfilePage() {
               name: u.name, 
               email: u.email, 
               handle: `@${u.name.toLowerCase().replace(/\s+/g, '')}`,
-              profile_picture: u.profile_picture 
+              profile_picture: u.profile_picture,
+              cover_photo: u.cover_photo || prev.cover_photo
             }));
-            setEditForm({ name: u.name, bio: userInfo.bio, profile_picture: u.profile_picture });
+            setEditForm({ name: u.name, bio: userInfo.bio, profile_picture: u.profile_picture, cover_photo: u.cover_photo || userInfo.cover_photo });
           }
         }
       } catch (err) {
@@ -116,7 +150,8 @@ export default function ProfilePage() {
         },
         body: JSON.stringify({ 
           name: editForm.name,
-          profile_picture: editForm.profile_picture
+          profile_picture: editForm.profile_picture,
+          cover_photo: editForm.cover_photo
         })
       });
       
@@ -126,11 +161,12 @@ export default function ProfilePage() {
           ...prev, 
           name: editForm.name, 
           bio: editForm.bio,
-          profile_picture: editForm.profile_picture
+          profile_picture: editForm.profile_picture,
+          cover_photo: editForm.cover_photo
         }));
         
         // Update local storage so navbar picks it up on next reload
-        const newLocalUser = { ...authUser, name: editForm.name, profile_picture: editForm.profile_picture };
+        const newLocalUser = { ...authUser, name: editForm.name, profile_picture: editForm.profile_picture, cover_photo: editForm.cover_photo };
         localStorage.setItem('user', JSON.stringify(newLocalUser));
         
         setIsEditing(false);
@@ -148,12 +184,72 @@ export default function ProfilePage() {
     <div className="w-full h-full flex flex-col bg-background overflow-y-auto overflow-x-hidden hide-scrollbar scroll-smooth pb-12">
       
       {/* 1. Hero Header Section */}
-      <div className="relative w-full h-64 md:h-80 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600">
+      <div 
+         className={`relative w-full h-64 md:h-80 ${(isEditing ? editForm.cover_photo : userInfo.cover_photo)?.startsWith('bg-') ? (isEditing ? editForm.cover_photo : userInfo.cover_photo) : 'bg-black'}`}
+         style={
+           (isEditing ? editForm.cover_photo : userInfo.cover_photo)?.startsWith('http') 
+             ? { backgroundImage: `url(${isEditing ? editForm.cover_photo : userInfo.cover_photo})`, backgroundSize: 'cover', backgroundPosition: 'center' } 
+             : {}
+         }
+      >
          <div className="absolute inset-0 bg-black/20" />
-         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-[1200px] overflow-hidden pointer-events-none">
-            <div className="absolute top-4 right-20 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-4 left-20 w-48 h-48 bg-black/20 rounded-full blur-2xl" />
-         </div>
+         
+         {isEditing && (
+            <Dialog open={isCoverDialogOpen} onOpenChange={setIsCoverDialogOpen}>
+              <DialogTrigger asChild>
+                 <Button variant="outline" size="sm" className="absolute top-4 right-4 z-20 bg-black/50 hover:bg-black/70 border-white/20 text-white backdrop-blur-md rounded-full">
+                    <Camera className="w-4 h-4 mr-2" />
+                    Edit Cover
+                 </Button>
+              </DialogTrigger>
+              <DialogContent className="bg-background border-white/10 sm:max-w-3xl">
+                <DialogHeader>
+                  <DialogTitle>Choose a Cover Photo</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-6 py-4 max-h-[70vh] overflow-y-auto pr-2 custom-scrollbar">
+                   <div>
+                     <h4 className="text-sm font-bold text-muted-foreground mb-3">Music-Themed Presets</h4>
+                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        {COVER_PRESETS.map((preset, i) => (
+                           <div key={i} onClick={() => { setEditForm({...editForm, cover_photo: preset.value}); setIsCoverDialogOpen(false); }} className="relative h-24 rounded-lg overflow-hidden cursor-pointer group hover:ring-2 ring-primary transition-all">
+                              <img src={preset.value} alt={preset.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                              <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                 <span className="text-white font-semibold text-sm shadow-sm">{preset.name}</span>
+                              </div>
+                           </div>
+                        ))}
+                     </div>
+                   </div>
+
+                   <div>
+                     <h4 className="text-sm font-bold text-muted-foreground mb-3">Gradients</h4>
+                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        {GRADIENT_PRESETS.map((grad, i) => (
+                           <div key={i} onClick={() => { setEditForm({...editForm, cover_photo: grad}); setIsCoverDialogOpen(false); }} className={`h-16 rounded-lg cursor-pointer hover:ring-2 ring-primary transition-all ${grad}`} />
+                        ))}
+                     </div>
+                   </div>
+
+                   <div>
+                     <h4 className="text-sm font-bold text-muted-foreground mb-2">Custom Image URL</h4>
+                     <Input 
+                        placeholder="https://..." 
+                        value={editForm.cover_photo?.startsWith('http') ? editForm.cover_photo : ''}
+                        onChange={(e) => setEditForm({...editForm, cover_photo: e.target.value})}
+                        className="bg-white/5 border-white/10"
+                     />
+                   </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+         )}
+
+         {!(isEditing ? editForm.cover_photo : userInfo.cover_photo)?.startsWith('http') && (
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-[1200px] overflow-hidden pointer-events-none">
+               <div className="absolute top-4 right-20 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
+               <div className="absolute bottom-4 left-20 w-48 h-48 bg-black/20 rounded-full blur-2xl" />
+            </div>
+         )}
       </div>
 
       <div className="max-w-[1200px] mx-auto w-full px-6 relative -mt-20 md:-mt-24 z-10 flex flex-col md:flex-row gap-6 md:items-end">
@@ -206,15 +302,18 @@ export default function ProfilePage() {
             </div>
         
         <div className="flex-1 space-y-2 mt-4 md:mt-0">
-           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div>
-                 <h1 className="text-3xl md:text-4xl font-extrabold text-white">{userInfo.name}</h1>
-                 <p className="text-primary font-medium">{userInfo.handle}</p>
-              </div>
-              <div className="flex gap-3">
-                 <Button variant="outline" className="rounded-full bg-background/50 backdrop-blur-sm hover:bg-white/10 border-white/10" onClick={() => {
-                    if (isEditing) {
-                       setEditForm({ name: userInfo.name, bio: userInfo.bio, profile_picture: userInfo.profile_picture }); // Reset form
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+               <div>
+                  <div className="flex items-center gap-2">
+                     <h1 className="text-3xl md:text-4xl font-extrabold text-white">{userInfo.name}</h1>
+                     <BadgeCheck className="w-6 h-6 text-blue-400 mt-1" />
+                  </div>
+                  <p className="text-primary font-medium">{userInfo.handle}</p>
+               </div>
+               <div className="flex gap-3">
+                  <Button variant="outline" className="rounded-full bg-background/50 backdrop-blur-sm hover:bg-white/10 border-white/10" onClick={() => {
+                     if (isEditing) {
+                        setEditForm({ name: userInfo.name, bio: userInfo.bio, profile_picture: userInfo.profile_picture, cover_photo: userInfo.cover_photo }); // Reset form
                        setIsEditing(false);
                     } else {
                        setIsEditing(true);
@@ -229,9 +328,31 @@ export default function ProfilePage() {
                  </Button>
               </div>
            </div>
-           
-           <p className="text-muted-foreground max-w-2xl">{userInfo.bio}</p>
-        </div>
+                      <p className="text-muted-foreground max-w-2xl">{userInfo.bio}</p>
+
+            <div className="flex flex-wrap items-center gap-6 mt-6 pt-2">
+               <div className="flex flex-col">
+                  <span className="text-xl font-bold text-white">{userInfo.stats.followers}</span>
+                  <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Followers</span>
+               </div>
+               <div className="flex flex-col">
+                  <span className="text-xl font-bold text-white">{userInfo.stats.following}</span>
+                  <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Following</span>
+               </div>
+               <div className="flex flex-col">
+                  <span className="text-xl font-bold text-white">{userInfo.stats.friends}</span>
+                  <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Friends</span>
+               </div>
+               <div className="flex flex-col">
+                  <span className="text-xl font-bold text-white">{userInfo.stats.playlists}</span>
+                  <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Playlists</span>
+               </div>
+               <div className="flex flex-col">
+                  <span className="text-xl font-bold text-white">{userInfo.stats.songsLiked}</span>
+                  <span className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Songs Liked</span>
+               </div>
+            </div>
+         </div>
       </div>
 
       <div className="max-w-[1200px] mx-auto w-full px-6 mt-12 grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -245,39 +366,59 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Secondary Content (Right Sidebar) */}
-        <div className="space-y-8">
-           
-           {/* Connected Services */}
+         {/* Secondary Content (Right Sidebar) */}
+         <div className="space-y-8">
+            
+           {/* Music Stats */}
            <Card className="glass-panel border-white/10 bg-black/20">
              <CardHeader>
                <CardTitle className="flex items-center gap-2 text-lg">
-                  <LinkIcon className="w-5 h-5 text-primary" />
-                  Connected Services
+                  <Music className="w-5 h-5 text-primary" />
+                  Music Stats
                </CardTitle>
-               <CardDescription>Link your streaming accounts for full functionality.</CardDescription>
              </CardHeader>
              <CardContent className="space-y-4">
-                
-
-
-                {/* Discord Connection (Placeholder) */}
-                <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5 opacity-50 grayscale">
-                   <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-[#5865F2] flex items-center justify-center shrink-0">
-                         <Users className="w-5 h-5 text-white" />
+                <div className="space-y-3">
+                   <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                         <Headphones className="w-4 h-4" />
+                         <span>Songs Played</span>
                       </div>
-                      <div>
-                         <h4 className="font-bold text-white">Discord</h4>
-                         <p className="text-xs text-muted-foreground">Coming Soon</p>
-                      </div>
+                      <span className="font-bold text-white">{userInfo.stats.songsPlayed}</span>
                    </div>
-                   <Button size="sm" variant="outline" disabled className="rounded-full">Link</Button>
+                   <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                         <Mic2 className="w-4 h-4" />
+                         <span>Artists</span>
+                      </div>
+                      <span className="font-bold text-white">{userInfo.stats.artists}</span>
+                   </div>
+                   <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                         <ListMusic className="w-4 h-4" />
+                         <span>Playlists</span>
+                      </div>
+                      <span className="font-bold text-white">{userInfo.stats.playlists}</span>
+                   </div>
+                   <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                         <Clock className="w-4 h-4" />
+                         <span>Listening Time</span>
+                      </div>
+                      <span className="font-bold text-white">{userInfo.stats.listeningTime} hrs</span>
+                   </div>
+                   <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                         <Heart className="w-4 h-4" />
+                         <span>Liked Songs</span>
+                      </div>
+                      <span className="font-bold text-white">{userInfo.stats.songsLiked}</span>
+                   </div>
                 </div>
              </CardContent>
            </Card>
 
-           {/* Account Settings */}
+            {/* Account Settings */}
            <Card className="glass-panel border-white/10 bg-black/20">
              <CardHeader>
                <CardTitle className="flex items-center gap-2 text-lg">
