@@ -6,6 +6,7 @@ export interface PlayerSong {
   song_title: string;
   song_artist: string;
   song_image: string;
+  song_album?: string;
   
   // Smart Queue Metadata
   queueSource?: 'manual' | 'auto';

@@ -12,7 +12,9 @@ class RecommendationCache {
   set(songId: string, recs: PlayerSong[]) {
     if (this.cache.size >= this.MAX_SIZE) {
       const firstKey = this.cache.keys().next().value;
-      this.cache.delete(firstKey);
+      if (firstKey !== undefined) {
+        this.cache.delete(firstKey);
+      }
     }
     this.cache.set(songId, recs);
   }

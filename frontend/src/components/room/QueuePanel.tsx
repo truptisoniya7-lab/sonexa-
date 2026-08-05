@@ -1,21 +1,22 @@
 import React, { Fragment } from 'react';
 import { motion } from 'framer-motion';
-import { Play, Music, User, ChevronUp, ArrowUp, X, Clock, Flame, Activity, History } from 'lucide-react';
+import { Play, Music, User, ChevronUp, ArrowUp, X, Clock, Flame, Activity, History, MoreVertical, ThumbsUp, ThumbsDown, Trash2, GripVertical, BarChart2, Sparkles } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 
 interface QueuePanelProps {
   queue: any[];
   currentSongIndex: number;
-  trendingSongs: any[];
+  recommendedSongs: any[];
   onPlaySong: (song: any) => void;
+  onPlayExisting: (song: any) => void;
   onSetCurrentIndex: (index: number) => void;
   onVote: (id: number, dir: 'up'|'down') => void;
   onRemove: (id: number) => void;
   onAdd: (song: any) => void;
 }
 
-export const QueuePanel: React.FC<QueuePanelProps> = ({ queue, currentSongIndex, trendingSongs, onPlaySong, onSetCurrentIndex, onVote, onRemove, onAdd }) => {
+export const QueuePanel: React.FC<QueuePanelProps> = ({ queue, currentSongIndex, recommendedSongs, onPlaySong, onPlayExisting, onSetCurrentIndex, onVote, onRemove, onAdd }) => {
 
   const renderSongCard = (song: any, index: number, isPlaying: boolean, isTrending: boolean = false) => {
     const displayIndex = index >= 0 ? index + 1 : null;
@@ -23,33 +24,29 @@ export const QueuePanel: React.FC<QueuePanelProps> = ({ queue, currentSongIndex,
     return (
       <Fragment key={song.id || `${song.song_uri}-${index}`}>
         <motion.div 
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: 10 }}
-          className={`group flex items-center gap-3 p-2 rounded-md cursor-pointer transition-colors relative \${isPlaying ? 'bg-primary/10 hover:bg-primary/20' : 'hover:bg-white/5'}`}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, x: -10 }}
+          key={`${isTrending ? 'trend' : 'q'}-${song.song_uri}-${index}`}
+          className={`group flex items-center gap-3 p-2.5 rounded-xl cursor-pointer transition-all duration-300 relative border border-white/5 ${isPlaying ? 'bg-primary/20 shadow-[0_0_15px_rgba(var(--primary),0.3)]' : 'bg-black/20 hover:bg-white/10 hover:-translate-y-1 hover:rotate-[1deg] hover:shadow-xl backdrop-blur-md'}`}
           onClick={() => {
             if (isTrending) {
               onPlaySong(song);
             } else if (index >= 0) {
+              onPlayExisting(song);
               onSetCurrentIndex(index);
             }
           }}
         >
-          {/* Index / Play / EQ */}
-          <div className="w-6 flex justify-center shrink-0">
+          {isPlaying && (
+            <div className="absolute inset-0 bg-primary/5 rounded-xl animate-pulse pointer-events-none border border-primary/20"></div>
+          )}
+          
+          <div className="w-4 text-center shrink-0">
             {isPlaying ? (
-              <div className="flex items-end justify-center gap-[2px] h-3.5 w-4 overflow-hidden">
-                <motion.div animate={{ height: ["40%", "100%", "40%"] }} transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut" }} className="w-1 bg-primary rounded-t-sm" />
-                <motion.div animate={{ height: ["100%", "30%", "100%"] }} transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut", delay: 0.2 }} className="w-1 bg-primary rounded-t-sm" />
-                <motion.div animate={{ height: ["60%", "90%", "60%"] }} transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut", delay: 0.4 }} className="w-1 bg-primary rounded-t-sm" />
-              </div>
+              <BarChart2 className="w-4 h-4 text-primary animate-pulse" />
             ) : (
-              <div className="relative flex items-center justify-center w-full h-full">
-                <span className={`text-xs font-medium text-muted-foreground group-hover:opacity-0 transition-opacity \${isTrending ? 'opacity-0' : 'opacity-100'}`}>
-                  {displayIndex}
-                </span>
-                <Play className={`w-4 h-4 text-foreground fill-current absolute opacity-0 group-hover:opacity-100 transition-opacity \${isTrending ? 'group-hover:opacity-100 opacity-0' : ''}`} />
-              </div>
+              <span className="text-xs font-bold text-muted-foreground group-hover:text-white transition-colors">{displayIndex}</span>
             )}
           </div>
 
@@ -159,17 +156,17 @@ export const QueuePanel: React.FC<QueuePanelProps> = ({ queue, currentSongIndex,
         </div>
       )}
 
-      {/* TRENDING */}
-      {trendingSongs && trendingSongs.length > 0 && (
-        <div className="space-y-2 pt-2">
-          <div className="flex items-center gap-4 px-1 mb-1">
-            <h3 className="text-[10px] font-bold tracking-[0.2em] text-orange-400 uppercase flex items-center gap-2 shrink-0">
-              <Flame className="w-3.5 h-3.5" /> Trending
+      {/* RECOMMENDED */}
+      {recommendedSongs && recommendedSongs.length > 0 && (
+        <div className="space-y-3 pt-4">
+          <div className="flex items-center gap-4 px-1 mb-2">
+            <h3 className="text-[10px] font-bold tracking-[0.2em] text-accent uppercase flex items-center gap-2 shrink-0">
+              <Sparkles className="w-3.5 h-3.5" /> Because you're playing
             </h3>
             <div className="h-px bg-white/10 flex-1"></div>
           </div>
-          <div className="space-y-0.5">
-            {trendingSongs.map((song, index) => (
+          <div className="space-y-1.5">
+            {recommendedSongs.map((song, index) => (
               renderSongCard(song, -1, false, true)
             ))}
           </div>

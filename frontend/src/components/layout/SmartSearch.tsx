@@ -61,7 +61,7 @@ export function SmartSearch() {
       if (!debouncedQuery.trim()) return null
       const res = await fetch(`/api/music/search?q=${encodeURIComponent(debouncedQuery)}`)
       if (!res.ok) throw new Error('Search failed')
-      return { songs: await res.json() }
+      return { songs: await res.json() } as any
     },
     enabled: debouncedQuery.trim().length > 0,
     staleTime: 1000 * 60 * 5,

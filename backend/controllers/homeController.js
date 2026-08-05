@@ -53,7 +53,7 @@ const getLayout = async (req, res) => {
       { id: 'vijay', title: 'Vijay Thalapathy', search: 'Vijay Thalapathy' }
     ];
 
-    let madeForYouEndpoint = '/api/music/discover?section=recommended songs based on history';
+    let madeForYouEndpoint = '/api/music/discover?section=hindi bollywood romantic songs';
 
     // Personalization Logic: Override static artists with user's top artists if history exists
     if (supabase) {
@@ -80,10 +80,7 @@ const getLayout = async (req, res) => {
         // Replace as many static sections as we have top artists (up to 5)
         for (let i = 0; i < Math.min(topArtists.length, 5); i++) {
           const artist = topArtists[i];
-          if (i === 0) {
-            // Use top artist for "Made For You"
-            madeForYouEndpoint = `/api/music/discover?section=${encodeURIComponent(artist + ' mix')}`;
-          }
+
           dynamicArtistSections[i] = {
             id: `personalized-artist-${i}`,
             title: `Because You Listened To ${artist}`,
@@ -114,7 +111,7 @@ const getLayout = async (req, res) => {
         id: 'because-you-played',
         type: 'CAROUSEL',
         title: `Because You Played ${dynamicArtistSections[0].search}`,
-        endpoint: `/api/music/discover?section=${encodeURIComponent(dynamicArtistSections[0].search + ' songs')}`,
+        endpoint: `/api/music/discover?section=${encodeURIComponent(dynamicArtistSections[0].search === 'Bollywood' ? 'Hindi item songs' : dynamicArtistSections[0].search + ' songs')}`,
         motionPreset: 'level-3',
         caching: { strategy: 'stale-while-revalidate', ttl: 3600 }
       }] : []),
@@ -136,18 +133,18 @@ const getLayout = async (req, res) => {
         caching: { strategy: 'stale-while-revalidate', ttl: 7200 }
       },
       {
-        id: 'the-pulse',
-        type: 'BENTO_GRID',
-        title: 'The Pulse',
-        endpoint: null,
+        id: 'global-trending-songs',
+        type: 'CAROUSEL',
+        title: 'Global Trending Songs',
+        endpoint: '/api/music/discover?section=trending songs',
         motionPreset: 'level-1',
-        caching: { strategy: 'cache-first', ttl: 0 }
+        caching: { strategy: 'stale-while-revalidate', ttl: 3600 }
       },
       {
         id: 'mood-mixes',
         type: 'CAROUSEL',
         title: 'Your Mood Mixes',
-        endpoint: `/api/music/discover?section=${encodeURIComponent((dynamicArtistSections[0]?.search || 'Bollywood') + ' mood mix songs')}`,
+        endpoint: `/api/music/discover?section=mood mixes`,
         motionPreset: 'level-1',
         caching: { strategy: 'stale-while-revalidate', ttl: 86400 }
       },

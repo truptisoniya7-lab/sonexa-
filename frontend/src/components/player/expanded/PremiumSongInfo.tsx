@@ -1,5 +1,5 @@
 import React from 'react';
-import { BadgeCheck, HighQuality } from 'lucide-react';
+import { BadgeCheck } from 'lucide-react';
 import { PlayerSong } from '../../../services/PlayerService';
 import { SongStats } from '../../../services/MockDataProvider';
 import { Heart } from 'lucide-react';

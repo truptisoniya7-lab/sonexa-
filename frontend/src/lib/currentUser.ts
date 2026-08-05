@@ -23,7 +23,7 @@ export const getCurrentUser = (): User => {
     if (storedName) {
       name = storedName;
     } else {
-      name = `Guest_\${id.substring(0, 4)}`;
+      name = `Guest_${id.substring(0, 4)}`;
       localStorage.setItem('mock_user_name', name);
     }
   }

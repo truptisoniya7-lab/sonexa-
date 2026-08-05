@@ -19,6 +19,9 @@ export interface IRoomProvider {
   /** Add a song to the queue */
   addSong(song: any): Promise<void>;
   
+  /** Remove a song from the queue */
+  removeSong(songId: string): Promise<void>;
+  
   /** Send an ephemeral reaction */
   sendReaction(emoji: string): Promise<void>;
   

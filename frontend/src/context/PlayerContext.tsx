@@ -9,6 +9,7 @@ interface Song {
   song_title: string;
   song_artist: string;
   song_image: string;
+  song_album?: string;
 }
 
 interface PlayerContextType {
@@ -33,6 +34,7 @@ interface PlayerContextType {
   setVolume: (v: number) => void;
   removeFromQueue: (index: number) => void;
   reorderQueue: (startIndex: number, endIndex: number) => void;
+  updateQueue: (queue: Song[]) => void;
   clearQueue: () => void;
   isAutoplayEnabled: boolean;
   setIsAutoplayEnabled: (v: boolean) => void;
@@ -231,6 +233,11 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     setQueueState(queueManager.getQueue());
   };
 
+  const updateQueue = (newQueue: Song[]) => {
+    queueManager.updateQueue(newQueue);
+    setQueueState(queueManager.getQueue());
+  };
+
   const clearQueue = () => {
     queueManager.clearQueue();
     setQueueState([]);
@@ -368,7 +375,7 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
     <PlayerContext.Provider value={{ 
       currentSong, queue, isPlaying, progress, duration, volume, isReady, hasSpotifyToken: !!token, deviceId, hasSpotifyError,
       playSong, addToQueue, togglePlay, play, pause, nextTrack, prevTrack, seekTo, setVolume,
-      removeFromQueue, reorderQueue, clearQueue, isAutoplayEnabled, setIsAutoplayEnabled
+      removeFromQueue, reorderQueue, updateQueue, clearQueue, isAutoplayEnabled, setIsAutoplayEnabled
     }}>
       {/* Hidden YouTube Player */}
       <div className="fixed -top-[1000px] -left-[1000px] opacity-0 pointer-events-none w-0 h-0">

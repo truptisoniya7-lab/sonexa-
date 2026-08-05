@@ -18,6 +18,8 @@ import { ActivityFeed } from '@/components/room/ActivityFeed';
 import { VoicePanel } from '@/components/room/VoicePanel';
 import { NowPlayingCinematic } from '@/components/room/NowPlayingCinematic';
 import { QueuePanel } from '@/components/room/QueuePanel';
+import { RoomCanvas } from '@/components/room/3d/RoomCanvas';
+import { useDynamicTheme } from '@/components/room/hooks/useDynamicTheme';
 
 // Provider Hook
 import { useRoom } from '@/hooks/useRoom';
@@ -38,7 +40,7 @@ export default function RoomPage() {
   // Search State
   const [newSong, setNewSong] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [trendingSongs, setTrendingSongs] = useState<any[]>([]);
+  const [recommendedSongs, setRecommendedSongs] = useState<any[]>([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   
@@ -47,6 +49,9 @@ export default function RoomPage() {
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [playerMode, setPlayerMode] = useState<'artwork' | 'lyrics'>('artwork');
   const currentSong = queue[currentSongIndex] || globalCurrentSong;
+  
+  // Dynamic Theme
+  const theme = useDynamicTheme(currentSong?.song_image);
 
   // WebRTC State
   const [inVoice, setInVoice] = useState(false);
@@ -62,15 +67,45 @@ export default function RoomPage() {
       })
       .then(data => { if (data.name) setRoomName(data.name); })
       .catch(err => { setRoomName(`Room ${id}`); });
-
-    fetch(`/api/music/discover?section=trending`)
-      .then(res => { 
-        if (!res.ok) return [];
-        return res.json(); 
-      })
-      .then(data => { if (Array.isArray(data)) setTrendingSongs(data); })
-      .catch(() => setTrendingSongs([]));
   }, [id]);
+
+  useEffect(() => {
+    if (!currentSong) {
+      fetch(`/api/music/discover?section=trending`)
+        .then(res => res.ok ? res.json() : [])
+        .then(data => { 
+          if (Array.isArray(data)) {
+             const mapped = data.map(s => ({
+               ...s,
+               song_uri: s.uri || s.song_uri,
+               song_title: s.title || s.song_title,
+               song_artist: s.artist || s.song_artist,
+               song_image: s.image || s.song_image
+             }));
+             setRecommendedSongs(mapped.slice(0, 5));
+          }
+        })
+        .catch(() => setRecommendedSongs([]));
+      return;
+    }
+
+    const query = currentSong.song_artist || currentSong.song_title;
+    fetch(`/api/music/search?q=${encodeURIComponent(query)}`)
+      .then(res => res.ok ? res.json() : [])
+      .then(data => { 
+        let songs = Array.isArray(data) ? data : (data.songs || []);
+        songs = songs.filter((s: any) => s.title !== currentSong.song_title);
+        const mapped = songs.map((s: any) => ({
+          ...s,
+          song_uri: s.uri || s.id,
+          song_title: s.title,
+          song_artist: s.artist,
+          song_image: s.image || s.thumbnail
+        }));
+        setRecommendedSongs(mapped.slice(0, 5));
+      })
+      .catch(() => setRecommendedSongs([]));
+  }, [currentSong?.song_uri]);
 
   useEffect(() => {
     // Autoplay logic if queue populates and we haven't played
@@ -111,7 +146,17 @@ export default function RoomPage() {
   }, [newSong]);
 
   const addToQueue = async (track: any) => {
-    const songData = { song_uri: track.uri, song_title: track.title, song_artist: track.artist, song_image: track.image };
+    const uri = track.uri || track.song_uri;
+    const title = track.title || track.song_title;
+    const artist = track.artist || track.song_artist;
+    const image = track.image || track.song_image;
+    const songData = { song_uri: uri, song_title: title, song_artist: artist, song_image: image };
+    
+    if (queue.length === 0) {
+      playSong({ ...songData, room_id: id as string } as any);
+      setTimeout(() => setCurrentSongIndex(0), 500);
+    }
+    
     await provider.addSong(songData);
     setNewSong('');
     setSearchResults([]);
@@ -119,8 +164,13 @@ export default function RoomPage() {
   };
 
   const playNow = async (track: any) => {
-    playSong({ song_uri: track.uri, song_title: track.title, song_artist: track.artist, song_image: track.image, room_id: id as string } as any);
-    const songData = { song_uri: track.uri, song_title: track.title, song_artist: track.artist, song_image: track.image };
+    const uri = track.uri || track.song_uri;
+    const title = track.title || track.song_title;
+    const artist = track.artist || track.song_artist;
+    const image = track.image || track.song_image;
+    const songData = { song_uri: uri, song_title: title, song_artist: artist, song_image: image };
+    
+    playSong({ ...songData, room_id: id as string } as any);
     await provider.addSong(songData);
     
     // We let the provider's queue sync update the queue, then we'll jump to the end
@@ -134,9 +184,8 @@ export default function RoomPage() {
   };
 
   const removeFromQueue = async (songId: number) => {
-    // Phase 3 feature, backend endpoint might exist
     try {
-      await fetch(`/api/rooms/\${id}/queue/\${songId}`, { method: 'DELETE' });
+      await provider.removeSong(songId.toString());
     } catch (error) { console.error(error); }
   };
 
@@ -162,34 +211,20 @@ export default function RoomPage() {
   // (setOnEndedCallback removed since it's not in PlayerContext yet)
 
   return (
-    <div className="flex flex-col h-[calc(100vh-13rem)] md:h-[calc(100vh-14rem)] overflow-hidden relative w-full bg-background rounded-2xl shadow-2xl border border-white/5">
+    <div className="flex flex-col h-[calc(100vh-13rem)] md:h-[calc(100vh-14rem)] overflow-hidden relative w-full rounded-2xl shadow-2xl border border-white/5" style={{ backgroundColor: theme.dark }}>
       
       <ReactionOverlay reactions={reactions} />
       
-      {/* Dynamic Cinematic Background */}
-      {currentSong?.song_image && (
-        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-          <div 
-            className="absolute inset-0 opacity-50 blur-[100px] scale-150 transition-all duration-1000"
-            style={{
-              backgroundImage: `url(\${currentSong.song_image?.replace('100x100', '1000x1000') || ''})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/60 to-background/90" />
-          <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }} />
-          <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 100%)' }} />
-        </div>
-      )}
+      {/* 3D Music Universe Layer */}
+      <RoomCanvas currentSong={currentSong} isPlaying={globalIsPlaying} theme={theme} />
 
-      {/* Main Content Area Container */}
-      <div className="flex-1 flex flex-col z-10 w-full max-w-[1800px] mx-auto min-h-0 pt-6 px-4 sm:px-6 lg:px-8">
+      {/* Main Content Area Container - Glassmorphism Overlay */}
+      <div className="flex-1 flex flex-col z-10 w-full max-w-[1800px] mx-auto min-h-0 pt-6 px-4 sm:px-6 lg:px-8 pointer-events-none">
         <div className="flex-1 flex flex-col lg:flex-row gap-6 min-h-0 pb-6">
           
-          {/* Left: Header, Cinematic & Activity */}
-          <div className="flex-1 flex flex-col min-w-0">
-            <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 shrink-0">
+          {/* Left: Header & Activity */}
+          <div className="flex-1 flex flex-col min-w-0 justify-between">
+            <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 shrink-0 pointer-events-auto">
               <div>
                 <h1 className="text-3xl font-extrabold tracking-tight mb-1 bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400">{roomName}</h1>
                 <div className="flex flex-wrap items-center gap-3 mt-2">
@@ -200,30 +235,15 @@ export default function RoomPage() {
               </div>
             </header>
 
-            <div className="flex items-center gap-6 border-b border-white/10 pb-3 mb-4 px-2">
-              <button 
-                onClick={() => setPlayerMode('artwork')} 
-                className={`text-sm font-bold uppercase tracking-widest transition-colors \${playerMode === 'artwork' ? 'text-primary' : 'text-muted-foreground hover:text-white'}`}
-              >
-                ARTWORK
-              </button>
-              <button 
-                onClick={() => setPlayerMode('lyrics')} 
-                className={`text-sm font-bold uppercase tracking-widest transition-colors \${playerMode === 'lyrics' ? 'text-primary' : 'text-muted-foreground hover:text-white'}`}
-              >
-                LYRICS
-              </button>
-            </div>
-            
-            <div className="mb-6 shrink-0">
-              <NowPlayingCinematic currentSong={currentSong} playerMode={playerMode} progress={progress} />
-            </div>
+              <div className="flex items-center gap-6 border-b border-white/10 pb-3 mb-4 px-2 pointer-events-auto">
+                {/* We removed NowPlayingCinematic as the 3D scene handles the visuals now */}
+              </div>
 
             <div className="flex-1 min-h-0 overflow-y-auto w-full lg:w-[85%] mx-auto">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-6 pr-2">
                 
                 {/* Chat Preview */}
-                <div className="bg-black/20 rounded-xl p-4 border border-white/5 flex flex-col transition-all hover:bg-black/30 hover:border-white/10">
+                <div className="bg-black/10 backdrop-blur-md rounded-xl p-4 border border-white/5 flex flex-col transition-all hover:bg-black/20 hover:border-white/10 pointer-events-auto">
                   <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-2"><MessageSquare className="w-4 h-4"/> Chat Preview</h3>
                   <div className="flex-1 flex flex-col justify-end space-y-2">
                     {messages.slice(-2).map((msg, idx) => (
@@ -243,7 +263,7 @@ export default function RoomPage() {
           </div>
 
           {/* Right: Sidebar Container */}
-          <div className="w-full lg:w-[35%] h-full shrink-0 flex flex-col overflow-hidden rounded-2xl shadow-2xl" style={{ background: 'rgba(15,15,20,0.55)', backdropFilter: 'blur(30px)', border: '1px solid rgba(255,255,255,0.08)' }}>
+          <div className="w-full lg:w-[35%] h-full shrink-0 flex flex-col overflow-hidden rounded-2xl shadow-2xl pointer-events-auto" style={{ background: 'rgba(15, 15, 20, 0.4)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.08)' }}>
             
             <VoicePanel 
               inVoice={inVoice} 
@@ -275,8 +295,9 @@ export default function RoomPage() {
                     <QueuePanel 
                       queue={queue} 
                       currentSongIndex={currentSongIndex} 
-                      trendingSongs={trendingSongs} 
-                      onPlaySong={(song) => { playSong({...song, room_id: id as string} as any); }}
+                      recommendedSongs={recommendedSongs} 
+                      onPlaySong={playNow}
+                      onPlayExisting={(song) => { playSong({...song, room_id: id as string} as any); }}
                       onSetCurrentIndex={setCurrentSongIndex}
                       onVote={handleVote}
                       onRemove={removeFromQueue}

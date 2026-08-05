@@ -13,6 +13,11 @@ export class QueueManager {
     this.persist();
   }
 
+  updateQueue(queue: any[]) {
+    this.queue = queue;
+    this.persist();
+  }
+
   addTrack(track: any) {
     if (track.queueSource === 'manual') {
       // Find the first auto track after currentIndex and insert before it

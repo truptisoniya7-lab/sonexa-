@@ -28,7 +28,7 @@ interface PlayerLayoutProps {
 export function PlayerLayout({
   currentSong, isMobile, onClose, isLiked, onToggleLike, onAddToPlaylist, onAddToQueue
 }: PlayerLayoutProps) {
-  const { isPlaying, togglePlay, progress, duration, seekTo, volume, setVolume, nextTrack, prevTrack, queue, playSong, reorderQueue } = usePlayer();
+  const { isPlaying, togglePlay, progress, duration, seekTo, volume, setVolume, nextTrack, prevTrack, queue, playSong, updateQueue } = usePlayer();
   
   const [activeTab, setActiveTab] = useState<'queue' | 'lyrics' | 'credits'>('queue');
   const [stats, setStats] = useState<SongStats | null>(null);
@@ -166,7 +166,7 @@ export function PlayerLayout({
                       const s = queue[idx];
                       if (s) playSong(s, false);
                     }}
-                    onReorder={reorderQueue}
+                    onReorder={updateQueue}
                   />
                 )}
                 {activeTab === 'lyrics' && (
@@ -198,7 +198,7 @@ export function PlayerLayout({
                       const s = queue[idx];
                       if (s) playSong(s, false);
                     }}
-                    onReorder={reorderQueue}
+                    onReorder={updateQueue}
                   />
                 </div>
               )}

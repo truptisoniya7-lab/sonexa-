@@ -189,6 +189,19 @@ export class LiveRoomProvider implements IRoomProvider {
     }
   }
 
+  async removeSong(songId: string): Promise<void> {
+    if (!this.currentRoomId) return;
+
+    this.queue = this.queue.filter(s => s.id.toString() !== songId);
+    this.notify('queue_updated', this.queue);
+
+    try {
+      await supabase.from('queue').delete().eq('id', songId).eq('room_id', this.currentRoomId);
+    } catch (error) {
+      console.error('Failed to remove song', error);
+    }
+  }
+
   async voteSong(songId: string, direction: 'up' | 'down'): Promise<void> {
     // Optimistic update
     this.queue = this.queue.map(s => {

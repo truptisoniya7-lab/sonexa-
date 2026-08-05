@@ -5,6 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import EmojiPicker from 'emoji-picker-react';
 import { ChatMessage, RoomMember } from '@/types/room';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface ChatPanelProps {
   messages: ChatMessage[];
@@ -39,7 +47,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ messages, typingUsers, mem
   };
 
   return (
-    <div className="h-full flex flex-col overflow-hidden relative">
+    <div className="h-full flex flex-col overflow-hidden relative bg-black/10 backdrop-blur-md rounded-xl border border-white/5">
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-muted-foreground text-sm opacity-70">
@@ -56,10 +64,22 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ messages, typingUsers, mem
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   className={`flex flex-col \${isMe ? 'items-end' : 'items-start'}`}
                 >
-                  <span className="text-[10px] text-muted-foreground mb-1 px-1 font-medium tracking-wide">
-                    {msg.user_name}
-                  </span>
-                  <div className={`px-4 py-2.5 rounded-2xl max-w-[85%] text-sm shadow-sm \${isMe ? 'bg-primary text-primary-foreground rounded-br-sm' : 'bg-black/40 text-foreground rounded-bl-sm border border-white/5'}`}>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger className="text-[10px] text-white/50 mb-1 px-1 font-medium tracking-wide hover:text-white transition-colors cursor-pointer outline-none text-left">
+                      {msg.user_name}
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align={isMe ? 'end' : 'start'} className="w-48 bg-black/40 backdrop-blur-xl border-white/10 shadow-2xl">
+                      <DropdownMenuLabel className="text-xs font-bold text-white">{msg.user_name}</DropdownMenuLabel>
+                      <DropdownMenuSeparator className="bg-white/10" />
+                      <DropdownMenuItem className="text-xs text-white/60 focus:bg-transparent cursor-default flex justify-between">
+                        ID: <span className="font-mono text-[10px] text-white/40">{msg.user_id}</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem className="text-xs font-bold cursor-pointer text-primary focus:text-primary focus:bg-primary/20 mt-1" onClick={() => console.log('Add friend', msg.user_id)}>
+                        Add to Friends
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                  <div className={`px-4 py-2.5 rounded-2xl max-w-[85%] text-sm shadow-sm backdrop-blur-md \${isMe ? 'bg-primary/80 text-white rounded-br-sm border border-primary/50' : 'bg-white/10 text-white rounded-bl-sm border border-white/10'}`}>
                     {msg.content}
                   </div>
                 </motion.div>
@@ -86,14 +106,14 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ messages, typingUsers, mem
         <div ref={messagesEndRef} className="h-1" />
       </div>
 
-      <div className="p-4 border-t border-white/5 bg-black/20 backdrop-blur-md relative z-50">
+      <div className="p-4 border-t border-white/5 bg-black/20 backdrop-blur-xl relative z-50 rounded-b-xl">
         <AnimatePresence>
           {showEmojiPicker && (
             <motion.div 
               initial={{ opacity: 0, y: 20, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.9 }}
-              className="absolute bottom-[calc(100%+12px)] left-4 z-50 shadow-2xl rounded-2xl overflow-hidden border border-border/50"
+              className="absolute bottom-[calc(100%+12px)] left-4 z-50 shadow-2xl rounded-2xl overflow-hidden border border-white/10"
             >
               <EmojiPicker onEmojiClick={(e) => setChatInput(prev => prev + e.emoji)} theme={'dark' as any} />
             </motion.div>
@@ -104,7 +124,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ messages, typingUsers, mem
             variant="outline" 
             size="icon"
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-            className={`shrink-0 rounded-full h-10 w-10 border-white/10 transition-colors \${showEmojiPicker ? 'bg-white/10 text-white' : 'bg-black/40 text-muted-foreground hover:text-white'}`}
+            className={`shrink-0 rounded-full h-10 w-10 border-white/10 transition-colors \${showEmojiPicker ? 'bg-white/20 text-white' : 'bg-white/5 text-white/60 hover:text-white hover:bg-white/10'}`}
           >
             <Smile className="w-5 h-5" />
           </Button>
@@ -114,9 +134,9 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ messages, typingUsers, mem
             value={chatInput} 
             onChange={(e) => setChatInput(e.target.value)} 
             onKeyDown={(e) => e.key === 'Enter' && handleSend()} 
-            className="flex-1 bg-black/40 border-white/10 rounded-full h-10 focus-visible:ring-primary/50 transition-shadow"
+            className="flex-1 bg-white/5 border-white/10 rounded-full h-10 focus-visible:ring-primary/50 transition-shadow text-white placeholder:text-white/40"
           />
-          <Button onClick={handleSend} size="icon" className="shrink-0 rounded-full h-10 w-10 bg-primary hover:bg-primary/90 text-primary-foreground border-none transition-transform active:scale-95" disabled={!chatInput.trim()}>
+          <Button onClick={handleSend} size="icon" className="shrink-0 rounded-full h-10 w-10 bg-primary/80 hover:bg-primary text-white border border-primary/50 shadow-[0_0_15px_rgba(var(--primary),0.3)] transition-transform active:scale-95" disabled={!chatInput.trim()}>
             <Send className="w-4 h-4" />
           </Button>
         </div>

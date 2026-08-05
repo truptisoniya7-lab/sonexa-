@@ -1,13 +1,13 @@
 "use client"
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { usePlayer } from '@/context/PlayerContext';
 import { Loader2, Play, Plus, Heart, MoreHorizontal, Clock, Search as SearchIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-export default function SearchPage() {
+function SearchContent() {
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get('q') || '';
   const { playSong } = usePlayer();
@@ -187,5 +187,13 @@ export default function SearchPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div className="w-full h-full flex items-center justify-center pt-32"><Loader2 className="w-10 h-10 animate-spin text-primary" /></div>}>
+      <SearchContent />
+    </Suspense>
   );
 }
