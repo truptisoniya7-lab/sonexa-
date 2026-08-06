@@ -66,7 +66,8 @@ const performLiveSearch = async (q, skipDedupe = false) => {
 
     if (process.env.YOUTUBE_API_KEY) {
       try {
-        const res = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(q)}&type=video&maxResults=30&key=${process.env.YOUTUBE_API_KEY}`);
+        const apiKey = process.env.YOUTUBE_API_KEY.replace(/['"]/g, '').trim();
+        const res = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(q)}&type=video&maxResults=30&key=${apiKey}`);
         
         if (!res.ok) {
           const errorData = await res.json();
