@@ -44,7 +44,7 @@ export const RoomCanvas: React.FC<RoomCanvasProps> = ({ currentSong, isPlaying, 
             <OrbitingAvatars members={members} />
             
             {/* Phase 1 Post-Processing: Targeted Bloom & Vignette */}
-            <EffectComposer disableNormalPass>
+            <EffectComposer>
               <Bloom 
                 luminanceThreshold={0.8} // Only very bright (emissive) things bloom
                 mipmapBlur 

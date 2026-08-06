@@ -44,8 +44,7 @@ export const Galaxy: React.FC<GalaxyProps> = ({ theme }) => {
           <Cloud 
             opacity={0.15} 
             speed={0.1} 
-            width={25} 
-            depth={10} 
+            bounds={[25, 10, 25]}
             segments={20} 
             position={[-10, 5, -25]} 
             color={theme.dark} 
@@ -53,8 +52,7 @@ export const Galaxy: React.FC<GalaxyProps> = ({ theme }) => {
           <Cloud 
             opacity={0.15} 
             speed={0.15} 
-            width={20} 
-            depth={5} 
+            bounds={[20, 5, 20]}
             segments={15} 
             position={[10, -5, -20]} 
             color={theme.secondary} 
@@ -68,14 +66,12 @@ export const Galaxy: React.FC<GalaxyProps> = ({ theme }) => {
           <bufferAttribute
             attach="attributes-position"
             count={particleCount}
-            array={positions}
-            itemSize={3}
+            args={[positions, 3]}
           />
           <bufferAttribute
             attach="attributes-size"
             count={particleCount}
-            array={scales}
-            itemSize={1}
+            args={[scales, 1]}
           />
         </bufferGeometry>
         <pointsMaterial

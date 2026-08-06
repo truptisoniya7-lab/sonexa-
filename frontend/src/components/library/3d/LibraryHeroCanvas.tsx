@@ -37,7 +37,7 @@ export const LibraryHeroCanvas: React.FC<LibraryHeroCanvasProps> = ({ currentSon
           <Suspense fallback={null}>
             <MusicCrystal imageUrl={currentSong?.song_image} theme={theme} />
             
-            <EffectComposer disableNormalPass>
+            <EffectComposer>
               <Bloom 
                 luminanceThreshold={0.5} 
                 mipmapBlur 
