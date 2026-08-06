@@ -38,7 +38,17 @@ export const MembersPanel: React.FC<MembersPanelProps> = ({ members }) => {
               
               <div className="flex flex-col">
                 <span className="font-semibold text-sm text-white/90 group-hover:text-white transition-colors">{member.name}</span>
-                <span className="text-[10px] text-white/40 uppercase tracking-wider">{i === 0 ? 'Host' : member.role}</span>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <span className="text-[9px] text-white/30 uppercase tracking-wider">{i === 0 ? 'Host' : member.role}</span>
+                  <span className="text-[9px] text-white/30">•</span>
+                  {member.isSpeaking ? (
+                    <span className="text-[10px] text-green-400 font-medium flex items-center gap-1">🎤 Speaking</span>
+                  ) : member.isTyping ? (
+                    <span className="text-[10px] text-blue-400 font-medium flex items-center gap-1">💬 Chatting</span>
+                  ) : (
+                    <span className="text-[10px] text-white/50 font-medium flex items-center gap-1">🟢 Listening</span>
+                  )}
+                </div>
               </div>
             </div>
             

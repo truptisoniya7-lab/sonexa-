@@ -363,7 +363,14 @@ export default function RoomPage() {
             <Tabs defaultValue="queue" value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="flex-1 flex flex-col w-full min-h-0">
               <div className="p-0 border-b border-white/[0.08] bg-white/[0.02] relative">
                 <TabsList className="w-full bg-transparent p-0 h-14 rounded-none border-b-0 flex">
-                  <TabsTrigger value="queue" className="flex-1 h-full rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none text-sm font-semibold text-white/60 data-[state=active]:text-white transition-colors">Queue</TabsTrigger>
+                  <TabsTrigger value="queue" className="flex-1 h-full rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none text-sm font-semibold text-white/60 data-[state=active]:text-white transition-colors flex flex-col justify-center">
+                    <span>Queue</span>
+                    {activeTab !== 'queue' && queue.length > 1 && (
+                      <span className="text-[9px] font-normal text-white/40 truncate w-[90%] mt-0.5">
+                        Next: {queue[1]?.song_title} {queue.length > 2 ? `+${queue.length - 2}` : ''}
+                      </span>
+                    )}
+                  </TabsTrigger>
                   <TabsTrigger value="chat" className="flex-1 h-full rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none text-sm font-semibold text-white/60 data-[state=active]:text-white transition-colors">Live Chat</TabsTrigger>
                   <TabsTrigger value="members" className="flex-1 h-full rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none text-sm font-semibold text-white/60 data-[state=active]:text-white transition-colors">Members</TabsTrigger>
                 </TabsList>

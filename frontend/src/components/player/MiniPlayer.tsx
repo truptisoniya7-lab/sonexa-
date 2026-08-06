@@ -8,6 +8,12 @@ import { PlayerSong } from '../../services/PlayerService';
 import { useDominantColor } from '../../hooks/useDominantColor';
 import { MoreMenu } from './MoreMenu';
 
+import { RoomSession } from '@/managers/RoomManager';
+import Link from 'next/link';
+import { Users, LogOut, ExternalLink } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { useState } from 'react';
+
 interface MiniPlayerProps {
   currentSong: PlayerSong;
   isMobile: boolean;
@@ -16,6 +22,8 @@ interface MiniPlayerProps {
   onToggleLike: () => void;
   onAddToPlaylist: () => void;
   onAddToQueue: () => void;
+  session?: RoomSession | null;
+  leaveRoom?: () => void;
 }
 
 export function MiniPlayer({ 
@@ -25,10 +33,13 @@ export function MiniPlayer({
   isLiked,
   onToggleLike,
   onAddToPlaylist,
-  onAddToQueue
+  onAddToQueue,
+  session,
+  leaveRoom
 }: MiniPlayerProps) {
   const { isPlaying, togglePlay, progress, duration, seekTo, volume, setVolume, nextTrack, prevTrack, isReady } = usePlayer();
   const { color: dominantColor } = useDominantColor(currentSong?.song_image, 'hsl(var(--primary))');
+  const [showLeavePrompt, setShowLeavePrompt] = useState(false);
 
   const formatTime = (secs: number) => {
     if (!secs || isNaN(secs)) return '0:00';
@@ -77,10 +88,23 @@ export function MiniPlayer({
             )}
           </motion.div>
           <div className="overflow-hidden flex-1 flex flex-col justify-center">
-            <h4 className="text-sm font-semibold truncate text-white group-hover:underline">{currentSong.song_title}</h4>
-            <p className="text-xs text-muted-foreground truncate hover:underline hover:text-white transition-colors" onClick={(e) => { e.stopPropagation(); }}>
-              {currentSong.song_artist}
-            </p>
+            <h4 className="text-sm font-semibold truncate text-white group-hover:underline flex items-center gap-2">
+              {currentSong.song_title}
+            </h4>
+            <div className="flex items-center gap-2 truncate">
+              <p className="text-xs text-muted-foreground hover:underline hover:text-white transition-colors" onClick={(e) => { e.stopPropagation(); }}>
+                {currentSong.song_artist}
+              </p>
+              {session && session.connectionStatus !== 'disconnected' && (
+                <>
+                  <span className="text-muted-foreground text-[10px]">•</span>
+                  <p className="text-[10px] text-red-400 font-medium flex items-center gap-1 bg-red-500/10 px-1.5 py-0.5 rounded-full">
+                    <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+                    {session.roomName}
+                  </p>
+                </>
+              )}
+            </div>
           </div>
           {!isMobile && (
             <Button 
@@ -146,6 +170,23 @@ export function MiniPlayer({
         {/* Right: Volume & Extras (Desktop only) */}
         {!isMobile && (
           <div className="flex justify-end items-center w-1/3 gap-3 pr-2 hidden md:flex" onClick={(e) => e.stopPropagation()}>
+            {session && session.connectionStatus !== 'disconnected' && (
+              <div className="flex items-center gap-1.5 mr-2">
+                <Link href={`/room/${session.roomId}`}>
+                  <Button variant="ghost" size="sm" className="h-7 text-xs text-muted-foreground hover:text-white px-2 rounded-full border border-white/10 hover:bg-white/10 transition-colors">
+                    <ExternalLink className="w-3 h-3 mr-1" /> Return
+                  </Button>
+                </Link>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-7 text-xs text-red-500/70 hover:text-red-400 px-2 rounded-full border border-red-500/10 hover:bg-red-500/10 transition-colors" 
+                  onClick={() => setShowLeavePrompt(true)}
+                >
+                  <LogOut className="w-3 h-3 mr-1" /> Leave
+                </Button>
+              </div>
+            )}
             <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground h-8 w-8 rounded-full" onClick={() => onExpand()} title="Lyrics">
               <Mic2 className="w-4 h-4" />
             </Button>
@@ -168,6 +209,31 @@ export function MiniPlayer({
           </div>
         )}
       </motion.div>
+
+      <Dialog open={showLeavePrompt} onOpenChange={setShowLeavePrompt}>
+        <DialogContent className="sm:max-w-md bg-background/95 backdrop-blur-xl border border-white/10 z-[100]">
+          <DialogHeader>
+            <DialogTitle>Leave {session?.roomName}?</DialogTitle>
+            <DialogDescription>
+              You'll stop listening together and be disconnected from the live room.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="sm:justify-end gap-2 mt-4">
+            <Button variant="secondary" onClick={() => setShowLeavePrompt(false)}>
+              Cancel
+            </Button>
+            <Button 
+              variant="destructive" 
+              onClick={() => {
+                setShowLeavePrompt(false);
+                if (leaveRoom) leaveRoom();
+              }} 
+            >
+              Leave Room
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </AnimatePresence>
   );
 }

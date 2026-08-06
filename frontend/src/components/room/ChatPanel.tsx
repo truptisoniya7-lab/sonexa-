@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import EmojiPicker from 'emoji-picker-react';
 import { ChatMessage, RoomMember } from '@/types/room';
+import { useRoomContext } from '@/context/RoomContext';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,6 +26,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ messages, typingUsers, mem
   const [chatInput, setChatInput] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { session } = useRoomContext();
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -51,7 +53,8 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ messages, typingUsers, mem
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-muted-foreground text-sm opacity-70">
-            <p className="font-medium">No messages yet. Start the conversation!</p>
+            <p className="font-medium text-lg mb-1 text-white">Welcome to {session?.roomName || 'the Room'} ❤️</p>
+            <p className="text-white/60">Be the first to say hello.</p>
           </div>
         ) : (
           <AnimatePresence initial={false}>
