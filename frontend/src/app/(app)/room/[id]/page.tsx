@@ -21,8 +21,9 @@ import { QueuePanel } from '@/components/room/QueuePanel';
 import { RoomCanvas } from '@/components/room/3d/RoomCanvas';
 import { useDynamicTheme } from '@/components/room/hooks/useDynamicTheme';
 
-// Provider Hook
-import { useRoom } from '@/hooks/useRoom';
+// Context Hook
+import { useRoomContext } from '@/context/RoomContext';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 
 export default function RoomPage() {
   const params = useParams();
@@ -31,7 +32,42 @@ export default function RoomPage() {
   const autoplay = searchParams?.get('autoplay');
 
   // Room State from Provider
-  const { members, messages, reactions, activities, typingUsers, queue, provider } = useRoom(id as string);
+  const { session, provider, joinRoom, leaveRoom } = useRoomContext();
+  
+  const [showSwitchPrompt, setShowSwitchPrompt] = useState(false);
+
+  useEffect(() => {
+    // If not in this room, and we are connected to another room, prompt switch
+    if (session && session.connectionStatus !== 'disconnected' && session.roomId !== id) {
+      setShowSwitchPrompt(true);
+    } else {
+      joinRoom(id);
+    }
+  }, [id, session?.roomId, session?.connectionStatus]);
+
+  const confirmSwitch = () => {
+    setShowSwitchPrompt(false);
+    joinRoom(id);
+  };
+
+  const cancelSwitch = () => {
+    setShowSwitchPrompt(false);
+    // User stays in current room, we might want to redirect them back or just leave them on this page but disconnected?
+    // Usually they'd be redirected back to the room they are in, or Home.
+    if (session?.roomId) {
+      window.location.href = `/room/${session.roomId}`;
+    } else {
+      window.location.href = '/discover';
+    }
+  };
+
+  // Provide defaults while loading
+  const members = session?.members || [];
+  const queue = session?.queue || [];
+  const messages = provider ? provider.getInitialState().messages : [];
+  const reactions: any[] = [];
+  const activities: any[] = [];
+  const typingUsers: number[] = [];
 
   // Room State
   const [roomName, setRoomName] = useState('Community Room');
@@ -157,7 +193,7 @@ export default function RoomPage() {
       setTimeout(() => setCurrentSongIndex(0), 500);
     }
     
-    await provider.addSong(songData);
+    await provider?.addSong(songData);
     setNewSong('');
     setSearchResults([]);
     setIsSearchOpen(false);
@@ -171,7 +207,7 @@ export default function RoomPage() {
     const songData = { song_uri: uri, song_title: title, song_artist: artist, song_image: image };
     
     playSong({ ...songData, room_id: id as string } as any);
-    await provider.addSong(songData);
+    await provider?.addSong(songData);
     
     // We let the provider's queue sync update the queue, then we'll jump to the end
     setTimeout(() => {
@@ -185,20 +221,20 @@ export default function RoomPage() {
 
   const removeFromQueue = async (songId: number) => {
     try {
-      await provider.removeSong(songId.toString());
+      await provider?.removeSong(songId.toString());
     } catch (error) { console.error(error); }
   };
 
   const handleVote = (songId: number, direction: 'up' | 'down') => {
-    provider.voteSong(songId.toString(), direction);
+    provider?.voteSong(songId.toString(), direction);
   };
 
   const handleSendMessage = (content: string) => {
-    provider.sendMessage(content);
+    provider?.sendMessage(content);
   };
 
   const sendReaction = (emoji: string) => {
-    provider.sendReaction(emoji);
+    provider?.sendReaction(emoji);
   };
 
   useEffect(() => {
@@ -402,6 +438,26 @@ export default function RoomPage() {
           </div>
         </SheetContent>
       </Sheet>
+
+      <Dialog open={showSwitchPrompt} onOpenChange={setShowSwitchPrompt}>
+        <DialogContent className="sm:max-w-md bg-background/95 backdrop-blur-xl border border-white/10">
+          <DialogHeader>
+            <DialogTitle>Switch Rooms?</DialogTitle>
+            <DialogDescription>
+              You're currently listening in <span className="font-bold text-primary">{session?.roomName}</span>. 
+              Do you want to leave this room and join a new one?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="sm:justify-end gap-2 mt-4">
+            <Button variant="secondary" onClick={cancelSwitch}>
+              Cancel
+            </Button>
+            <Button onClick={confirmSwitch} className="bg-primary text-primary-foreground hover:bg-primary/90">
+              Join New Room
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

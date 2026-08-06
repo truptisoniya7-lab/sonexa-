@@ -6,6 +6,8 @@ import { Home, Compass, Monitor, Globe, Users, Library, User, Settings } from "l
 import { cn } from "@/lib/utils"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { motion } from "framer-motion"
+import { useRoomContext } from "@/context/RoomContext"
+import { usePlayer } from "@/context/PlayerContext"
 
 const navItems = [
   { name: "Home", href: "/home", icon: Home },
@@ -20,6 +22,8 @@ const onlineFriends: any[] = [];
 
 export function Sidebar({ unreadCount, toggleNotifs }: { unreadCount: number, toggleNotifs: () => void }) {
   const pathname = usePathname()
+  const { session } = useRoomContext()
+  const { currentSong } = usePlayer()
 
   return (
     <motion.aside 
@@ -65,6 +69,28 @@ export function Sidebar({ unreadCount, toggleNotifs }: { unreadCount: number, to
             )
           })}
         </nav>
+
+        {session && session.connectionStatus !== 'disconnected' && (
+          <div className="hidden lg:block mt-6 pt-4 border-t border-white/5">
+            <p className="text-[10px] font-bold text-primary uppercase tracking-widest mb-3 px-4 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span> CURRENT ROOM
+            </p>
+            <Link href={`/room/${session.roomId}`}>
+              <div className="mx-2 p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors border border-white/10 cursor-pointer group">
+                <p className="font-semibold text-white truncate">{session.roomName}</p>
+                <p className="text-xs text-white/60 flex items-center gap-1 mt-1">
+                  <Users className="w-3 h-3" /> {session.members?.length || 0} Members
+                </p>
+                {currentSong && (
+                  <p className="text-xs text-primary/80 truncate mt-2 flex items-center gap-1">
+                    🎵 {currentSong.song_title}
+                  </p>
+                )}
+                <p className="text-[10px] text-white/40 mt-3 group-hover:text-white/80 transition-colors">Click to Return →</p>
+              </div>
+            </Link>
+          </div>
+        )}
 
         <div className="hidden lg:block mt-8 pt-6 border-t border-white/5">
           <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4 px-4">Friends Online</p>
