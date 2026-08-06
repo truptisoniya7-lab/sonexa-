@@ -67,7 +67,13 @@ const performLiveSearch = async (q, skipDedupe = false) => {
     if (process.env.YOUTUBE_API_KEY) {
       try {
         const res = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(q)}&type=video&maxResults=30&key=${process.env.YOUTUBE_API_KEY}`);
-        if (!res.ok) throw new Error('YouTube API failed');
+        
+        if (!res.ok) {
+          const errorData = await res.json();
+          const googleError = errorData.error?.message || 'Unknown Google API Error';
+          throw new Error(googleError);
+        }
+        
         const data = await res.json();
         
         rawVideos = data.items.map(item => ({
@@ -78,11 +84,10 @@ const performLiveSearch = async (q, skipDedupe = false) => {
           seconds: 240 // mock duration since search API doesn't return duration
         }));
       } catch (err) {
-        console.error('YouTube API fallback failed, trying ytSearch:', err);
-        // If the fetch itself failed, it's likely a bad key or unenabled API
+        console.error('YouTube API fallback failed:', err);
         rawVideos = [{
           videoId: 'error',
-          title: 'Error: Invalid YouTube API Key or API not enabled in Google Cloud',
+          title: `API Error: ${err.message}`,
           author: { name: 'System' },
           thumbnail: 'https://images.unsplash.com/photo-1506157786151-b8491531f063',
           seconds: 240
