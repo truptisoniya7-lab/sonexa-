@@ -141,7 +141,7 @@ const getLayout = async (req, res) => {
         id: 'albums-you-will-like',
         type: 'CAROUSEL',
         title: 'Albums You\'ll Like',
-        endpoint: `/api/music/discover?section=Trending Albums`,
+        endpoint: `/api/music/discover?section=Trending Hindi Album Hit Songs`,
         motionPreset: 'level-3',
         caching: { strategy: 'stale-while-revalidate', ttl: 86400 }
       },

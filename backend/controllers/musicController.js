@@ -74,6 +74,7 @@ const performLiveSearch = async (q, skipDedupe = false) => {
         !video.title.toLowerCase().includes("live") &&
         !video.title.toLowerCase().includes("mix") &&
         !video.title.toLowerCase().includes("playlist") &&
+        !video.title.toLowerCase().includes("top 10") &&
         !video.title.toLowerCase().includes("hours")
       );
       return basicSongs.slice(0, 40).map(mapYoutubeTrack).filter(t => t.image);
