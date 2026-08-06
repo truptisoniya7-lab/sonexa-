@@ -28,6 +28,29 @@ class SearchService {
 
   static async searchSongs(query) {
     try {
+      const rawApiKey = process.env.YOUTUBE_API_KEY || process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
+      if (rawApiKey) {
+        const apiKey = rawApiKey.replace(/['"]/g, '').trim();
+        // Dynamic import of node-fetch since SearchService might not have it loaded
+        const fetch = require('node-fetch');
+        const res = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=video&maxResults=10&key=${apiKey}`);
+        
+        if (res.ok) {
+          const data = await res.json();
+          if (data.items) {
+            return data.items.map(item => ({
+              id: item.id.videoId,
+              uri: item.id.videoId,
+              title: item.snippet.title.replace(/\[.*?\]|\(.*?\)|ft\..*|feat\..*/gi, '').trim(),
+              artist: item.snippet.channelTitle,
+              image: item.snippet.thumbnails.high?.url || item.snippet.thumbnails.default?.url,
+              duration: 240
+            }));
+          }
+        }
+      }
+
+      // Fallback to yt-search
       const result = await ytSearch(query);
       if (!result.videos) return [];
       
