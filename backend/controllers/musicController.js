@@ -87,15 +87,8 @@ const performLiveSearch = async (q, skipDedupe = false) => {
           seconds: 240 // mock duration since search API doesn't return duration
         }));
       } catch (err) {
-        console.error('YouTube API fallback failed:', err);
-        rawVideos = [{
-          videoId: 'error',
-          title: `API Error: ${err.message}`,
-          author: { name: 'System' },
-          thumbnail: 'https://images.unsplash.com/photo-1506157786151-b8491531f063',
-          seconds: 240
-        }];
-        return SearchRankingService.processResults(rawVideos, q, skipDedupe);
+        console.error('YouTube API failed (quota exceeded?), falling back to yt-search scraper:', err.message);
+        rawVideos = []; // Let it fall through to the ytSearch scraper below
       }
     }
 
