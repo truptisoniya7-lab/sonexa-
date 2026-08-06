@@ -59,12 +59,49 @@ const setCachedSearch = async (queryKey, results) => {
   }
 };
 
+const fetch = require('node-fetch');
+
 const performLiveSearch = async (q, skipDedupe = false) => {
-    const result = await ytSearch(q);
-    if (!result.videos) return [];
+    let rawVideos = [];
+
+    if (process.env.YOUTUBE_API_KEY) {
+      try {
+        const res = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(q)}&type=video&maxResults=30&key=${process.env.YOUTUBE_API_KEY}`);
+        if (!res.ok) throw new Error('YouTube API failed');
+        const data = await res.json();
+        
+        rawVideos = data.items.map(item => ({
+          videoId: item.id.videoId,
+          title: item.snippet.title,
+          author: { name: item.snippet.channelTitle },
+          thumbnail: item.snippet.thumbnails.high?.url || item.snippet.thumbnails.default?.url,
+          seconds: 240 // mock duration since search API doesn't return duration
+        }));
+      } catch (err) {
+        console.error('YouTube API fallback failed, trying ytSearch:', err);
+        // If the fetch itself failed, it's likely a bad key or unenabled API
+        rawVideos = [{
+          videoId: 'error',
+          title: 'Error: Invalid YouTube API Key or API not enabled in Google Cloud',
+          author: { name: 'System' },
+          thumbnail: 'https://images.unsplash.com/photo-1506157786151-b8491531f063',
+          seconds: 240
+        }];
+        return SearchRankingService.processResults(rawVideos, q, skipDedupe);
+      }
+    }
+
+    if (rawVideos.length === 0) {
+      const result = await ytSearch(q);
+      if (result && result.videos) {
+        rawVideos = result.videos;
+      }
+    }
+
+    if (rawVideos.length === 0) return [];
     
     // Pipe through the robust SearchRankingService
-    const cleanResults = SearchRankingService.processResults(result.videos, q, skipDedupe);
+    const cleanResults = SearchRankingService.processResults(rawVideos, q, skipDedupe);
     
     // Fallback: If strict ranking removed everything, return standard results
     if (cleanResults.length === 0) {
