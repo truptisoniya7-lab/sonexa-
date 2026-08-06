@@ -76,10 +76,10 @@ const performLiveSearch = async (q, skipDedupe = false) => {
         !video.title.toLowerCase().includes("playlist") &&
         !video.title.toLowerCase().includes("hours")
       );
-      return basicSongs.slice(0, 20).map(mapYoutubeTrack).filter(t => t.image);
+      return basicSongs.slice(0, 40).map(mapYoutubeTrack).filter(t => t.image);
     }
     
-    return cleanResults.slice(0, 20); // Top 20 best results
+    return cleanResults.slice(0, 40); // Top 40 best results
 };
 
 // In-memory locks for concurrent requests

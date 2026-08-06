@@ -93,16 +93,7 @@ const getLayout = async (req, res) => {
           .map(e => e[0])
           .filter(a => a && a.trim() !== '' && a !== 'Unknown');
 
-        // Replace as many static sections as we have top artists (up to 5)
-        for (let i = 0; i < Math.min(topArtists.length, 5); i++) {
-          const artist = topArtists[i];
-
-          dynamicArtistSections[i] = {
-            id: `personalized-artist-${i}`,
-            title: `Because You Listened To ${artist}`,
-            search: artist
-          };
-        }
+        // Personalization override has been disabled to keep static hit sections
       }
     }
 
@@ -114,7 +105,6 @@ const getLayout = async (req, res) => {
         motionPreset: 'level-1',
         caching: { strategy: 'cache-first', ttl: 0 }
       },
-      ...(continueListeningRow ? [continueListeningRow] : []),
       {
         id: 'made-for-you',
         type: 'CAROUSEL',
@@ -123,24 +113,6 @@ const getLayout = async (req, res) => {
         motionPreset: 'level-3',
         caching: { strategy: 'stale-while-revalidate', ttl: 3600 }
       },
-      // Because You Played This (first dynamic artist)
-      ...(dynamicArtistSections[0] ? [{
-        id: 'because-you-played',
-        type: 'CAROUSEL',
-        title: `Because You Played ${dynamicArtistSections[0].search}`,
-        endpoint: `/api/music/discover?section=${encodeURIComponent(dynamicArtistSections[0].search === 'Bollywood' ? 'Hindi item songs' : dynamicArtistSections[0].search + ' songs')}`,
-        motionPreset: 'level-3',
-        caching: { strategy: 'stale-while-revalidate', ttl: 3600 }
-      }] : []),
-      // Similar Artists (second dynamic artist)
-      ...(dynamicArtistSections[1] ? [{
-        id: 'similar-artists',
-        type: 'CAROUSEL',
-        title: `Similar to ${dynamicArtistSections[1].search}`,
-        endpoint: `/api/music/discover?section=${encodeURIComponent(dynamicArtistSections[1].search + ' hit songs')}`,
-        motionPreset: 'level-3',
-        caching: { strategy: 'stale-while-revalidate', ttl: 3600 }
-      }] : []),
       {
         id: 'trending',
         type: 'COVER_FLOW',
@@ -166,14 +138,6 @@ const getLayout = async (req, res) => {
         caching: { strategy: 'stale-while-revalidate', ttl: 86400 }
       },
       {
-        id: 'recently-played',
-        type: 'INFINITE_CAROUSEL',
-        title: 'Recently Played',
-        endpoint: `/api/history/recent/${userId}`,
-        motionPreset: 'level-3',
-        caching: { strategy: 'cache-first', ttl: 0 }
-      },
-      {
         id: 'albums-you-will-like',
         type: 'CAROUSEL',
         title: 'Albums You\'ll Like',
@@ -181,8 +145,7 @@ const getLayout = async (req, res) => {
         motionPreset: 'level-3',
         caching: { strategy: 'stale-while-revalidate', ttl: 86400 }
       },
-      // Additional dynamic sections for depth
-      ...dynamicArtistSections.slice(2).map((section) => ({
+      ...dynamicArtistSections.map((section) => ({
         id: section.id,
         type: 'CAROUSEL',
         title: section.title,
