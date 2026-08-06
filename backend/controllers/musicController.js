@@ -200,7 +200,7 @@ const discover = async (req, res) => {
         liveQuery = `bollywood ${searchStr}`;
     }
     
-    const results = await performLiveSearch(liveQuery);
+    const results = await performLiveSearch(liveQuery, true);
     if (results && results.length > 0) {
       await setCachedSearch(cacheKey, results);
     }
