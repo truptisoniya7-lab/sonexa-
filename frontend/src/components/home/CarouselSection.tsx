@@ -30,7 +30,8 @@ export function CarouselSection({ title, subtitle, icon, queryKey, endpoint }: C
     queryFn: async () => {
       const res = await fetch(endpoint);
       if (!res.ok) throw new Error('Failed to fetch data');
-      return res.json();
+      const json = await res.json();
+      return json.raw || json.items || json;
     },
     staleTime: 60000, // 1 minute instead of 1 hour
   });

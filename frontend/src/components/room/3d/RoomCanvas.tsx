@@ -10,14 +10,16 @@ import { Lighting } from './Lighting';
 import { AudioRings } from './AudioRings';
 import { CinematicCamera } from './CinematicCamera';
 import { PerformanceManager } from '../performance/PerformanceManager';
+import { OrbitingAvatars } from './OrbitingAvatars';
 
 interface RoomCanvasProps {
   currentSong: any;
   isPlaying: boolean;
   theme: any;
+  members: any[];
 }
 
-export const RoomCanvas: React.FC<RoomCanvasProps> = ({ currentSong, isPlaying, theme }) => {
+export const RoomCanvas: React.FC<RoomCanvasProps> = ({ currentSong, isPlaying, theme, members }) => {
   return (
     <div className="fixed inset-0 z-0 pointer-events-none" style={{ backgroundColor: theme.dark }}>
       <Canvas
@@ -26,7 +28,7 @@ export const RoomCanvas: React.FC<RoomCanvasProps> = ({ currentSong, isPlaying, 
       >
         <PerformanceManager>
           <Suspense fallback={null}>
-            <CinematicCamera />
+            <CinematicCamera currentSong={currentSong} isPlaying={isPlaying} />
             <Lighting theme={theme} isPlaying={isPlaying} />
             
             <Galaxy theme={theme} />
@@ -38,6 +40,8 @@ export const RoomCanvas: React.FC<RoomCanvasProps> = ({ currentSong, isPlaying, 
               isPlaying={isPlaying} 
               theme={theme}
             />
+
+            <OrbitingAvatars members={members} />
             
             {/* Phase 1 Post-Processing: Targeted Bloom & Vignette */}
             <EffectComposer disableNormalPass>

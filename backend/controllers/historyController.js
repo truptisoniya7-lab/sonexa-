@@ -1,11 +1,7 @@
 const { supabase } = require('../config/db');
 
-const addHistory = async (req, res) => {
-  // Legacy support for basic insert
-  return addListeningEvent(req, res);
-};
-
-const addListeningEvent = async (req, res) => {
+// Upsert listening progress (sync endpoint)
+const syncProgress = async (req, res) => {
   try {
     const { 
       user_id, 
@@ -13,138 +9,327 @@ const addListeningEvent = async (req, res) => {
       song_title, 
       song_artist, 
       song_image, 
-      song_duration,
-      duration_listened = 0,
+      duration = 0,
+      progress = 0,
+      last_position = 0,
       completed = false,
-      skipped = false,
-      context = 'home'
+      room_id = null
     } = req.body;
     
     if (!user_id || !song_id) {
       return res.status(400).json({ error: 'user_id and song_id are required' });
     }
 
-    let finalArtistId = null;
-
-    // Normalize Artist
-    if (song_artist) {
-      const { data: artistData, error: artistErr } = await supabase
-        .from('artists')
-        .upsert({ name: song_artist, image_url: song_image }, { onConflict: 'name' })
-        .select('id')
-        .single();
-        
-      if (!artistErr && artistData) {
-        finalArtistId = artistData.id;
-      }
+    // Ignore short accidental plays (less than 15 seconds AND less than 20%)
+    const durationSec = duration || (last_position > 0 ? last_position / progress : 1);
+    const progressPct = progress || (durationSec > 0 ? last_position / durationSec : 0);
+    
+    if (last_position < 15 && progressPct < 0.20 && !completed) {
+      return res.json({ success: true, ignored: true, reason: 'too short' });
     }
 
-    // Insert into user_listening_history
-    const { data, error } = await supabase
-      .from('user_listening_history')
-      .insert([{
-        user_id,
-        track_id: song_id,
-        track_title: song_title,
-        artist_id: finalArtistId,
-        played_at: new Date().toISOString(),
-        duration_listened,
-        total_duration: song_duration || 0,
-        completed,
-        skipped,
-        context
-      }])
-      .select();
+    // 1. Ensure track exists in catalog
+    const { data: trackData, error: trackError } = await supabase
+      .from('tracks')
+      .upsert({ 
+        youtube_video_id: song_id, 
+        title: song_title || 'Unknown Title', 
+        artist: song_artist || 'Unknown Artist', 
+        thumbnail: song_image, 
+        duration_ms: duration ? duration * 1000 : 0 
+      }, { onConflict: 'youtube_video_id' })
+      .select('id')
+      .single();
 
-    if (error) {
-      // Fallback for backwards compatibility if schema_v5 hasn't run yet
-      await supabase
-        .from('listening_history')
+    if (trackError || !trackData) {
+      console.error('Error upserting track:', trackError);
+      return res.status(500).json({ error: 'Failed to process track metadata' });
+    }
+
+    const internalTrackId = trackData.id;
+
+    // 2. Check for an existing session within the last 30 minutes
+    const thirtyMinsAgo = new Date(Date.now() - 30 * 60 * 1000).toISOString();
+    
+    const { data: recentSessions, error: recentError } = await supabase
+      .from('play_history')
+      .select('*')
+      .eq('user_id', user_id)
+      .eq('song_id', internalTrackId)
+      .gte('played_at', thirtyMinsAgo)
+      .order('played_at', { ascending: false })
+      .limit(1);
+
+    if (recentSessions && recentSessions.length > 0) {
+      // Update existing session
+      const session = recentSessions[0];
+      
+      // Only mark completed if it transitions to completed, or stays completed
+      const isNowCompleted = session.completed || completed || progressPct > 0.90;
+      
+      const { data, error } = await supabase
+        .from('play_history')
+        .update({
+          progress: progressPct,
+          last_position: last_position,
+          completed: isNowCompleted,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', session.id)
+        .select();
+
+      return res.json({ success: true, action: 'updated', data });
+    } else {
+      // Create new session
+      const isNowCompleted = completed || progressPct > 0.90;
+      const { data, error } = await supabase
+        .from('play_history')
         .insert([{
           user_id,
-          song_id,
-          song_title,
-          song_artist,
-          song_image,
-          song_duration,
-          played_at: new Date().toISOString()
-        }]);
+          song_id: internalTrackId,
+          progress: progressPct,
+          last_position: last_position,
+          completed: isNowCompleted,
+          play_count: 1,
+          played_at: new Date().toISOString(),
+          room_id: room_id
+        }])
+        .select();
+
+      return res.json({ success: true, action: 'inserted', data });
+    }
+  } catch (error) {
+    console.error('Error syncing progress:', error);
+    res.status(500).json({ error: 'Failed to sync progress' });
+  }
+};
+
+// Merge guest local storage on login
+const mergeHistory = async (req, res) => {
+  try {
+    const { user_id, local_history } = req.body;
+    if (!user_id || !local_history || !Array.isArray(local_history)) {
+      return res.status(400).json({ error: 'Invalid payload' });
     }
 
-    res.json(data || { success: true });
+    // Naive merge for now - insert everything that is > 15s. 
+    // In a real prod environment we'd do a smart batch UPSERT.
+    let mergedCount = 0;
+    
+    for (const item of local_history) {
+       if (item.last_position >= 15 || item.progress >= 0.20 || item.completed) {
+         // Create track
+         const { data: trackData } = await supabase
+          .from('tracks')
+          .upsert({ 
+            youtube_video_id: item.song_id, 
+            title: item.song_title || 'Unknown Title', 
+            artist: item.song_artist || 'Unknown Artist', 
+            thumbnail: item.song_image, 
+            duration_ms: item.duration ? item.duration * 1000 : 0 
+          }, { onConflict: 'youtube_video_id' })
+          .select('id')
+          .single();
+          
+         if (trackData) {
+            // Check 30 min window based on item.played_at
+            const itemTime = new Date(item.played_at).getTime();
+            const thirtyMinsBefore = new Date(itemTime - 30 * 60 * 1000).toISOString();
+            const thirtyMinsAfter = new Date(itemTime + 30 * 60 * 1000).toISOString();
+            
+            const { data: existing } = await supabase
+              .from('play_history')
+              .select('id, progress, last_position, completed')
+              .eq('user_id', user_id)
+              .eq('song_id', trackData.id)
+              .gte('played_at', thirtyMinsBefore)
+              .lte('played_at', thirtyMinsAfter)
+              .limit(1);
+              
+            if (existing && existing.length > 0) {
+               // Merge - take highest progress
+               const ex = existing[0];
+               if (item.last_position > ex.last_position) {
+                 await supabase.from('play_history').update({
+                   progress: item.progress,
+                   last_position: item.last_position,
+                   completed: ex.completed || item.completed,
+                   updated_at: new Date().toISOString()
+                 }).eq('id', ex.id);
+               }
+            } else {
+               // Insert
+               await supabase.from('play_history').insert([{
+                  user_id,
+                  song_id: trackData.id,
+                  progress: item.progress,
+                  last_position: item.last_position,
+                  completed: item.completed,
+                  played_at: item.played_at,
+                  play_count: 1
+               }]);
+            }
+            mergedCount++;
+         }
+       }
+    }
+    
+    res.json({ success: true, merged: mergedCount });
   } catch (error) {
-    console.error('Error adding listening event:', error);
-    res.status(500).json({ error: 'Failed to add event' });
+    console.error('Error merging history:', error);
+    res.status(500).json({ error: 'Failed to merge history' });
   }
 };
 
 const getRecentHistory = async (req, res) => {
   try {
-    const { userId } = req.params;
+    const userId = req.params.userId || req.cookies?.user_id || req.headers['x-user-id'] || '1';
     
-    if (!userId) {
-      return res.status(400).json({ error: 'userId is required' });
-    }
-
-    // Try V5 schema first
-    const { data: v5Data, error: v5Error } = await supabase
-      .from('user_listening_history')
-      .select('*, artists(name, image_url)')
+    const { data, error } = await supabase
+      .from('play_history')
+      .select('*, tracks(*)')
       .eq('user_id', userId)
       .order('played_at', { ascending: false })
-      .limit(20);
+      .limit(50);
 
-    let dataToMap = [];
+    if (error) throw error;
 
-    if (!v5Error && v5Data && v5Data.length > 0) {
-       dataToMap = v5Data.map(item => ({
-        id: item.track_id,
-        uri: item.track_id,
-        title: item.track_title,
-        artist: item.artists?.name || 'Unknown',
-        image: item.artists?.image_url || 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17',
-        duration: item.total_duration,
-        lastPlayed: item.played_at,
-        type: 'Song',
-        progress: item.duration_listened > 0 ? (item.duration_listened / item.total_duration) * 100 : 0,
-        progress_ms: item.duration_listened * 1000,
-        duration_ms: item.total_duration * 1000
-      }));
-    } else {
-      // Fallback to V4 schema
-      const { data, error } = await supabase
-        .from('listening_history')
-        .select('*')
-        .eq('user_id', userId)
-        .order('played_at', { ascending: false })
-        .limit(20);
+    // Format for frontend
+    const history = (data || []).map(item => ({
+      id: item.id, // The history record ID
+      uri: item.tracks?.youtube_video_id,
+      title: item.tracks?.title,
+      artist: item.tracks?.artist,
+      image: item.tracks?.thumbnail,
+      duration: item.tracks?.duration_ms ? item.tracks.duration_ms / 1000 : 0,
+      duration_ms: item.tracks?.duration_ms,
+      progress: item.progress * 100, // percentage
+      progress_ms: item.last_position * 1000,
+      last_position: item.last_position,
+      completed: item.completed,
+      played_at: item.played_at,
+      type: 'Song'
+    }));
 
-      if (!error && data) {
-         dataToMap = data.map(item => ({
-          id: item.song_id,
-          uri: item.song_id,
-          title: item.song_title,
-          artist: item.song_artist,
-          image: item.song_image,
-          duration: item.song_duration,
-          lastPlayed: item.played_at,
-          type: 'Song',
-          progress: 0,
-          progress_ms: 0,
-          duration_ms: item.song_duration ? item.song_duration * 1000 : 300000
-        }));
+    // Grouping
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    const yesterday = today - 86400000;
+    const last7Days = today - 7 * 86400000;
+    const last30Days = today - 30 * 86400000;
+
+    const grouped = {
+      continueListening: [],
+      today: [],
+      yesterday: [],
+      last7Days: [],
+      last30Days: [],
+      older: []
+    };
+
+    // Track unique URIs to avoid duplicates in continue listening
+    const continueSet = new Set();
+
+    history.forEach(item => {
+      const time = new Date(item.played_at).getTime();
+      
+      // Continue Listening filter: progress > 10% and not completed
+      if (item.progress > 10 && !item.completed && !continueSet.has(item.uri)) {
+        grouped.continueListening.push(item);
+        continueSet.add(item.uri);
       }
+
+      if (time >= today) {
+        grouped.today.push(item);
+      } else if (time >= yesterday) {
+        grouped.yesterday.push(item);
+      } else if (time >= last7Days) {
+        grouped.last7Days.push(item);
+      } else if (time >= last30Days) {
+        grouped.last30Days.push(item);
+      } else {
+        grouped.older.push(item);
+      }
+    });
+
+    if (req.query.filter === 'continue') {
+      return res.json(grouped.continueListening);
     }
 
-    res.json(dataToMap);
+    res.json({
+      success: true,
+      raw: history,
+      grouped
+    });
   } catch (error) {
     console.error('Error fetching recent history:', error);
     res.status(500).json({ error: 'Failed to fetch history' });
   }
 };
 
+const getStats = async (req, res) => {
+  try {
+    const userId = req.params.userId || req.cookies?.user_id || req.headers['x-user-id'] || '1';
+    
+    // In a real app we would use SQL aggregations. For simplicity, we'll fetch up to 1000 and calculate in memory.
+    const { data, error } = await supabase
+      .from('play_history')
+      .select('*, tracks(*)')
+      .eq('user_id', userId)
+      .order('played_at', { ascending: false })
+      .limit(1000);
+
+    if (error) throw error;
+
+    let totalPlays = 0;
+    let totalSecondsListened = 0;
+    let completedSongs = 0;
+    const artistsCount = {};
+    const songsCount = {};
+    let longestSession = 0;
+
+    (data || []).forEach(item => {
+      totalPlays += item.play_count;
+      totalSecondsListened += item.last_position;
+      if (item.completed) completedSongs++;
+      
+      if (item.last_position > longestSession) {
+        longestSession = item.last_position;
+      }
+
+      if (item.tracks) {
+        artistsCount[item.tracks.artist] = (artistsCount[item.tracks.artist] || 0) + 1;
+        songsCount[item.tracks.title] = (songsCount[item.tracks.title] || 0) + 1;
+      }
+    });
+
+    const favoriteArtist = Object.entries(artistsCount).sort((a, b) => b[1] - a[1])[0]?.[0] || 'Unknown';
+    const mostPlayedSong = Object.entries(songsCount).sort((a, b) => b[1] - a[1])[0]?.[0] || 'Unknown';
+    
+    const stats = {
+      totalPlays,
+      hoursListened: (totalSecondsListened / 3600).toFixed(1),
+      favoriteArtist,
+      favoriteGenre: 'Pop', // Mock for now unless we enrich genre
+      mostPlayedSong,
+      completionRate: totalPlays > 0 ? Math.round((completedSongs / totalPlays) * 100) : 0,
+      longestSessionMinutes: Math.round(longestSession / 60)
+    };
+
+    res.json(stats);
+  } catch (error) {
+    console.error('Error fetching stats:', error);
+    res.status(500).json({ error: 'Failed to fetch stats' });
+  }
+};
+
+// Export the updated functions
 module.exports = {
-  addHistory,
-  addListeningEvent,
-  getRecentHistory
+  syncProgress,
+  mergeHistory,
+  getRecentHistory,
+  getStats,
+  // backwards compatibility
+  addHistory: syncProgress, 
+  addListeningEvent: syncProgress
 };

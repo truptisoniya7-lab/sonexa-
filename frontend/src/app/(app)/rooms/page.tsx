@@ -40,7 +40,7 @@ export default function ListenTogetherPage() {
 
   const fetchRooms = async () => {
     try {
-      const res = await fetch('/api/rooms');
+      const res = await fetch('/api/rooms', { cache: 'no-store' });
       if (!res.ok) throw new Error('Failed to fetch rooms');
       const roomsData = await res.json();
       

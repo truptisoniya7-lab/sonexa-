@@ -28,7 +28,7 @@ export const QueuePanel: React.FC<QueuePanelProps> = ({ queue, currentSongIndex,
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, x: -10 }}
           key={`${isTrending ? 'trend' : 'q'}-${song.song_uri}-${index}`}
-          className={`group flex items-center gap-3 p-2.5 rounded-xl cursor-pointer transition-all duration-300 relative border border-white/5 ${isPlaying ? 'bg-primary/20 shadow-[0_0_15px_rgba(var(--primary),0.3)]' : 'bg-black/20 hover:bg-white/10 hover:-translate-y-1 hover:rotate-[1deg] hover:shadow-xl backdrop-blur-md'}`}
+          className={`group flex items-center gap-3 p-2.5 rounded-xl cursor-pointer transition-all duration-300 relative border border-white/[0.04] ${isPlaying ? 'bg-primary/20 shadow-[0_0_15px_rgba(var(--primary),0.3)]' : 'bg-white/[0.02] hover:bg-white/[0.08] hover:-translate-y-1 hover:rotate-[1deg] hover:shadow-xl backdrop-blur-md'}`}
           onClick={() => {
             if (isTrending) {
               onPlaySong(song);
@@ -51,7 +51,7 @@ export const QueuePanel: React.FC<QueuePanelProps> = ({ queue, currentSongIndex,
           </div>
 
           {/* Thumbnail */}
-          <div className="relative w-10 h-10 rounded-md overflow-hidden shrink-0 bg-black/50 border border-white/5">
+          <div className="relative w-10 h-10 rounded-md overflow-hidden shrink-0 bg-white/[0.05] border border-white/[0.05]">
             {song.song_image ? (
               <img src={song.song_image} alt="Art" className="w-full h-full object-cover" />
             ) : (
@@ -146,7 +146,7 @@ export const QueuePanel: React.FC<QueuePanelProps> = ({ queue, currentSongIndex,
             <h3 className="text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase flex items-center gap-2 shrink-0">
               <Clock className="w-3.5 h-3.5" /> Up Next
             </h3>
-            <div className="h-px bg-white/10 flex-1"></div>
+            <div className="h-px bg-white/[0.05] flex-1"></div>
           </div>
           <div className="space-y-0.5">
             {queue.slice(currentSongIndex + 1).map((song, index) => (
@@ -163,7 +163,7 @@ export const QueuePanel: React.FC<QueuePanelProps> = ({ queue, currentSongIndex,
             <h3 className="text-[10px] font-bold tracking-[0.2em] text-accent uppercase flex items-center gap-2 shrink-0">
               <Sparkles className="w-3.5 h-3.5" /> Because you're playing
             </h3>
-            <div className="h-px bg-white/10 flex-1"></div>
+            <div className="h-px bg-white/[0.05] flex-1"></div>
           </div>
           <div className="space-y-1.5">
             {recommendedSongs.map((song, index) => (
@@ -180,7 +180,7 @@ export const QueuePanel: React.FC<QueuePanelProps> = ({ queue, currentSongIndex,
             <h3 className="text-[10px] font-bold tracking-[0.2em] text-muted-foreground uppercase flex items-center gap-2 shrink-0">
               <History className="w-3.5 h-3.5" /> History
             </h3>
-            <div className="h-px bg-white/10 flex-1"></div>
+            <div className="h-px bg-white/[0.05] flex-1"></div>
           </div>
           <div className="space-y-0.5 grayscale hover:grayscale-0 transition-all">
             {queue.slice(0, currentSongIndex).reverse().map((song, index) => (

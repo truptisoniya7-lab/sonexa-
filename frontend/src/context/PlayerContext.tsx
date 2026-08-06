@@ -100,9 +100,9 @@ export const PlayerProvider = ({ children }: { children: React.ReactNode }) => {
           const durationVal = await ytPlayerRef.current.getDuration();
           if (currentTime) {
             setProgressState(currentTime);
-            // Save playback progress periodically (every 10s logic handled in manager)
-            if (currentSong?.song_uri) {
-               PlaybackManager.saveProgress(currentSong.song_uri, currentTime * 1000, (durationVal || 1) * 1000);
+            // Save playback progress periodically (every 15s logic handled in manager)
+            if (currentSong) {
+               HistoryManager.updateProgress(currentSong, currentTime, durationVal || 1);
             }
           }
           if (durationVal && durationVal > 0) setDuration(durationVal);

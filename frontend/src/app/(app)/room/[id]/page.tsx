@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Search, Lock, Users, Music, Heart, Clock, MessageSquare } from 'lucide-react';
+import { Search, Lock, Users, Music, Heart, Clock, MessageSquare, Activity } from 'lucide-react';
 
 // Modular Components
 import { ReactionOverlay } from '@/components/room/ReactionOverlay';
@@ -89,7 +89,7 @@ export default function RoomPage() {
       return;
     }
 
-    const query = currentSong.song_artist || currentSong.song_title;
+    const query = `more songs like ${currentSong.song_title} by ${currentSong.song_artist || 'various artists'}`;
     fetch(`/api/music/search?q=${encodeURIComponent(query)}`)
       .then(res => res.ok ? res.json() : [])
       .then(data => { 
@@ -216,7 +216,7 @@ export default function RoomPage() {
       <ReactionOverlay reactions={reactions} />
       
       {/* 3D Music Universe Layer */}
-      <RoomCanvas currentSong={currentSong} isPlaying={globalIsPlaying} theme={theme} />
+      <RoomCanvas currentSong={currentSong} isPlaying={globalIsPlaying} theme={theme} members={members} />
 
       {/* Main Content Area Container - Glassmorphism Overlay */}
       <div className="flex-1 flex flex-col z-10 w-full max-w-[1800px] mx-auto min-h-0 pt-6 px-4 sm:px-6 lg:px-8 pointer-events-none">
@@ -240,30 +240,79 @@ export default function RoomPage() {
               </div>
 
             <div className="flex-1 min-h-0 overflow-y-auto w-full lg:w-[85%] mx-auto">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-6 pr-2">
+              <div className="flex flex-col gap-6 pb-6 pr-2">
                 
-                {/* Chat Preview */}
-                <div className="bg-black/10 backdrop-blur-md rounded-xl p-4 border border-white/5 flex flex-col transition-all hover:bg-black/20 hover:border-white/10 pointer-events-auto">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-2"><MessageSquare className="w-4 h-4"/> Chat Preview</h3>
-                  <div className="flex-1 flex flex-col justify-end space-y-2">
-                    {messages.slice(-2).map((msg, idx) => (
-                      <div key={idx} className="text-sm leading-relaxed">
-                        <span className="font-bold text-primary/90 mr-2">{msg.user_name}:</span>
-                        <span className="text-foreground/80">{msg.content}</span>
+                {/* NOW PLAYING DASHBOARD */}
+                <div className="bg-white/[0.08] backdrop-blur-2xl rounded-2xl p-6 border border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.2)] flex flex-col transition-all hover:bg-white/[0.12] pointer-events-auto relative overflow-hidden">
+                  <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
+                    <Music className="w-32 h-32" />
+                  </div>
+                  
+                  <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary mb-4 flex items-center gap-2">
+                    <Activity className="w-3.5 h-3.5"/> Now Playing
+                  </h3>
+                  
+                  <div className="flex flex-col md:flex-row gap-6 items-start">
+                    <img 
+                      src={currentSong?.song_image || 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&q=80&w=300'} 
+                      alt="Album Art" 
+                      className="w-32 h-32 rounded-xl object-cover shadow-2xl border border-white/10" 
+                    />
+                    
+                    <div className="flex-1 space-y-4">
+                      <div>
+                        <h2 className="text-2xl font-extrabold tracking-tight text-white line-clamp-1">{currentSong?.song_title || 'Waiting for DJ'}</h2>
+                        <p className="text-lg font-medium text-white/70 line-clamp-1">{currentSong?.song_artist || 'Silence'}</p>
                       </div>
-                    ))}
-                    {messages.length === 0 && <p className="text-sm text-muted-foreground">No recent messages.</p>}
+                      
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        <div>
+                          <p className="text-[10px] font-semibold uppercase tracking-wider text-white/50 mb-1">Duration</p>
+                          <p className="text-sm font-medium text-white">{currentSong?.duration || '3:45'}</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-semibold uppercase tracking-wider text-white/50 mb-1">Genre</p>
+                          <p className="text-sm font-medium text-white">{currentSong?.genre || 'Electronic'}</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-semibold uppercase tracking-wider text-white/50 mb-1">Mood</p>
+                          <p className="text-sm font-medium text-white capitalize">{currentSong?.mood || 'Vibing'}</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-semibold uppercase tracking-wider text-white/50 mb-1">Likes</p>
+                          <p className="text-sm font-medium text-white flex items-center gap-1"><Heart className="w-3 h-3 text-pink-500 fill-pink-500"/> {currentSong?.likes || 0}</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <ActivityFeed activities={activities} />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* COMPACT CHAT PREVIEW */}
+                  <div className="bg-white/[0.06] backdrop-blur-2xl rounded-2xl p-4 border border-white/[0.08] flex flex-col pointer-events-auto h-40">
+                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/50 mb-3 flex items-center gap-2">
+                      <MessageSquare className="w-3.5 h-3.5"/> Live Chat
+                    </h3>
+                    <div className="flex-1 flex flex-col justify-end space-y-2 overflow-hidden">
+                      {messages.slice(-2).map((msg, idx) => (
+                        <div key={idx} className="text-xs leading-relaxed truncate">
+                          <span className="font-bold text-primary mr-1">{msg.user_name}:</span>
+                          <span className="text-white/80">{msg.content}</span>
+                        </div>
+                      ))}
+                      {messages.length === 0 && <p className="text-xs text-white/40 italic">Quiet in here...</p>}
+                    </div>
+                  </div>
+
+                  <ActivityFeed activities={activities} />
+                </div>
 
               </div>
             </div>
           </div>
 
           {/* Right: Sidebar Container */}
-          <div className="w-full lg:w-[35%] h-full shrink-0 flex flex-col overflow-hidden rounded-2xl shadow-2xl pointer-events-auto" style={{ background: 'rgba(15, 15, 20, 0.4)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.08)' }}>
+          <div className="w-full lg:w-[35%] h-full shrink-0 flex flex-col overflow-hidden rounded-2xl shadow-2xl pointer-events-auto bg-white/[0.06] backdrop-blur-2xl border border-white/[0.08]">
             
             <VoicePanel 
               inVoice={inVoice} 
@@ -276,11 +325,11 @@ export default function RoomPage() {
             />
 
             <Tabs defaultValue="queue" value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="flex-1 flex flex-col w-full min-h-0">
-              <div className="p-0 border-b border-white/10 bg-black/20 relative">
+              <div className="p-0 border-b border-white/[0.08] bg-white/[0.02] relative">
                 <TabsList className="w-full bg-transparent p-0 h-14 rounded-none border-b-0 flex">
-                  <TabsTrigger value="queue" className="flex-1 h-full rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none text-sm font-semibold">Queue</TabsTrigger>
-                  <TabsTrigger value="chat" className="flex-1 h-full rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none text-sm font-semibold">Live Chat</TabsTrigger>
-                  <TabsTrigger value="members" className="flex-1 h-full rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none text-sm font-semibold">Members</TabsTrigger>
+                  <TabsTrigger value="queue" className="flex-1 h-full rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none text-sm font-semibold text-white/60 data-[state=active]:text-white transition-colors">Queue</TabsTrigger>
+                  <TabsTrigger value="chat" className="flex-1 h-full rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none text-sm font-semibold text-white/60 data-[state=active]:text-white transition-colors">Live Chat</TabsTrigger>
+                  <TabsTrigger value="members" className="flex-1 h-full rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none text-sm font-semibold text-white/60 data-[state=active]:text-white transition-colors">Members</TabsTrigger>
                 </TabsList>
               </div>
               

@@ -5,7 +5,7 @@ const getProfile = async (req, res) => {
   try {
     const { data: userData, error: userError } = await supabase
       .from('users')
-      .select('id, email, name, profile_picture, provider, created_at')
+      .select('id, email, name, profile_picture, cover_photo, provider, created_at')
       .eq('id', id)
       .single();
     
@@ -32,10 +32,10 @@ const getProfile = async (req, res) => {
 
 const updateProfile = async (req, res) => {
   const { id } = req.params;
-  const { name, profile_picture } = req.body;
+  const { name, profile_picture, cover_photo } = req.body;
   const currentUserId = req.user?.userId || req.user?.id;
   
-  console.log('UPDATE PROFILE DEBUG:', { id, name, profile_picture, currentUserId, reqUser: req.user });
+  console.log('UPDATE PROFILE DEBUG:', { id, name, profile_picture, cover_photo, currentUserId, reqUser: req.user });
   
   if (currentUserId != id) {
     console.log('Forbidden! currentUserId != id');
@@ -51,12 +51,15 @@ const updateProfile = async (req, res) => {
     if (profile_picture !== undefined) {
       updateData.profile_picture = profile_picture;
     }
+    if (cover_photo !== undefined) {
+      updateData.cover_photo = cover_photo;
+    }
 
     const { data, error } = await supabase
       .from('users')
       .update(updateData)
       .eq('id', id)
-      .select('id, email, name, profile_picture, provider');
+      .select('id, email, name, profile_picture, cover_photo, provider');
       
     if (error) throw error;
     

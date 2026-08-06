@@ -56,19 +56,35 @@ const getLayout = async (req, res) => {
     let madeForYouEndpoint = '/api/music/discover?section=hindi bollywood romantic songs';
 
     // Personalization Logic: Override static artists with user's top artists if history exists
+    let continueListeningRow = null;
+
     if (supabase) {
       const { data: history } = await supabase
-        .from('listening_history')
-        .select('song_artist')
+        .from('play_history')
+        .select('*, tracks(artist)')
         .eq('user_id', userId)
         .order('played_at', { ascending: false })
         .limit(50);
         
       if (history && history.length > 0) {
+        // Continue Listening check
+        const continueSongs = history.filter(h => h.progress > 0.10 && !h.completed);
+        if (continueSongs.length > 0) {
+          continueListeningRow = {
+            id: 'continue-listening',
+            type: 'INFINITE_CAROUSEL', // Or regular CAROUSEL
+            title: 'Continue Listening',
+            endpoint: `/api/history/recent/${userId}?filter=continue`, 
+            motionPreset: 'level-1',
+            caching: { strategy: 'cache-first', ttl: 0 }
+          };
+        }
+
         const counts = {};
         history.forEach(h => {
-          if (h.song_artist) {
-            counts[h.song_artist] = (counts[h.song_artist] || 0) + 1;
+          const artist = h.tracks?.artist;
+          if (artist) {
+            counts[artist] = (counts[artist] || 0) + 1;
           }
         });
         
@@ -98,6 +114,7 @@ const getLayout = async (req, res) => {
         motionPreset: 'level-1',
         caching: { strategy: 'cache-first', ttl: 0 }
       },
+      ...(continueListeningRow ? [continueListeningRow] : []),
       {
         id: 'made-for-you',
         type: 'CAROUSEL',

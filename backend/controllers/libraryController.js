@@ -9,37 +9,39 @@ const formatTimeOfDay = () => {
 
 const getLibraryData = async (req, res) => {
   try {
-    // We assume user_id 1 for now if no auth is provided
-    const userId = 1;
+    const userId = req.cookies?.user_id || req.headers['x-user-id'] || '1';
 
-    // 1. Fetch Recently Played
+    // 1. Fetch History from the new Centralized Play History
     const { data: historyData, error: historyError } = await supabase
-      .from('listening_history')
-      .select('*')
-      // If userId was UUID, we'd filter, but since it might not be set up, we just get recent
+      .from('play_history')
+      .select('*, tracks(*)')
+      .eq('user_id', userId)
       .order('played_at', { ascending: false })
-      .limit(30);
+      .limit(50);
 
     const recent = (historyData || []).map(item => ({
-      id: item.song_id + Math.random(),
+      id: item.id,
+      uri: item.tracks?.youtube_video_id,
       type: 'Song',
-      title: item.song_title,
-      artist: item.song_artist,
-      image: item.song_image,
+      title: item.tracks?.title,
+      artist: item.tracks?.artist,
+      image: item.tracks?.thumbnail,
       lastPlayed: item.played_at,
-      progress_ms: 0,
-      duration_ms: item.song_duration ? item.song_duration * 1000 : 200000,
-      progress: 0
+      progress_ms: item.last_position * 1000,
+      duration_ms: item.tracks?.duration_ms || 200000,
+      progress: item.progress * 100,
+      completed: item.completed
     }));
 
     // Deduplicate recent for artists list
     const uniqueArtists = new Map();
     (historyData || []).forEach(item => {
-      if (!uniqueArtists.has(item.song_artist)) {
-        uniqueArtists.set(item.song_artist, {
-          id: `artist-${item.song_artist}`,
-          title: item.song_artist,
-          image: item.song_image,
+      const track = item.tracks;
+      if (track && !uniqueArtists.has(track.artist)) {
+        uniqueArtists.set(track.artist, {
+          id: `artist-${track.artist}`,
+          title: track.artist,
+          image: track.thumbnail,
           plays: '1 plays',
           status: 'Artist'
         });
@@ -47,9 +49,45 @@ const getLibraryData = async (req, res) => {
     });
     const artists = Array.from(uniqueArtists.values());
 
-    const continueListening = recent[0] || null;
+    const continueListening = recent.find(item => item.progress > 10 && !item.completed) || null;
 
-    // 2. Fetch Playlists (assuming a playlists table exists, catch if not)
+    // Timeline Grouping for History Tab
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    const yesterday = today - 86400000;
+    const last7Days = today - 7 * 86400000;
+    const last30Days = today - 30 * 86400000;
+
+    const historyGrouped = {
+      today: [],
+      yesterday: [],
+      last7Days: [],
+      last30Days: [],
+      older: []
+    };
+
+    let totalSecondsListened = 0;
+    let completedCount = 0;
+
+    recent.forEach(item => {
+      const time = new Date(item.lastPlayed).getTime();
+      totalSecondsListened += (item.progress_ms / 1000) || 0;
+      if (item.completed) completedCount++;
+
+      if (time >= today) historyGrouped.today.push(item);
+      else if (time >= yesterday) historyGrouped.yesterday.push(item);
+      else if (time >= last7Days) historyGrouped.last7Days.push(item);
+      else if (time >= last30Days) historyGrouped.last30Days.push(item);
+      else historyGrouped.older.push(item);
+    });
+
+    const stats = {
+      hoursListened: (totalSecondsListened / 3600).toFixed(1),
+      totalSongs: recent.length,
+      completionRate: recent.length > 0 ? Math.round((completedCount / recent.length) * 100) : 0
+    };
+
+    // 2. Fetch Playlists
     let playlists = [];
     try {
       const { data: pData } = await supabase.from('playlists').select('*').limit(10);
@@ -58,7 +96,7 @@ const getLibraryData = async (req, res) => {
           id: p.id,
           type: 'Playlist',
           title: p.name || p.title,
-          image: p.image || 'https://via.placeholder.com/300',
+          image: p.cover_image || 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=500&q=80',
           count: '0 Songs'
         }));
       }
@@ -66,25 +104,17 @@ const getLibraryData = async (req, res) => {
       // ignore
     }
 
-    // 3. Activity
-    const activity = (historyData || []).slice(0, 5).map(item => ({
-      id: item.song_id + Math.random(),
-      date: item.played_at,
-      action: 'Played',
-      detail: item.song_title,
-      type: 'music'
-    }));
-
-    // 4. Personalized Recommendations
+    // 3. Personalized Recommendations
     let recommendations = [];
     if (artists.length > 0) {
-      // Pick top artist
       const topArtist = artists[0].title;
-      // Fetch 4 tracks from listening history related to this artist, or just create a mock recommendation for now that is generated based on this artist
-      const subItems = historyData.filter(h => h.song_artist === topArtist).slice(0, 3).map(h => ({
-        title: h.song_title,
-        image: h.song_image
-      }));
+      const subItems = historyData
+        .filter(h => h.tracks?.artist === topArtist)
+        .slice(0, 3)
+        .map(h => ({
+          title: h.tracks?.title,
+          image: h.tracks?.thumbnail
+        }));
       
       recommendations.push({
         id: `rec_1`,
@@ -98,15 +128,14 @@ const getLibraryData = async (req, res) => {
     res.json({
       greeting: formatTimeOfDay(),
       greetingSubtitle: `Played ${recent.length} songs recently.`,
-      summary: { likedSongs: 0, playlists: playlists.length, downloaded: 0, followingArtists: artists.length },
-      pinned: playlists.slice(0, 4),
+      pinned: [],
       recent,
+      historyGrouped,
+      stats,
       continueListening,
       playlists,
       albums: [],
       artists,
-      activity,
-      friendsActivity: [],
       recommendations
     });
   } catch (error) {

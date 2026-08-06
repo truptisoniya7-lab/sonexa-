@@ -3,10 +3,23 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Play, Heart, Clock, Star, 
-  Music2, ListMusic, Mic2, Disc3,
-  Search, Plus, Download, Pin, ChevronLeft, ChevronRight, User, Users
+  Play, Heart, Clock, Star, Music2, ListMusic, Mic2, Disc3,
+  Search, Plus, Download, Pin, ChevronLeft, ChevronRight, User, Users,
+  Lock, Music, MessageSquare, Activity, PlayCircle, ListVideo, Disc, Mic 
 } from 'lucide-react';
+import { NowPlayingCinematic } from '@/components/room/NowPlayingCinematic';
+import { QueuePanel } from '@/components/room/QueuePanel';
+import { useDynamicTheme } from '@/components/room/hooks/useDynamicTheme';
+import { AnimatedBackground } from '@/components/library/AnimatedBackground';
+import { LibraryHeroCanvas } from '@/components/library/3d/LibraryHeroCanvas';
+import { AnimatedCounter } from '@/components/library/AnimatedCounter';
+import { SongCard } from '@/components/library/cards/SongCard';
+import { AlbumCard } from '@/components/library/cards/AlbumCard';
+import { PlaylistCard } from '@/components/library/cards/PlaylistCard';
+import { ArtistCard } from '@/components/library/cards/ArtistCard';
+import { RecommendationCard } from '@/components/library/cards/RecommendationCard';
+import { HistoryCard } from '@/components/library/cards/HistoryCard';
+import { EmptyVault } from '@/components/library/EmptyVault';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -78,6 +91,7 @@ export default function LibraryPage() {
       const localLikes = await PlayerService.getLikedSongs();
       const localPlaylists = await PlayerService.getPlaylists();
       
+      d.summary = d.summary || {};
       d.summary.likedSongs = localLikes.length;
       
       const mappedPlaylists = localPlaylists.map((p: any) => ({
@@ -137,13 +151,17 @@ export default function LibraryPage() {
     };
   }, []);
 
-  const heroSong = useMemo(() => {
+  const [viewMode, setViewMode] = useState<'list'|'grid'|'galaxy'>('grid');
+
+  const bgGradient = useMemo(() => {
     if (currentSong) return currentSong as any;
     if (data?.continueListening) {
       return {
+        id: data.continueListening.id || data.continueListening.song_id,
         song_title: data.continueListening.title,
         song_artist: data.continueListening.artist,
         song_image: data.continueListening.image,
+        song_url: data.continueListening.song_url || data.continueListening.url,
         progress_ms: data.continueListening.progress_ms,
         duration_ms: data.continueListening.duration_ms,
         progress: data.continueListening.progress
@@ -152,17 +170,33 @@ export default function LibraryPage() {
     return null;
   }, [currentSong, data]);
 
-  const bgGradient = useMemo(() => {
-    if (!heroSong) return 'from-indigo-900/40 via-purple-900/40 to-fuchsia-900/40';
-    const colors = [
-      'from-purple-900/40 via-indigo-900/40 to-blue-900/40',
-      'from-rose-900/40 via-orange-900/40 to-amber-900/40',
-      'from-emerald-900/40 via-teal-900/40 to-cyan-900/40',
-      'from-fuchsia-900/40 via-pink-900/40 to-rose-900/40'
-    ];
-    const hash = heroSong.song_title.length % colors.length;
-    return colors[hash];
-  }, [heroSong]);
+  const heroSong = useMemo(() => {
+    if (currentSong) return currentSong as any;
+    if (data?.continueListening) {
+      return {
+        id: data.continueListening.id || data.continueListening.song_id,
+        song_title: data.continueListening.title,
+        song_artist: data.continueListening.artist,
+        song_image: data.continueListening.image,
+        song_url: data.continueListening.song_url || data.continueListening.url,
+        progress_ms: data.continueListening.progress_ms,
+        duration_ms: data.continueListening.duration_ms,
+        progress: data.continueListening.progress
+      };
+    }
+    return null;
+  }, [currentSong, data]);
+
+  const handlePlay = (item: any) => {
+    playSong({
+      song_uri: item.uri || item.id || item.song_uri,
+      song_title: item.title || item.song_title || item.name || 'Unknown',
+      song_artist: item.artist || item.song_artist || 'Unknown',
+      song_image: item.image || item.song_image || item.image_url || 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17',
+    } as any);
+  };
+
+  const theme = useDynamicTheme(heroSong?.song_image);
 
   const scrollContainer = (ref: any, direction: 'left' | 'right') => {
     if (ref.current) {
@@ -170,68 +204,6 @@ export default function LibraryPage() {
       ref.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   };
-
-  const renderRecentCard = (item: any) => (
-    <div key={item.id} className="min-w-[180px] w-[180px] group p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all cursor-pointer relative overflow-hidden flex flex-col hover:scale-[1.03] hover:border-primary/30 hover:shadow-[0_10px_40px_-10px_rgba(139,92,246,0.3)]">
-      <div className={`relative aspect-square w-full mb-3 overflow-hidden shadow-lg ${item.type === 'Artist' ? 'rounded-full' : 'rounded-md'}`}>
-        <FallbackImage src={item.image} alt={item.title} fallbackType={item.type === 'Artist' ? 'artist' : 'playlist'} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 group-hover:blur-[2px]" />
-        
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-        
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center z-10">
-          <div className="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(139,92,246,0.6)] transform translate-y-4 group-hover:translate-y-0 transition-transform">
-            <Play className="w-6 h-6 ml-1" />
-          </div>
-        </div>
-      </div>
-      
-      <h3 className="font-bold text-white text-[16px] truncate mb-1">{item.title}</h3>
-      <p className="text-[12px] text-muted-foreground truncate mb-2">{item.type} • {item.lastPlayed}</p>
-      
-      {/* Progress Bar */}
-      {item.progress !== undefined && item.progress > 0 && item.progress < 100 && (
-        <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden mt-auto">
-          <div className="h-full bg-primary" style={{ width: `${item.progress}%` }} />
-        </div>
-      )}
-    </div>
-  );
-
-  const renderArtistCard = (artist: any) => (
-    <div key={artist.id} className="min-w-[180px] w-[180px] flex flex-col items-center group cursor-pointer hover:scale-[1.03] transition-all">
-      <div className="w-36 h-36 rounded-full overflow-hidden mb-4 relative shadow-lg group-hover:shadow-[0_0_30px_-5px_rgba(139,92,246,0.5)] transition-all">
-        <FallbackImage src={artist.image} alt={artist.title} fallbackType="artist" className="w-full h-full object-cover group-hover:scale-110 group-hover:blur-[2px] transition-all duration-500" />
-        
-        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">
-          <Play className="w-10 h-10 text-white fill-white" />
-          <span className="text-[12px] font-bold tracking-widest uppercase text-white/80">View Profile</span>
-        </div>
-      </div>
-      <h3 className="font-bold text-white text-[18px] text-center mb-1">{artist.title}</h3>
-      <p className="text-[12px] text-primary font-medium text-center mb-1">{artist.status}</p>
-      <p className="text-[12px] text-muted-foreground text-center">{artist.plays}</p>
-    </div>
-  );
-
-  const renderPlaylistCard = (playlist: any) => (
-    <div key={playlist.id} className="group p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all cursor-pointer flex flex-col hover:scale-[1.03] hover:border-primary/30 hover:shadow-[0_10px_40px_-10px_rgba(139,92,246,0.3)]">
-      <div className="relative aspect-square w-full mb-4 overflow-hidden rounded-md shadow-lg">
-        <FallbackImage src={playlist.image} alt={playlist.title} fallbackType="playlist" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 group-hover:blur-[2px]" />
-        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-          <div className="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(139,92,246,0.6)] transform translate-y-4 group-hover:translate-y-0 transition-transform">
-            <Play className="w-6 h-6 ml-1" />
-          </div>
-        </div>
-      </div>
-      <h3 className="font-bold text-white text-[18px] truncate mb-1">{playlist.title}</h3>
-      <div className="flex flex-col text-[14px] text-muted-foreground gap-0.5">
-        <span>{playlist.count} • {playlist.duration}</span>
-        <span>{playlist.updated}</span>
-        <span className="text-white/60">By {playlist.creator}</span>
-      </div>
-    </div>
-  );
 
   const renderTimelineIcon = (type: string) => {
     switch(type) {
@@ -244,7 +216,7 @@ export default function LibraryPage() {
     }
   };
 
-  if (loading) {
+  if (loading || !data) {
     return (
       <div className="w-full h-full p-8 space-y-8 bg-background">
         <Skeleton className="w-full h-64 rounded-[2rem]" />
@@ -264,115 +236,115 @@ export default function LibraryPage() {
   const filteredArtists = data.artists?.filter((a:any) => a.title.toLowerCase().includes(searchQuery.toLowerCase())) || [];
 
   return (
-    <div className="w-full h-full flex flex-col bg-background overflow-y-auto overflow-x-hidden hide-scrollbar scroll-smooth pb-24">
-      <div className="max-w-[1400px] mx-auto w-full px-6 py-8 space-y-12">
+    <div className="w-full h-full flex flex-col overflow-y-auto overflow-x-hidden hide-scrollbar scroll-smooth pb-24 relative z-10 text-white" style={{ backgroundColor: 'transparent' }}>
+      <AnimatedBackground dominantColor={theme.primary} isDark={theme.isDark} />
+      
+      <div className="max-w-[1400px] mx-auto w-full px-6 py-8 space-y-12 relative z-10">
         
-        {/* Dynamic Hero Section */}
+        {/* Dynamic Hero Section - Two Column Layout */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className={`w-full rounded-[2rem] overflow-hidden relative shadow-2xl bg-gradient-to-br ${bgGradient} p-8 md:p-12 border border-white/10 backdrop-blur-md transition-colors duration-1000`}
+          className="w-full rounded-[30px] overflow-hidden relative shadow-[0_8px_32px_rgba(0,0,0,0.2)] bg-white/[0.04] p-8 md:p-12 border border-white/[0.08] backdrop-blur-2xl transition-colors duration-1000"
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent pointer-events-none" />
           
-          <div className="relative z-10 max-w-3xl">
-            <h1 className="text-[32px] md:text-[40px] font-extrabold text-white mb-2 tracking-tight drop-shadow-md">
-              {heroSong ? '🎵 Continue Listening' : `👋 ${data.greeting}`}
-            </h1>
-            <p className="text-[16px] text-white/70 mb-8 font-medium">
-              {data.greetingSubtitle}
-            </p>
+          <div className="relative z-10 w-full flex flex-col lg:flex-row items-center gap-12">
             
-            {heroSong ? (
-              <div className="flex items-center gap-6 mb-8">
-                <img src={heroSong.song_image} alt="cover" className="w-24 h-24 rounded-lg shadow-2xl object-cover" />
-                <div className="flex-1">
-                  <h2 className="text-[28px] font-bold text-white mb-1">{heroSong.song_title}</h2>
-                  <p className="text-[18px] text-white/80 mb-3">{heroSong.song_artist}</p>
-                  
-                  {heroSong.progress_ms !== undefined && (
-                    <div className="w-full max-w-[300px]">
-                      <div className="flex justify-between text-[12px] font-mono text-white/60 mb-1.5">
-                        <span>{formatMs(heroSong.progress_ms)}</span>
-                        <span>{formatMs(heroSong.duration_ms)}</span>
-                      </div>
-                      <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-                         <div className="h-full bg-primary shadow-[0_0_10px_rgba(139,92,246,0.8)]" style={{ width: `${heroSong.progress}%` }} />
-                      </div>
+            {/* Left Column: 3D Hero & Context */}
+            <div className="flex-1 flex flex-col md:flex-row items-center md:items-start gap-8 w-full">
+              <LibraryHeroCanvas currentSong={heroSong} theme={theme} />
+              
+              <div className="flex flex-col pt-4">
+                <h1 className="text-[20px] font-bold text-white/60 mb-2 tracking-widest uppercase flex items-center gap-2">
+                  <PlayCircle className="w-5 h-5" /> 
+                  {heroSong ? 'Continue Listening' : `Welcome, ${data.greeting}`}
+                </h1>
+                
+                {heroSong ? (
+                  <>
+                    <h2 className="text-[40px] font-extrabold text-white mb-2 leading-tight">{heroSong.song_title}</h2>
+                    <p className="text-[20px] text-white/80 mb-6 font-medium">{heroSong.song_artist}</p>
+                    <div className="flex items-center gap-3">
+                      <Button size="lg" className="rounded-full bg-primary text-white hover:bg-primary/90 hover:scale-[1.05] transition-all shadow-[0_0_30px_-5px_rgba(var(--primary),0.6)] font-bold px-8 h-12 text-[16px]" onClick={() => playSong(heroSong)}>
+                        <Play className="w-5 h-5 mr-2 fill-current" /> Resume
+                      </Button>
+                      <Button size="icon" variant="outline" className="rounded-full border-white/20 bg-white/5 hover:bg-white/20 hover:text-white w-12 h-12">
+                        <Heart className="w-5 h-5" />
+                      </Button>
                     </div>
-                  )}
+                  </>
+                ) : (
+                  <p className="text-[18px] text-white/80 mt-2 max-w-md">
+                    Start liking songs and creating playlists to build your personal music vault.
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Right Column: Listening Stats */}
+            <div className="w-full lg:w-[400px] shrink-0">
+              <div className="grid grid-cols-2 gap-4">
+                <AnimatedCounter value={data.summary?.likedSongs || 0} label="Favorites" icon={<Heart className="w-4 h-4"/>} onClick={() => setActiveTab('songs')} />
+                <AnimatedCounter value={data.summary?.playlists || 0} label="Playlists" icon={<ListVideo className="w-4 h-4"/>} onClick={() => setActiveTab('playlists')} />
+                <AnimatedCounter value={data.stats?.totalSongs || 0} label="Songs Played" icon={<Disc className="w-4 h-4"/>} onClick={() => setActiveTab('songs')} />
+                <AnimatedCounter value={data.stats?.completionRate || 0} label="Completion %" icon={<Activity className="w-4 h-4"/>} onClick={() => setActiveTab('history')} />
+                <div className="col-span-2">
+                   <AnimatedCounter value={data.stats?.hoursListened || 0} label="Hours Listened" icon={<Clock className="w-4 h-4"/>} />
                 </div>
               </div>
-            ) : (
-              <p className="text-[18px] text-white/80 mb-8 font-medium">
-                Start liking songs and creating playlists. We'll organize everything here automatically.
-              </p>
-            )}
-            
-            <div className="flex flex-wrap items-center gap-3 text-[14px] font-semibold text-white/80 mb-8 tracking-wide">
-              <span className="bg-white/10 px-3 py-1.5 rounded-full backdrop-blur-sm border border-white/10 hover:bg-white/20 transition-colors cursor-pointer">{data.summary?.likedSongs || 0} Liked Songs</span>
-              <span className="bg-white/10 px-3 py-1.5 rounded-full backdrop-blur-sm border border-white/10 hover:bg-white/20 transition-colors cursor-pointer">{data.summary?.playlists || 0} Playlists</span>
-              <span className="bg-white/10 px-3 py-1.5 rounded-full backdrop-blur-sm border border-white/10 hover:bg-white/20 transition-colors cursor-pointer">{data.summary?.downloaded || 0} Downloaded</span>
-              <span className="bg-white/10 px-3 py-1.5 rounded-full backdrop-blur-sm border border-white/10 hover:bg-white/20 transition-colors cursor-pointer">{data.summary?.followingArtists || 0} Artists</span>
             </div>
             
-            <div className="flex flex-wrap gap-4">
-              <Button size="lg" className="rounded-full bg-primary text-white hover:bg-primary/90 hover:scale-[1.05] transition-all shadow-[0_0_30px_-5px_rgba(139,92,246,0.6)] font-bold px-8 h-14 text-[16px]">
-                <Play className="w-5 h-5 mr-2 fill-current" />
-                {heroSong ? 'Resume' : 'Discover Music'}
-              </Button>
-            </div>
           </div>
         </motion.div>
 
-        {/* Pinned Section */}
-        {data.pinned?.length > 0 && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {data.pinned.map((pin: any) => (
-              <div key={pin.id} className="group flex items-center gap-4 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 rounded-xl p-3 cursor-pointer transition-all hover:scale-[1.02]">
-                <FallbackImage src={pin.image} alt={pin.title} fallbackType="playlist" className="w-16 h-16 rounded-md shadow-md shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1.5 mb-0.5">
-                    <Pin className="w-3 h-3 text-primary fill-primary rotate-45 shrink-0" />
-                    <h3 className="font-bold text-[16px] text-white truncate">{pin.title}</h3>
-                  </div>
-                  <p className="text-[12px] text-muted-foreground truncate">{pin.type} • {pin.count}</p>
-                </div>
-                <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all mr-2 shadow-[0_0_15px_rgba(139,92,246,0.4)] shrink-0">
-                   <Play className="w-5 h-5 text-primary fill-primary ml-1" />
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
 
         {/* Search & Filters */}
-        <div className="sticky top-0 z-20 bg-background/80 backdrop-blur-xl py-4 border-b border-white/5 space-y-4 -mx-6 px-6">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="bg-transparent border-none p-0 w-full justify-start overflow-x-auto hide-scrollbar gap-2">
-                {['All', 'Songs', 'Playlists', 'Albums', 'Artists'].map(tab => {
-                  const val = tab.toLowerCase();
-                  return (
-                    <TabsTrigger 
-                      key={val} 
-                      value={val} 
-                      className="rounded-full px-6 py-2.5 min-h-[44px] h-auto text-[14px] font-semibold border border-transparent data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:border-white/20 hover:bg-white/5 transition-all"
-                    >
-                      {tab}
-                    </TabsTrigger>
-                  )
-                })}
-              </TabsList>
-            </Tabs>
-            <div className="relative w-full sm:w-64 shrink-0">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input 
-                placeholder="Search Library..." 
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-                className="pl-9 bg-white/5 border-white/10 rounded-full h-11 text-[14px] focus-visible:ring-primary"
-              />
+        <div className="sticky top-0 z-20 bg-background/80 backdrop-blur-xl py-4 border-b border-white/[0.05] space-y-4 -mx-6 px-6">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+            
+            {/* Animated Pills */}
+            <div className="flex gap-2 p-1 bg-white/[0.04] rounded-full border border-white/[0.08] backdrop-blur-md overflow-x-auto hide-scrollbar max-w-full">
+              {['All', 'Songs', 'Playlists', 'History'].map(tab => {
+                const val = tab.toLowerCase();
+                const isActive = activeTab === val;
+                return (
+                  <button
+                    key={val}
+                    onClick={() => setActiveTab(val)}
+                    className={`relative px-6 py-2 rounded-full text-[14px] font-bold transition-colors whitespace-nowrap z-10 ${isActive ? 'text-white' : 'text-white/50 hover:text-white/80'}`}
+                  >
+                    {isActive && (
+                      <motion.div 
+                        layoutId="activeTabIndicator" 
+                        className="absolute inset-0 bg-white/10 border border-white/10 rounded-full -z-10 shadow-[0_0_15px_rgba(255,255,255,0.05)]" 
+                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      />
+                    )}
+                    {tab}
+                  </button>
+                )
+              })}
+            </div>
+
+            <div className="flex items-center gap-4 w-full lg:w-auto">
+              {/* View Switcher */}
+              <div className="hidden sm:flex bg-white/[0.04] p-1 rounded-full border border-white/[0.08]">
+                <button onClick={() => setViewMode('list')} className={`p-2 rounded-full transition-all ${viewMode === 'list' ? 'bg-white/10 text-white' : 'text-white/40 hover:text-white/70'}`} title="List View"><ListMusic className="w-4 h-4"/></button>
+                <button onClick={() => setViewMode('grid')} className={`p-2 rounded-full transition-all ${viewMode === 'grid' ? 'bg-white/10 text-white' : 'text-white/40 hover:text-white/70'}`} title="Grid View"><Disc3 className="w-4 h-4"/></button>
+                <button onClick={() => setViewMode('galaxy')} className={`p-2 rounded-full transition-all ${viewMode === 'galaxy' ? 'bg-primary/20 text-primary shadow-[0_0_10px_rgba(var(--primary),0.3)]' : 'text-white/40 hover:text-white/70'}`} title="Galaxy View"><Star className="w-4 h-4"/></button>
+              </div>
+
+              {/* Search */}
+              <div className="relative flex-1 lg:w-64 shrink-0">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/50" />
+                <Input 
+                  placeholder="Search Vault..." 
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  className="pl-9 bg-white/[0.04] border-white/[0.08] rounded-full h-11 text-[14px] focus-visible:ring-primary text-white placeholder:text-white/30 transition-all hover:bg-white/[0.06]"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -387,6 +359,11 @@ export default function LibraryPage() {
             className="space-y-12"
           >
             {activeTab === 'all' && (
+              (!data.recent?.length && !data.artists?.length && !data.recommendations?.length && !data.activity?.length) ? (
+                <div className="py-12">
+                  <EmptyVault type="songs" />
+                </div>
+              ) : (
               <>
                 {/* Recently Played Horizontal Carousel */}
                 {data.recent?.length > 0 && (
@@ -408,8 +385,8 @@ export default function LibraryPage() {
                       className="flex overflow-x-auto hide-scrollbar gap-5 pb-8 -mx-6 px-6 snap-x"
                     >
                       {data.recent.map((r:any) => (
-                        <div key={r.id} className="snap-start">
-                          {renderRecentCard(r)}
+                        <div key={r.id} className="snap-start w-[300px]">
+                          <SongCard song={r} onPlay={() => handlePlay(r)} />
                         </div>
                       ))}
                     </div>
@@ -439,7 +416,7 @@ export default function LibraryPage() {
                         >
                           {data.artists.map((a:any) => (
                             <div key={a.id} className="snap-start">
-                              {renderArtistCard(a)}
+                              <ArtistCard artist={a} onClick={() => handlePlay(a)} />
                             </div>
                           ))}
                         </div>
@@ -453,7 +430,7 @@ export default function LibraryPage() {
                         <p className="text-[16px] text-muted-foreground mb-8">Crafted for your taste</p>
                         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
                           {data.recommendations.map((rec:any) => (
-                            <div key={rec.id} className="group overflow-hidden rounded-2xl p-6 border border-white/5 bg-white/5 hover:bg-white/10 transition-all cursor-pointer flex flex-col gap-4">
+                            <div key={rec.id} className="group overflow-hidden rounded-2xl p-6 border border-white/5 bg-white/5 hover:bg-white/10 transition-all cursor-pointer flex flex-col gap-4" onClick={() => handlePlay(rec)}>
                               <div className="flex items-center gap-6">
                                 <FallbackImage src={rec.image} alt={rec.title} fallbackType="playlist" className="w-20 h-20 rounded-lg shadow-md group-hover:scale-105 transition-transform shrink-0" />
                                 <div>
@@ -507,88 +484,133 @@ export default function LibraryPage() {
                     </div>
 
                     {/* Activity Timeline */}
-                    <div className="bg-white/5 rounded-2xl p-6 border border-white/5 flex flex-col h-[400px]">
-                      <h3 className="text-[20px] font-bold mb-6 flex items-center gap-2">Your Activity</h3>
-                      <div className="space-y-0 overflow-y-auto hide-scrollbar pr-4 flex-1">
-                        {data.activity?.map((act:any, index: number) => (
-                          <div key={act.id} className="flex gap-4 relative pb-6">
-                            {/* Vertical Line */}
-                            {index !== data.activity.length - 1 && (
-                              <div className="absolute left-4 top-8 bottom-0 w-px bg-white/10" />
-                            )}
-                            
-                            <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0 z-10 border border-white/5">
-                              {renderTimelineIcon(act.type)}
+                    <div className="bg-white/[0.04] rounded-3xl p-6 border border-white/[0.08] flex flex-col h-[400px]">
+                      <h3 className="text-[20px] font-bold mb-6 flex items-center gap-2">Listening History</h3>
+                      <div className="space-y-6 overflow-y-auto hide-scrollbar pr-2 flex-1">
+                        
+                        {/* Mock Grouping for the redesign */}
+                        <div className="space-y-4">
+                          <h4 className="text-[12px] font-bold text-white/40 uppercase tracking-widest sticky top-0 bg-background/90 backdrop-blur-md py-1 z-10">Today</h4>
+                          {data.activity?.slice(0,2).map((act:any, index: number) => (
+                            <div key={act.id} className="flex gap-4 relative">
+                              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0 z-10 border border-white/5">
+                                {renderTimelineIcon(act.type)}
+                              </div>
+                              <div className="flex-1 bg-white/[0.02] p-3 rounded-xl border border-white/5 hover:bg-white/[0.06] transition-colors">
+                                <p className="text-[12px] text-muted-foreground mb-1">{act.date}</p>
+                                <p className="text-[14px] text-white">
+                                  <span className="font-semibold text-primary/90">{act.action}</span> {act.detail}
+                                </p>
+                              </div>
                             </div>
-                            
-                            <div className="flex-1 bg-white/[0.02] p-3 rounded-lg border border-white/5 hover:bg-white/5 transition-colors">
-                              <p className="text-[12px] text-muted-foreground mb-1">{act.date}</p>
-                              <p className="text-[14px] text-white">
-                                <span className="font-semibold text-primary/90">{act.action}</span> {act.detail}
-                              </p>
+                          ))}
+                        </div>
+
+                        <div className="space-y-4">
+                          <h4 className="text-[12px] font-bold text-white/40 uppercase tracking-widest sticky top-0 bg-background/90 backdrop-blur-md py-1 z-10">Yesterday</h4>
+                          {data.activity?.slice(2,4).map((act:any, index: number) => (
+                            <div key={act.id} className="flex gap-4 relative">
+                              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0 z-10 border border-white/5">
+                                {renderTimelineIcon(act.type)}
+                              </div>
+                              <div className="flex-1 bg-white/[0.02] p-3 rounded-xl border border-white/5 hover:bg-white/[0.06] transition-colors">
+                                <p className="text-[12px] text-muted-foreground mb-1">{act.date}</p>
+                                <p className="text-[14px] text-white">
+                                  <span className="font-semibold text-primary/90">{act.action}</span> {act.detail}
+                                </p>
+                              </div>
                             </div>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
+
                       </div>
                     </div>
                   </div>
                 </div>
               </>
+              )
             )}
 
             {/* Songs Tab (Liked Songs) */}
             {activeTab === 'songs' && (
               <div className="flex flex-col gap-2">
                 {(!data.likedSongsList || data.likedSongsList.length === 0) ? (
-                  <div className="col-span-full flex flex-col items-center justify-center py-20 text-center bg-white/5 rounded-2xl border border-dashed border-white/10">
-                    <Heart className="w-16 h-16 text-muted-foreground mb-4 opacity-50" />
-                    <h3 className="text-[24px] font-bold mb-2 text-white">No liked songs</h3>
-                    <p className="text-[14px] text-muted-foreground">Songs you like will appear here.</p>
-                  </div>
+                  <EmptyVault type="songs" />
                 ) : (
                   data.likedSongsList.map((song: any, i: number) => (
-                    <div 
-                      key={i} 
-                      onClick={() => playSong(song)}
-                      className="group flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors cursor-pointer border border-transparent hover:border-white/5"
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className="relative w-12 h-12 rounded-md overflow-hidden shadow-md">
-                          <img src={song.song_image} alt={song.song_title} className="w-full h-full object-cover" />
-                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                            <Play className="w-4 h-4 text-white fill-white" />
-                          </div>
-                        </div>
-                        <div>
-                          <h3 className="text-[16px] font-bold text-white mb-0.5">{song.song_title}</h3>
-                          <p className="text-[14px] text-muted-foreground">{song.song_artist}</p>
-                        </div>
-                      </div>
-                      <Heart className="w-5 h-5 text-primary fill-primary" />
-                    </div>
+                    <SongCard key={i} song={song} onPlay={() => handlePlay(song)} />
                   ))
                 )}
               </div>
             )}
 
-            {/* Empty States for other tabs */}
-            {['albums'].includes(activeTab) && (
-              <div className="col-span-full flex flex-col items-center justify-center py-20 text-center bg-white/5 rounded-2xl border border-dashed border-white/10">
-                <Music2 className="w-16 h-16 text-muted-foreground mb-4 opacity-50" />
-                <h3 className="text-[24px] font-bold mb-2 text-white">No items found</h3>
-                <p className="text-[14px] text-muted-foreground">Try clearing your search or checking another tab.</p>
-              </div>
-            )}
-            
             {activeTab === 'playlists' && (
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5">
-                {filteredPlaylists.map((p:any) => renderPlaylistCard(p))}
+              filteredPlaylists.length === 0 ? <EmptyVault type="playlists" /> :
+              <div className={viewMode === 'list' ? "flex flex-col gap-4" : "grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5"}>
+                {filteredPlaylists.map((p:any) => <PlaylistCard key={p.id} playlist={p} onClick={() => handlePlay(p)} />)}
               </div>
             )}
 
-            {activeTab === 'artists' && (
-              <div className="flex flex-wrap gap-6 pt-4">
-                {filteredArtists.map((a:any) => renderArtistCard(a))}
+            {activeTab === 'history' && (
+              <div className="flex flex-col gap-8">
+                {(!data.recent || data.recent.length === 0) ? (
+                  <div className="py-12">
+                    <EmptyVault type="songs" />
+                  </div>
+                ) : (
+                  <>
+                    {data.historyGrouped?.today?.length > 0 && (
+                      <section>
+                        <h3 className="text-[18px] font-bold text-white mb-4 px-2">Today</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                          {data.historyGrouped.today.map((song: any, i: number) => (
+                            <HistoryCard key={song.id || i} item={song} onPlay={() => handlePlay(song)} />
+                          ))}
+                        </div>
+                      </section>
+                    )}
+                    {data.historyGrouped?.yesterday?.length > 0 && (
+                      <section>
+                        <h3 className="text-[18px] font-bold text-white mb-4 px-2">Yesterday</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                          {data.historyGrouped.yesterday.map((song: any, i: number) => (
+                            <HistoryCard key={song.id || i} item={song} onPlay={() => handlePlay(song)} />
+                          ))}
+                        </div>
+                      </section>
+                    )}
+                    {data.historyGrouped?.last7Days?.length > 0 && (
+                      <section>
+                        <h3 className="text-[18px] font-bold text-white mb-4 px-2">Last 7 Days</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                          {data.historyGrouped.last7Days.map((song: any, i: number) => (
+                            <HistoryCard key={song.id || i} item={song} onPlay={() => handlePlay(song)} />
+                          ))}
+                        </div>
+                      </section>
+                    )}
+                    {data.historyGrouped?.last30Days?.length > 0 && (
+                      <section>
+                        <h3 className="text-[18px] font-bold text-white mb-4 px-2">Last 30 Days</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                          {data.historyGrouped.last30Days.map((song: any, i: number) => (
+                            <HistoryCard key={song.id || i} item={song} onPlay={() => handlePlay(song)} />
+                          ))}
+                        </div>
+                      </section>
+                    )}
+                    {data.historyGrouped?.older?.length > 0 && (
+                      <section>
+                        <h3 className="text-[18px] font-bold text-white mb-4 px-2">Older</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                          {data.historyGrouped.older.map((song: any, i: number) => (
+                            <HistoryCard key={song.id || i} item={song} onPlay={() => handlePlay(song)} />
+                          ))}
+                        </div>
+                      </section>
+                    )}
+                  </>
+                )}
               </div>
             )}
             

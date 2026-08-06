@@ -13,13 +13,13 @@ export interface ThemeColors {
 }
 
 const defaultTheme: ThemeColors = {
-  primary: '#3b82f6', // blue-500
-  secondary: '#8b5cf6', // violet-500
-  accent: '#ec4899', // pink-500
-  dark: '#0f172a', // slate-900
-  light: '#f8fafc', // slate-50
+  primary: '#6d28d9', // Deep purple
+  secondary: '#be185d', // Deep pink
+  accent: '#0284c7', // Deep blue
+  dark: '#06070a', // Ultra dark cinematic base
+  light: '#94a3b8',
   highlight: '#ffffff',
-  glow: 'rgba(59, 130, 246, 0.5)',
+  glow: 'rgba(109, 40, 217, 0.5)',
   isDark: true,
 };
 
@@ -84,16 +84,18 @@ export const useDynamicTheme = (imageUrl: string | undefined | null) => {
 
         const baseHsl = hexToHSL(color.hex);
         
-        // Generate palette based on dominant color
-        const primary = hslToHex(baseHsl.h, Math.max(baseHsl.s, 40), 50);
-        const secondary = hslToHex((baseHsl.h + 30) % 360, Math.max(baseHsl.s, 50), 45);
-        const accent = hslToHex((baseHsl.h + 150) % 360, Math.max(baseHsl.s, 60), 60);
-        const dark = hslToHex(baseHsl.h, Math.min(baseHsl.s, 20), 8); 
-        const light = hslToHex(baseHsl.h, Math.min(baseHsl.s, 10), 90);
-        const highlight = hslToHex(baseHsl.h, Math.max(baseHsl.s, 80), 85);
+        // Generate palette based on dominant color, constrained to cinematic bounds
+        const primary = hslToHex(baseHsl.h, Math.max(baseHsl.s, 40), 45); // Kept saturated but slightly darker
+        const secondary = hslToHex((baseHsl.h + 30) % 360, Math.max(baseHsl.s, 50), 40);
+        const accent = hslToHex((baseHsl.h + 150) % 360, Math.max(baseHsl.s, 60), 55);
+        
+        // Dark background should be ultra-dark and moody (e.g. #06070A)
+        const dark = hslToHex(baseHsl.h, Math.min(baseHsl.s, 20), 4); // Extremely low lightness
+        const light = hslToHex(baseHsl.h, Math.min(baseHsl.s, 10), 80);
+        const highlight = hslToHex(baseHsl.h, Math.max(baseHsl.s, 70), 85);
 
         const rgb = color.value;
-        const glow = `rgba(\${rgb[0]}, \${rgb[1]}, \${rgb[2]}, 0.5)`;
+        const glow = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.3)`; // Subtler glow
 
         setTheme({
           primary,

@@ -34,23 +34,35 @@ export const Galaxy: React.FC<GalaxyProps> = ({ theme }) => {
 
   return (
     <group ref={groupRef}>
-      {/* Dense background stars */}
-      <Stars radius={50} depth={50} count={particleCount * 2} factor={4} saturation={1} fade speed={1} />
+      {/* 1 & 2. Deep Space & Tiny Animated Stars */}
+      <Stars radius={60} depth={50} count={particleCount * 3} factor={3} saturation={1} fade speed={1.5} />
+      <Stars radius={80} depth={20} count={particleCount} factor={6} saturation={0.5} fade speed={0.5} />
       
-      {/* Fog/Nebula effect using Drei Cloud */}
+      {/* 3 & 4. Volumetric Fog & Nebula Clouds */}
       {enableComplexShaders && (
-        <Cloud 
-          opacity={0.3} 
-          speed={0.2} 
-          width={20} 
-          depth={5} 
-          segments={20} 
-          position={[0, 0, -15]} 
-          color={theme.secondary} 
-        />
+        <group>
+          <Cloud 
+            opacity={0.15} 
+            speed={0.1} 
+            width={25} 
+            depth={10} 
+            segments={20} 
+            position={[-10, 5, -25]} 
+            color={theme.dark} 
+          />
+          <Cloud 
+            opacity={0.15} 
+            speed={0.15} 
+            width={20} 
+            depth={5} 
+            segments={15} 
+            position={[10, -5, -20]} 
+            color={theme.secondary} 
+          />
+        </group>
       )}
-      
-      {/* Dust Particles */}
+
+      {/* 5. Floating Dust / Audio Reactive Particles */}
       <points>
         <bufferGeometry>
           <bufferAttribute
@@ -70,11 +82,26 @@ export const Galaxy: React.FC<GalaxyProps> = ({ theme }) => {
           size={0.1}
           color={theme.highlight}
           transparent
-          opacity={0.6}
+          opacity={0.4}
           sizeAttenuation
           blending={THREE.AdditiveBlending}
+          depthWrite={false}
         />
       </points>
+
+      {/* 6. Soft Light Rays / Purple Aurora Simulation */}
+      {enableComplexShaders && (
+        <mesh position={[0, 10, -30]} rotation={[0, 0, Math.PI / 4]}>
+          <planeGeometry args={[40, 20]} />
+          <meshBasicMaterial 
+            color={theme.primary} 
+            transparent 
+            opacity={0.03} 
+            blending={THREE.AdditiveBlending} 
+            depthWrite={false}
+          />
+        </mesh>
+      )}
     </group>
   );
 };

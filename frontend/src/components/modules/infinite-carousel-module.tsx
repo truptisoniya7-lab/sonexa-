@@ -17,7 +17,8 @@ export function InfiniteCarouselModule({ module }: { module: any }) {
     queryFn: async () => {
       const res = await fetch(module.endpoint);
       if (!res.ok) throw new Error('Failed to fetch data');
-      return res.json();
+      const json = await res.json();
+      return json.raw || json.items || json;
     },
     staleTime: module.caching?.ttl !== undefined ? module.caching.ttl * 1000 : 60000,
   });

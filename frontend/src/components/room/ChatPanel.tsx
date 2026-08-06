@@ -65,8 +65,10 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ messages, typingUsers, mem
                   className={`flex flex-col \${isMe ? 'items-end' : 'items-start'}`}
                 >
                   <DropdownMenu>
-                    <DropdownMenuTrigger className="text-[10px] text-white/50 mb-1 px-1 font-medium tracking-wide hover:text-white transition-colors cursor-pointer outline-none text-left">
-                      {msg.user_name}
+                    <DropdownMenuTrigger asChild>
+                      {!isMe && (
+                        <span className="text-[10px] font-bold text-white/40 ml-1 mb-1 cursor-pointer hover:text-white transition-colors">{msg.user_name}</span>
+                      )}
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align={isMe ? 'end' : 'start'} className="w-48 bg-black/40 backdrop-blur-xl border-white/10 shadow-2xl">
                       <DropdownMenuLabel className="text-xs font-bold text-white">{msg.user_name}</DropdownMenuLabel>
@@ -74,12 +76,20 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ messages, typingUsers, mem
                       <DropdownMenuItem className="text-xs text-white/60 focus:bg-transparent cursor-default flex justify-between">
                         ID: <span className="font-mono text-[10px] text-white/40">{msg.user_id}</span>
                       </DropdownMenuItem>
-                      <DropdownMenuItem className="text-xs font-bold cursor-pointer text-primary focus:text-primary focus:bg-primary/20 mt-1" onClick={() => console.log('Add friend', msg.user_id)}>
-                        Add to Friends
-                      </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
-                  <div className={`px-4 py-2.5 rounded-2xl max-w-[85%] text-sm shadow-sm backdrop-blur-md \${isMe ? 'bg-primary/80 text-white rounded-br-sm border border-primary/50' : 'bg-white/10 text-white rounded-bl-sm border border-white/10'}`}>
+
+                  {isMe && (
+                    <span className="text-[10px] font-bold text-white/40 mr-1 mb-1">{msg.user_name}</span>
+                  )}
+                  
+                  <div 
+                    className={`px-4 py-2 rounded-2xl text-sm ${
+                      isMe 
+                        ? 'bg-primary/80 text-white rounded-br-sm shadow-[0_0_15px_rgba(var(--primary),0.3)]' 
+                        : 'bg-white/[0.08] text-white/90 rounded-bl-sm border border-white/[0.04]'
+                    }`}
+                  >
                     {msg.content}
                   </div>
                 </motion.div>
@@ -106,7 +116,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ messages, typingUsers, mem
         <div ref={messagesEndRef} className="h-1" />
       </div>
 
-      <div className="p-4 border-t border-white/5 bg-black/20 backdrop-blur-xl relative z-50 rounded-b-xl">
+      <div className="p-3 border-t border-white/[0.08] bg-black/20 shrink-0">
         <AnimatePresence>
           {showEmojiPicker && (
             <motion.div 
@@ -119,27 +129,33 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ messages, typingUsers, mem
             </motion.div>
           )}
         </AnimatePresence>
-        <div className="flex gap-2">
+        <form onSubmit={handleSend} className="relative flex items-center gap-2">
           <Button 
-            variant="outline" 
+            type="button"
+            variant="ghost" 
             size="icon"
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-            className={`shrink-0 rounded-full h-10 w-10 border-white/10 transition-colors \${showEmojiPicker ? 'bg-white/20 text-white' : 'bg-white/5 text-white/60 hover:text-white hover:bg-white/10'}`}
+            className={`shrink-0 rounded-full h-10 w-10 transition-colors ${showEmojiPicker ? 'bg-white/20 text-white' : 'text-white/60 hover:text-white hover:bg-white/10'}`}
           >
             <Smile className="w-5 h-5" />
           </Button>
           <Input 
             type="text" 
-            placeholder="Type a message..." 
+            placeholder="Say something..." 
             value={chatInput} 
             onChange={(e) => setChatInput(e.target.value)} 
-            onKeyDown={(e) => e.key === 'Enter' && handleSend()} 
-            className="flex-1 bg-white/5 border-white/10 rounded-full h-10 focus-visible:ring-primary/50 transition-shadow text-white placeholder:text-white/40"
+            className="flex-1 bg-white/[0.05] border-white/[0.08] rounded-full h-10 text-sm focus-visible:ring-1 focus-visible:ring-primary/50 placeholder:text-white/30 text-white"
           />
-          <Button onClick={handleSend} size="icon" className="shrink-0 rounded-full h-10 w-10 bg-primary/80 hover:bg-primary text-white border border-primary/50 shadow-[0_0_15px_rgba(var(--primary),0.3)] transition-transform active:scale-95" disabled={!chatInput.trim()}>
+          <Button 
+            type="submit" 
+            size="icon" 
+            variant="ghost"
+            disabled={!chatInput.trim()}
+            className="w-8 h-8 rounded-full text-primary hover:bg-primary/20 hover:text-primary transition-colors disabled:opacity-50"
+          >
             <Send className="w-4 h-4" />
           </Button>
-        </div>
+        </form>
       </div>
     </div>
   );

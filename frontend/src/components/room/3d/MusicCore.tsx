@@ -18,8 +18,10 @@ export const MusicCore: React.FC<MusicCoreProps> = ({ imageUrl, isPlaying, theme
   const { enableComplexShaders } = usePerformance();
   const groupRef = useRef<THREE.Group>(null);
   const coreRef = useRef<THREE.Mesh>(null);
+  const plasmaRef = useRef<THREE.Mesh>(null);
   const vinylRef = useRef<THREE.Mesh>(null);
   const geometryRef = useRef<THREE.SphereGeometry>(null);
+  const plasmaGeoRef = useRef<THREE.SphereGeometry>(null);
   
   const texture = useTexture(imageUrl || DEFAULT_COVER);
   
@@ -29,13 +31,18 @@ export const MusicCore: React.FC<MusicCoreProps> = ({ imageUrl, isPlaying, theme
     return geo.attributes.position.clone();
   }, []);
 
+  const plasmaPositions = useMemo(() => {
+    const geo = new THREE.SphereGeometry(2.0, 32, 32);
+    return geo.attributes.position.clone();
+  }, []);
+
   const artMaterial = useMemo(() => {
     return new THREE.MeshStandardMaterial({
       map: texture,
       roughness: 0.1,
       metalness: 0.2,
       emissive: theme.primary,
-      emissiveIntensity: 2.5, // High intensity to pierce the threshold
+      emissiveIntensity: 0.8, // Reduced to limit bloom
     });
   }, [texture, theme.primary]);
 
@@ -63,6 +70,21 @@ export const MusicCore: React.FC<MusicCoreProps> = ({ imageUrl, isPlaying, theme
       }
       positions.needsUpdate = true;
       geometryRef.current.computeVertexNormals();
+
+      // Plasma inner layer animation
+      if (plasmaRef.current && plasmaGeoRef.current) {
+        const pPositions = plasmaGeoRef.current.attributes.position;
+        const pCount = pPositions.count;
+        for (let i = 0; i < pCount; i++) {
+          const u = plasmaPositions.getX(i);
+          const v = plasmaPositions.getY(i);
+          const w = plasmaPositions.getZ(i);
+          const distortion = Math.cos(u * 3 + time * 1.5) * 0.08 + Math.sin(w * 3 + time) * 0.08;
+          const scale = 1 + distortion;
+          pPositions.setXYZ(i, u * scale, v * scale, w * scale);
+        }
+        pPositions.needsUpdate = true;
+      }
     } else if (!enableComplexShaders && groupRef.current) {
       // Fallback breathing if shaders are disabled
       const scale = 1 + Math.sin(time) * 0.02;
@@ -90,22 +112,22 @@ export const MusicCore: React.FC<MusicCoreProps> = ({ imageUrl, isPlaying, theme
         {enableComplexShaders ? (
           <MeshTransmissionMaterial 
             backside
-            thickness={1}
-            roughness={0.05}
-            transmission={1}
+            thickness={1.5}
+            roughness={0.15}
+            transmission={0.9}
             ior={1.5}
-            chromaticAberration={0.06}
-            color={theme.light}
-            distortion={0.5}
-            distortionScale={0.5}
-            temporalDistortion={0.1}
+            chromaticAberration={0.1}
+            color={theme.dark} // Dark tinted glass
+            distortion={0.6}
+            distortionScale={0.6}
+            temporalDistortion={0.2}
           />
         ) : (
           <meshPhysicalMaterial 
-            transmission={0.9} 
-            thickness={0.5} 
-            roughness={0.1}
-            color={theme.light}
+            transmission={0.8} 
+            thickness={1} 
+            roughness={0.2}
+            color={theme.dark}
           />
         )}
       </mesh>
@@ -116,9 +138,9 @@ export const MusicCore: React.FC<MusicCoreProps> = ({ imageUrl, isPlaying, theme
       </mesh>
       
       {/* Energy Plasma Layer (Inner glow) */}
-      <mesh position={[0, 0, -0.2]}>
-        <sphereGeometry args={[2.0, 32, 32]} />
-        <meshBasicMaterial color={theme.accent} transparent opacity={0.15} blending={THREE.AdditiveBlending} />
+      <mesh ref={plasmaRef} position={[0, 0, -0.2]}>
+        <sphereGeometry ref={plasmaGeoRef} args={[2.0, 32, 32]} />
+        <meshBasicMaterial color={theme.accent} transparent opacity={0.12} blending={THREE.AdditiveBlending} depthWrite={false} />
       </mesh>
 
       {/* Vinyl Disc behind the album */}
@@ -130,7 +152,7 @@ export const MusicCore: React.FC<MusicCoreProps> = ({ imageUrl, isPlaying, theme
       {/* Vinyl label (Neon Rim effect) */}
       <mesh position={[0, 0, -0.528]} rotation={[Math.PI / 2, 0, 0]}>
          <cylinderGeometry args={[0.6, 0.6, 0.06, 32]} />
-         <meshStandardMaterial color={theme.primary} emissive={theme.primary} emissiveIntensity={1.5} />
+         <meshStandardMaterial color={theme.primary} emissive={theme.primary} emissiveIntensity={0.6} />
       </mesh>
     </group>
   );
